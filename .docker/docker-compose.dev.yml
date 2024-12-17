@@ -1,0 +1,48 @@
+services:
+  backend:
+    container_name: tyg_backend
+    build: 
+      context: ../.
+      dockerfile: ./.docker/Dockerfile.dev
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./../:/usr/src/tyg/
+    ports:
+      - 8000:8000
+    env_file:
+      - ./conf/.env
+    depends_on:
+      database:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+  
+  database:
+    container_name: tyg_postgres
+    image: postgres:12.0-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    ports:
+      - 5432:5432
+    env_file:
+      - ./conf/.env
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 40s
+  
+  redis:
+    container_name: tyg_redis
+    image: redis:5.0.6-alpine
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "redis-server --daemonize yes && sleep 1 && redis-cli ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 40s
+
+volumes:
+  postgres_data:

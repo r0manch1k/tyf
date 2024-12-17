@@ -1,0 +1,68 @@
+services:
+  nginx:
+    container_name: tyg_nginx
+    build:
+      context: ../.
+      dockerfile: ./.docker/nginx/Dockerfile
+    restart: unless-stopped
+    ports:
+      - 8000:80
+    volumes:
+      - static_files:/usr/src/tyg/static
+      - media_files:/usr/src/tyg/media
+    depends_on:
+      - backend
+
+  backend:
+    container_name: tyg_backend
+    build: 
+      context: ../.
+      dockerfile: ./.docker/Dockerfile.prod
+    command: gunicorn tyg.wsgi:application --bind 0.0.0.0:8000
+    volumes:
+      - static_files:/usr/src/tyg/static
+      - media_files:/usr/src/tyg/media
+    expose:
+      - 8000
+    env_file:
+      - ./conf/.env
+    depends_on:
+      database:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: always
+  
+  database:
+    container_name: tyg_database
+    image: postgres:12.0-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    ports:
+      - 5432
+    env_file:
+      - ./conf/.env
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 40s
+  
+  redis:
+    container_name: tyg_redis
+    image: redis:5.0.6-alpine
+    restart: unless-stopped
+    ports:
+      - 6379
+    healthcheck:
+      test: ["CMD-SHELL", "redis-server --daemonize yes && sleep 1 && redis-cli ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 40s
+
+volumes:
+  postgres_data:
+  static_files:
+  media_files:
