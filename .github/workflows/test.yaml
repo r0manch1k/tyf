@@ -1,0 +1,98 @@
+name: Project CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:12.0-alpine
+        env:
+          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+      redis:
+        image: redis:5.0.6-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies (backend)
+        run: |
+          python -m venv .venv
+          source .venv/bin/activate
+          pip install -r backend/requirements.txt
+          pip install pylint
+
+      - name: Analysing the code with pylint
+        run: |
+          pylint $(git ls-files '*.py')
+
+      - name: Run migrations (backend)
+        env:
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}
+          DEBUG: ${{ secrets.DEBUG }}
+          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+          POSTGRES_HOST: ${{ secrets.POSTGRES_HOST }}
+          POSTGRES_PORT: ${{ secrets.POSTGRES_PORT }}
+          REDIS_LOCATION: ${{ secrets.REDIS_LOCATION }}
+        run: |
+          source .venv/bin/activate
+          python backend/manage.py makemigrations
+          python backend/manage.py migrate
+
+      - name: Run tests (backend)
+        env:
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}
+          DEBUG: ${{ secrets.DEBUG }}
+          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+          POSTGRES_HOST: ${{ secrets.POSTGRES_HOST }}
+          POSTGRES_PORT: ${{ secrets.POSTGRES_PORT }}
+          REDIS_LOCATION: ${{ secrets.REDIS_LOCATION }}
+        run: |
+          source .venv/bin/activate
+          python backend/manage.py test
+      
+      - name: Install ESLint (frontend)
+        run: |
+          npm install eslint@8.10.0
+      
+      - name: Run ESLint (frontend)
+        run: npx eslint .
+          --config .eslintrc.js
+          --ext .js,.jsx,.ts,.tsx
+        continue-on-error: true
+

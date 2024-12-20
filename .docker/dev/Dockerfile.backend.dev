@@ -1,0 +1,17 @@
+FROM python:3.11.4-slim-buster
+
+WORKDIR /tyf
+
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    postgresql-client redis-server gcc python3-dev libpq-dev netcat
+
+RUN pip3 install --upgrade pip
+COPY ./backend/requirements.txt .
+RUN pip3 install --no-cache-dir -r requirements.txt
+
+COPY . .
+
+ENTRYPOINT ["sh", "/tyf/.docker/dev/entrypoint.dev.sh"]

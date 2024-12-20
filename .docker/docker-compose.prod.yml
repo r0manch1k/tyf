@@ -1,68 +1,91 @@
+# TODO: Add celery
+
 services:
   nginx:
-    container_name: tyg_nginx
+    container_name: tyf_nginx
     build:
-      context: ../.
-      dockerfile: ./.docker/nginx/Dockerfile
+      context: ./../
+      dockerfile: ./.docker/prod/nginx/Dockerfile
     restart: unless-stopped
     ports:
       - 8000:80
     volumes:
-      - static_files:/usr/src/tyg/static
-      - media_files:/usr/src/tyg/media
+      - static_files:/backend/staticfiles/
+      - media_files:/backend/mediafiles/
     depends_on:
-      - backend
+      backend:
+        condition: service_started
+    networks:
+      - nginx_network
 
   backend:
-    container_name: tyg_backend
-    build: 
-      context: ../.
-      dockerfile: ./.docker/Dockerfile.prod
-    command: gunicorn tyg.wsgi:application --bind 0.0.0.0:8000
+    container_name: tyf_backend
+    build:
+      context: ./../
+      dockerfile: ./.docker/prod/Dockerfile.backend.prod
+    command: gunicorn tyf.wsgi:application --bind 0.0.0.0:8000
     volumes:
-      - static_files:/usr/src/tyg/static
-      - media_files:/usr/src/tyg/media
+      - static_files:/backend/staticfiles/
+      - media_files:/backend/mediafiles/
     expose:
       - 8000
     env_file:
-      - ./conf/.env
+      - ./prod/.env.prod
     depends_on:
       database:
         condition: service_healthy
       redis:
         condition: service_healthy
     restart: always
-  
+    networks:
+      - backend_network
+      - nginx_network
+
   database:
-    container_name: tyg_database
+    container_name: tyf_database
     image: postgres:12.0-alpine
+    restart: unless-stopped
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     ports:
-      - 5432
+      - "5432:5432"
     env_file:
-      - ./conf/.env
+      - ./prod/.env.prod
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 10s
       timeout: 5s
       retries: 5
       start_period: 40s
-  
+    networks:
+      - backend_network
+
   redis:
-    container_name: tyg_redis
+    container_name: tyf_redis
     image: redis:5.0.6-alpine
     restart: unless-stopped
     ports:
       - 6379
     healthcheck:
-      test: ["CMD-SHELL", "redis-server --daemonize yes && sleep 1 && redis-cli ping"]
+      test:
+        [
+          "CMD-SHELL",
+          "redis-server --daemonize yes && sleep 1 && redis-cli ping",
+        ]
       interval: 10s
       timeout: 5s
       retries: 5
       start_period: 40s
+    networks:
+      - backend_network
 
 volumes:
   postgres_data:
   static_files:
   media_files:
+
+networks:
+  nginx_network:
+    driver: bridge
+  backend_network:
+    driver: bridge
