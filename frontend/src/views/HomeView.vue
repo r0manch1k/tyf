@@ -1,18 +1,19 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/media/logo.png" />
-    <HelloWorld msg="Welcome to Your Vue.js + TypeScript App" />
+  <div class="container-fluid position-relative d-flex p-0">
+    <!-- <LoadingCircle /> -->
+    <Sidebar />
+    <div class="content open">
+      <Header />
+      <WelcomeTitle />
+      <Footer />
+    </div>
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
-import HelloWorld from "@/components/HelloWorld.vue"; // @ is an alias to /src
-
-export default defineComponent({
-  name: "HomeView",
-  components: {
-    HelloWorld,
-  },
-});
+<script lang="ts" setup>
+import LoadingCircle from "@/components/LoadingCircle.vue";
+import Sidebar from "@/components/Sidebar.vue";
+import Header from "@/components/Header.vue";
+import WelcomeTitle from "@/components/WelcomeTitle.vue";
+import Footer from "@/components/Footer.vue";
 </script>

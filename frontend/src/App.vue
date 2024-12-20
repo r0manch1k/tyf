@@ -1,14 +1,20 @@
 <template>
-  <nav>
+  <!-- <nav>
     <router-link to="/">Home</router-link> |
     <router-link to="/about">About</router-link>
-  </nav>
+  </nav> -->
   <router-view />
 </template>
 
 <style>
-@import "@/assets/styles/bootstrap/css/bootstrap.css";
-@import "@/assets/styles/css/main.css";
+@import "@/assets/styles/css/bootstrap.min.css";
+@import "@/assets/styles/css/edit_profile.css";
+@import "@/assets/styles/css/post_add.css";
+@import "@/assets/styles/css/post_detail.css";
+@import "@/assets/styles/css/post_edit.css";
+@import "@/assets/styles/css/post.css";
+@import "@/assets/styles/css/profile.css";
+@import "@/assets/styles/css/style.css";
 
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
