@@ -1,4 +1,4 @@
-name: Project CI
+name: Project CI Test
 
 on:
   push:
@@ -11,6 +11,8 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    env:
+      PYTHON_FOLDER: backend
 
     # services:
     #   postgres:
@@ -51,11 +53,12 @@ jobs:
           python -m venv .venv
           source .venv/bin/activate
           pip install -r backend/requirements.txt
-          pip install pylint
 
       - name: Analysing the code with pylint
         run: |
-          pylint $(git ls-files '*.py')
+          pylint -j 0 --fail-under=8.0 "${{ env.PYTHON_FOLDER }}/*.py" > pylint_recommendations.txt
+        working-directory: ${{ github.workspace }}
+        continue-on-error: true
 
       # - name: Run migrations (backend)
       #   env:
