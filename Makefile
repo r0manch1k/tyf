@@ -39,6 +39,9 @@ build-prod:
 up-prod:
 	$(DOCKER_COMPOSE_PROD) up -d
 
+up-prod-logs:
+	$(DOCKER_COMPOSE_PROD) up
+
 down-prod:
 	$(DOCKER_COMPOSE_PROD) down
 
