@@ -8,6 +8,9 @@ build-dev:
 up-dev:
 	$(DOCKER_COMPOSE_DEV) up -d
 
+up-dev-logs:
+	$(DOCKER_COMPOSE_DEV) up
+
 down-dev:
 	$(DOCKER_COMPOSE_DEV) down
 
