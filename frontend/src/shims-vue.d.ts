@@ -19,3 +19,5 @@ declare module "@/assets/styles/bootstrap/js/bootstrap.bundle.js" {
   const value: any;
   export default value;
 }
+
+declare globalProperties;
