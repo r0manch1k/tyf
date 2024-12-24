@@ -1,19 +1,12 @@
 import { createApp } from "vue";
 import App from "./App.vue";
 import router from "./router";
-import store from "./store";
-import axios from "axios";
+import store from "./stores";
+import { Tabs, Tab } from "vue3-tabs-component";
 
-const app = createApp(App);
-const axiosInstance = axios.create({
-  baseURL: "https://localhost:8000/api",
-  timeout: 5000,
-  headers: {
-    "Content-Type": "application/json",
-  },
-});
-
-app.provide("$axios", axiosInstance);
-// app.config.globalProperties.$axios = axiosInstance;
-
-app.use(store).use(router).mount("#app");
+createApp(App)
+  .component("Tabs", Tabs)
+  .component("Tab", Tab)
+  .use(store)
+  .use(router)
+  .mount("#app");

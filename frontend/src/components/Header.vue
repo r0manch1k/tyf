@@ -1,5 +1,5 @@
 <template>
-  <nav
+  <!-- <nav
     class="navbar navbar-expand bg-secondary navbar-dark sticky-top px-4 py-0"
     style="
       background-color: var(--dark) !important;
@@ -32,20 +32,14 @@
     >
     <div class="navbar-nav align-items-center ms-0">
       <div class="nav-item dropdown">
-        {% if user.is_authenticated %}
-        <a
-          href="{% url 'profile' username=request.user.profile.username %}"
+        // TODO: Add image
+        <router-link
+          :to="{ name: 'profile', params: { username: 'string' } }"
           class="nav-link dropdown-toggle ms-0"
           data-bs-toggle="dropdown"
         >
-          <img
-            class="rounded-circle me-lg-0"
-            src="{{ user.profile.get_avatar }}"
-            alt=""
-            style="width: 30px; height: 30px"
-          />
-        </a>
-        {% else %}
+        </router-link>
+
         <a
           href="{% url 'login' %}"
           class="nav-link dropdown-toggle"
@@ -76,5 +70,12 @@
         </div>
       </div>
     </div>
-  </nav>
+  </nav> -->
+  <p style="color: white">FKLDJSKLFJSDKLJFKLSDJFJSDKLJFKDJFKLjskldj</p>
+  <router-link
+    :to="{ name: 'profile', params: { username: 'string' } }"
+    class="nav-link dropdown-toggle ms-0"
+    data-bs-toggle="dropdown"
+  >
+  </router-link>
 </template>

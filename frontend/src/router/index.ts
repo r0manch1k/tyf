@@ -1,17 +1,18 @@
 import { createRouter, createWebHistory } from "vue-router";
-import HomeView from "../views/HomeView.vue";
+import IndexView from "../views/IndexView.vue";
 import NotFoundView from "../views/NotFoundView.vue";
 import LoginView from "../views/Authorization/LoginView.vue";
 import RegisterView from "../views/Authorization/RegisterView.vue";
 import ResetPasswordView from "../views/Authorization/ResetPasswordView.vue";
 import SetPasswordView from "@/views/Authorization/SetPasswordView.vue";
 import VerificationView from "@/views/Authorization/VerificationView.vue";
+import ProfileView from "@/views/ProfileView.vue";
 
 const routes = [
   {
     path: "/",
-    name: "home",
-    component: HomeView,
+    name: "index",
+    component: IndexView,
   },
   {
     path: "/register",
@@ -49,6 +50,12 @@ const routes = [
     path: "/:pathMatch(.*)*",
     name: "not-found",
     component: NotFoundView,
+  },
+  {
+    path: "/:username",
+    name: "profile",
+    component: ProfileView,
+    props: true,
   },
 ];
 

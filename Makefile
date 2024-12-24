@@ -17,14 +17,20 @@ down-dev:
 migrate-dev:
 	$(DOCKER_COMPOSE_DEV) exec backend bash -c "cd backend && python manage.py migrate"
 
+migrate-app-dev:
+	$(DOCKER_COMPOSE_DEV) exec backend bash -c "cd backend && python manage.py migrate $(app)"
+
 superuser-dev:
 	$(DOCKER_COMPOSE_DEV) exec backend bash -c "cd backend && python manage.py createsuperuser"
 
 makemigrations-dev:
 	$(DOCKER_COMPOSE_DEV) exec backend bash -c "cd backend && python manage.py makemigrations"
 
+makemigrations-app-dev:
+	$(DOCKER_COMPOSE_DEV) exec backend bash -c "cd backend && python manage.py makemigrations $(app)"
+
 startapp-dev:
-	$(DOCKER_COMPOSE_DEV) exec backend bash -c "cd backend/apps && python ../manage.py startapp $(name)"
+	$(DOCKER_COMPOSE_DEV) exec backend bash -c "cd backend/apps && python ../manage.py startapp $(app)"
 
 clean-dev:
 	$(DOCKER_COMPOSE_DEV) down --rmi all
@@ -55,7 +61,7 @@ makemigrations-prod:
 	$(DOCKER_COMPOSE_PROD) exec backend bash -c "cd backend && python manage.py makemigrations"
 
 startapp-prod:
-	$(DOCKER_COMPOSE_PROD) exec backend bash -c "cd backend/apps && python ../manage.py startapp $(name)"
+	$(DOCKER_COMPOSE_PROD) exec backend bash -c "cd backend/apps && python ../manage.py startapp $(app)"
 
 clean-prod:
 	$(DOCKER_COMPOSE_PROD) down --rmi all

@@ -1,5 +1,5 @@
 <template>
-  <div class="container-fluid p-0 bottom-0 w-100">
+  <!-- <div class="container-fluid p-0 bottom-0 w-100">
     <div class="bg-dark rounded-top mt-4 p-0">
       <div
         class="container-fluid d-flex align-items-center justify-content-between p-4"
@@ -15,5 +15,6 @@
         </div>
       </div>
     </div>
-  </div>
+  </div> -->
+  <div></div>
 </template>
