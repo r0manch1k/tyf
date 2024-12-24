@@ -10,12 +10,14 @@ declare module "*.css" {
   export default value;
 }
 
-declare module "*.js" {
-  const value: js;
-  export default value;
-}
-
-declare module "axios" {
+declare module "@/assets/styles/js/main.js" {
   const value: any;
   export default value;
 }
+
+declare module "@/assets/styles/bootstrap/js/bootstrap.bundle.js" {
+  const value: any;
+  export default value;
+}
+
+declare globalProperties;
