@@ -29,7 +29,6 @@
           </h3>
         </div>
         <form id="otp-form" method="post" role="form">
-          {% csrf_token %}
           <div
             id="otp"
             class="inputs d-flex flex-row justify-content-center mt-2 mb-4"
@@ -98,7 +97,6 @@
           </button>
         </form>
         <form id="otp-resend-form" method="post" role="form">
-          {% csrf_token %}
           <input type="hidden" id="send-status" name="send-status" value="1" />
           <div class="text-center">
             <span
@@ -115,3 +113,9 @@
     </div>
   </div>
 </template>
+
+<script setup>
+import "@/assets/styles/js/otp.js";
+import "@/assets/styles/js/timer.js";
+</script>
+

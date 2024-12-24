@@ -35,12 +35,14 @@ const routes = [
     component: ResetPasswordView,
   },
   {
-    path: "/login/set_password/:uidb64/:token",
+    // path: "/login/set_password/:uid/:token",
+    path: "/login/set_password",
     name: "reset_password_confirm",
     component: SetPasswordView,
   },
   {
-    path: "/verify/:uidb64/:token",
+    // path: "/verify/:uid/:token",
+    path: "/verify",
     name: "verification",
     component: VerificationView,
   },

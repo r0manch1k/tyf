@@ -1,22 +1,21 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from .serializer import ItemSerializer
+from .serializer import ProfileSerializer
 from .models import Profile
 
 
 @api_view(["GET"])
-def getAllProfiles(request):
+def AllProfiles(request):
     profiles = Profile.objects.all()
-    serializer = ItemSerializer(profiles, many=True)
+    serializer = ProfileSerializer(profiles, many=True)
     return Response(serializer.data)
 
 
 @api_view(["GET"])
-def getProfileByUsername(request, username):
+def ProfileByUsername(request, username):
     profile = Profile.objects.get(username=username)
-    serializer = ItemSerializer(profile, many=False)
+    serializer = ProfileSerializer(profile, many=False)
     return Response(serializer.data)
-
 
 
 # @api_view(["POST"])
