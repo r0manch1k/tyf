@@ -10,4 +10,9 @@ export default interface ProfileModel {
   date_joined: string;
   bio: string;
   avatar: string;
+  points: number;
+  awards: number;
+  telegram: string;
+  vkontakte: string;
+  thumbnail: string;
 }
