@@ -12,6 +12,8 @@ services:
     volumes:
       - static_files:/backend/staticfiles/
       - media_files:/backend/mediafiles/
+    env_file:
+      - ./prod/.env.prod
     depends_on:
       backend:
         condition: service_started

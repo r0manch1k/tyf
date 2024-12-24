@@ -1,7 +1,10 @@
 from django.urls import path
-from .views import getUsername, addItem
+from .views import *
 
 urlpatterns = [
-    path('get/', getUsername),
-    path('add/', addItem),
+    path("overview/", apiOverview),
+    path("login/", Login.as_view()),
+    path("register/", Register.as_view()),
+    path("verify-otp/", VerifyOTP.as_view()),
+    path("resend-otp/", ResendOTP.as_view()),
 ]
