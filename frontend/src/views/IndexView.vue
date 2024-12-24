@@ -1,10 +1,10 @@
 <template>
   <div class="container-fluid position-relative d-flex p-0">
     <!-- <LoadingCircle /> -->
-    <Sidebar />
+    <!-- <Sidebar /> -->
+    <!-- <WelcomeTitle /> -->
     <div class="content open">
       <Header />
-      <WelcomeTitle />
       <Footer />
     </div>
   </div>

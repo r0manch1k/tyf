@@ -3,8 +3,13 @@
     <router-link to="/">Home</router-link> |
     <router-link to="/about">About</router-link>
   </nav> -->
+  <!-- <IndexView /> -->
   <router-view />
 </template>
+
+<script setup>
+import IndexView from "@/views/IndexView.vue";
+</script>
 
 <style>
 @import "@/assets/styles/css/bootstrap.min.css";
