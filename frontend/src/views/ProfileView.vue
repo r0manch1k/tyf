@@ -5,7 +5,7 @@
         <!-- Profile -->
         <div class="col-md-3 text-center">
           <img
-            :src="profile.avatar"
+            :src="avatarUrl() || 'https://via.placeholder.com/150'"
             alt="avatar"
             class="img-fluid rounded-circle"
           />
@@ -29,38 +29,58 @@
           </div>
           <hr class="mt-3" />
           <ul class="list-unstyled d-flex flex-column fs-7">
-            <li v-for="(info, key) in stats" :key="key">
+            <li>
               <div class="d-flex align-items-center gap-1 mb-0">
-                <span class="badge bg-secondary">{{ info.count }}</span>
-                {{ info.label }}
-                <div class="avatars-block" v-if="info.avatars">
-                  <a v-for="(avatar, idx) in info.avatars" :key="idx" href="#">
-                    <img
-                      :src="avatar"
-                      alt="avatar"
-                      class="avatar reduce-margin-right"
-                    />
-                  </a>
-                </div>
+                <span class="badge bg-secondary">{{ profile.points }}</span>
+                Points
+              </div>
+            </li>
+            <li>
+              <div class="d-flex align-items-center gap-1 mb-0">
+                <span class="badge bg-secondary">{{ profile.awards }}</span>
+                Awards
               </div>
             </li>
           </ul>
         </div>
 
-        <!--Tabs  -->
+        <!-- Tabs -->
         <div class="col-md-9 fs-7">
-          <Tabs nav-item-class="nav-item" nav-item-active-class="nav-item-active" nav-item-link-class="nav-item-link" nav-class="tab-panels-wrapper"> 
+          <Tabs
+            nav-item-class="nav-item"
+            nav-item-active-class="nav-item-active"
+            nav-item-link-class="nav-item-link"
+            nav-class="tab-panels-wrapper"
+          >
             <Tab name="About" :selected="true">
               <div class="mt-4 text-start">
-                <p v-for="(value, key) in aboutInfo" :key="key">
-                  <em class="about-field">{{ key }}: </em>{{ value }}
+                <p v-if="profile.bio">
+                  <em class="about-field">Bio: </em>{{ profile.bio }}
+                </p>
+                <p v-if="profile.email">
+                  <em class="about-field">Email: </em>{{ profile.email }}
+                </p>
+                <p v-if="profile.date_of_birth">
+                  <em class="about-field">Date of Birth: </em
+                  >{{ profile.date_of_birth }}
+                </p>
+                <p v-if="profile.date_joined">
+                  <em class="about-field">Joined: </em
+                  >{{ new Date(profile.date_joined).toLocaleDateString() }}
+                </p>
+                <p v-if="profile.university">
+                  <em class="about-field">University: </em
+                  >{{ profile.university }}
+                </p>
+                <p v-if="profile.major">
+                  <em class="about-field">Major: </em>{{ profile.major }}
                 </p>
               </div>
             </Tab>
-            <Tab name="Posts" header-class="nav-item-class">
+            <Tab name="Posts">
               <div class="tab-pane">
                 <p
-                  v-if="!profile.posts.length"
+                  v-if="!profile.posts || !profile.posts.length"
                   class="text-secondary fs-7 mt-4 text-center"
                 >
                   {{ profile.username }} doesn't have any posts yet.
@@ -84,51 +104,25 @@
 
 <script setup lang="ts">
 import LoadingCircle from "@/components/LoadingCircle.vue";
-import { ref, reactive, defineProps, onMounted, computed } from "vue";
+import { ref, computed, defineProps, onMounted } from "vue";
 import { useStore } from "vuex";
+import { API_URL } from "@/config/apiConfig";
 
-const loading = ref(false);
+const loading = ref(true);
 
-// const props = defineProps({
-//   username: String,
-// });
-//
-// const store = useStore();
-//
-// const profile = computed(() => {
-//   return store.getters["profile/getProfileByUsername"](props.username);
-// });
-//
-// onMounted(async () => {
-//   await store.dispatch("profile/fetchProfileByUsername", props.username);
-//   loading.value = false;
-// });
-
-const profile = reactive({
-  avatar: "https://via.placeholder.com/150",
-  username: "test_user",
-  posts: [{ id: 1, content: "First post" }],
+const props = defineProps({
+  username: String,
 });
 
+const store = useStore();
+
+const profile = computed(() => {
+  return store.getters["profile/getProfileByUsername"](props.username);
+});
+
+// TODO: Implement follow/unfollow functionality
 const isAuthenticated = ref(true);
 const isFollowing = ref(false);
-const currentTab = ref("about");
-
-const stats = {
-  followers: { count: 10, label: "Followers", avatars: [] },
-  following: { count: 5, label: "Following", avatars: [] },
-  posts: { count: 1, label: "Posts" },
-};
-
-const aboutInfo = {
-  Username: profile.username,
-  Joined: "2024-01-01",
-};
-
-const tabs = [
-  { id: "about", label: "About" },
-  { id: "posts", label: "Posts" },
-];
 
 const toggleFollow = () => {
   isFollowing.value = !isFollowing.value;
@@ -137,6 +131,17 @@ const toggleFollow = () => {
 const login = () => {
   console.log("Redirect to login");
 };
+
+// idk maybe we should do it in another way
+const avatarUrl = () => {
+  return `${API_URL}${profile.value.avatar}`;
+}
+
+onMounted(async () => {
+  await store.dispatch("profile/fetchProfileByUsername", props.username);
+  console.log(profile.value);
+  loading.value = false;
+});
 </script>
 
 <style>
@@ -227,5 +232,4 @@ const login = () => {
 #posts-nav button.active {
   border-bottom: 1px solid var(--secondary-x-light);
 }
-
 </style>
