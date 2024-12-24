@@ -1,8 +1,8 @@
 from django.urls import path
-from .views import getAllProfiles, getProfileByUsername
+from .views import *
 
 urlpatterns = [
-    path('profiles/all', getAllProfiles),
-    path('profiles/<str:username>/', getProfileByUsername),
+    path("all/", AllProfiles),
+    path("<str:username>/", ProfileByUsername),
     # path('add/', addItem),
 ]
