@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", function (event) {
+document.addEventListener("DOMContentLoaded", function () {
   function OTPInput() {
     const inputs = document.querySelectorAll("#otp > *[id]");
 
@@ -35,8 +35,10 @@ document.addEventListener("DOMContentLoaded", function (event) {
       });
       inputs[i].addEventListener("paste", (event) => {
         inputs[i].value = "";
+        let data;
         data = event.clipboardData.getData("text/plain");
-        let text_len = data.length < inputs.length - i ? data.length : inputs.length - i;
+        let text_len =
+          data.length < inputs.length - i ? data.length : inputs.length - i;
 
         for (let j = 0; j < text_len; j++) {
           inputs[i + j].value = data[j].toUpperCase();

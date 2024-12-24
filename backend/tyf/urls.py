@@ -22,12 +22,12 @@ from django.conf import settings
 from django.conf.urls.static import static
 from rest_framework import routers
 
-
 router = routers.DefaultRouter()
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/", include("apps.users.urls")),
+    path("api/", include(router.urls)),
 ]
 
 if bool(settings.DEBUG):
