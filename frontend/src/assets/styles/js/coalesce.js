@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 const particleCount = 700;
 const particlePropCount = 9;
@@ -15,7 +15,7 @@ const noiseSteps = 2;
 const xOff = 0.0025;
 const yOff = 0.005;
 const zOff = 0.0005;
-const backgroundColor = 'hsla(60,50%,3%,1)';
+const backgroundColor = "hsla(60,50%,3%,1)";
 
 let container;
 let canvas;
@@ -32,10 +32,10 @@ let sizes;
 let hues;
 
 function setup() {
-	createCanvas();
+  createCanvas();
   resize();
   initParticles();
-	draw();
+  draw();
 }
 
 function initParticles() {
@@ -43,7 +43,7 @@ function initParticles() {
   particleProps = new Float32Array(particlePropsLength);
 
   let i;
-  
+
   for (i = 0; i < particlePropsLength; i += particlePropCount) {
     initParticle(i);
   }
@@ -75,7 +75,14 @@ function drawParticles() {
 }
 
 function updateParticle(i) {
-  let i2=1+i, i3=2+i, i4=3+i, i5=4+i, i6=5+i, i7=6+i, i8=7+i, i9=8+i;
+  let i2 = 1 + i,
+    i3 = 2 + i,
+    i4 = 3 + i,
+    i5 = 4 + i,
+    i6 = 5 + i,
+    i7 = 6 + i,
+    i8 = 7 + i,
+    i9 = 8 + i;
   let x, y, theta, vx, vy, life, ttl, speed, x2, y2, size, hue;
 
   x = particleProps[i];
@@ -105,10 +112,11 @@ function updateParticle(i) {
 }
 
 function drawParticle(x, y, theta, life, ttl, size, hue) {
-  let xRel = x - (0.5 * size), yRel = y - (0.5 * size);
-  
+  let xRel = x - 0.5 * size,
+    yRel = y - 0.5 * size;
+
   ctx.a.save();
-  ctx.a.lineCap = 'round';
+  ctx.a.lineCap = "round";
   ctx.a.lineWidth = 1;
   ctx.a.strokeStyle = `hsla(${hue},100%,60%,${fadeInOut(life, ttl)})`;
   ctx.a.beginPath();
@@ -121,37 +129,37 @@ function drawParticle(x, y, theta, life, ttl, size, hue) {
 }
 
 function createCanvas() {
-  container = document.querySelector('.content--canvas');
-	canvas = {
-		a: document.createElement('canvas'),
-		b: document.createElement('canvas')
-	};
-	canvas.b.style = `
+  container = document.querySelector(".content--canvas");
+  canvas = {
+    a: document.createElement("canvas"),
+    b: document.createElement("canvas"),
+  };
+  canvas.b.style = `
 		position: fixed;
 		top: 0;
 		left: 0;
 		width: 100%;
 		height: 100%;
 	`;
-	container.appendChild(canvas.b);
-	ctx = {
-		a: canvas.a.getContext('2d'),
-		b: canvas.b.getContext('2d')
+  container.appendChild(canvas.b);
+  ctx = {
+    a: canvas.a.getContext("2d"),
+    b: canvas.b.getContext("2d"),
   };
   center = [];
 }
 
 function resize() {
-	const { innerWidth, innerHeight } = window;
-	
-	canvas.a.width = innerWidth;
+  const { innerWidth, innerHeight } = window;
+
+  canvas.a.width = innerWidth;
   canvas.a.height = innerHeight;
 
   ctx.a.drawImage(canvas.b, 0, 0);
 
-	canvas.b.width = innerWidth;
+  canvas.b.width = innerWidth;
   canvas.b.height = innerHeight;
-  
+
   ctx.b.drawImage(canvas.a, 0, 0);
 
   center[0] = 0.5 * canvas.a.width;
@@ -160,21 +168,21 @@ function resize() {
 
 function renderGlow() {
   ctx.b.save();
-  ctx.b.filter = 'blur(8px) brightness(200%)';
-  ctx.b.globalCompositeOperation = 'lighter';
+  ctx.b.filter = "blur(8px) brightness(200%)";
+  ctx.b.globalCompositeOperation = "lighter";
   ctx.b.drawImage(canvas.a, 0, 0);
   ctx.b.restore();
 
   ctx.b.save();
-  ctx.b.filter = 'blur(4px) brightness(200%)';
-  ctx.b.globalCompositeOperation = 'lighter';
+  ctx.b.filter = "blur(4px) brightness(200%)";
+  ctx.b.globalCompositeOperation = "lighter";
   ctx.b.drawImage(canvas.a, 0, 0);
   ctx.b.restore();
 }
 
 function render() {
   ctx.b.save();
-  ctx.b.globalCompositeOperation = 'lighter';
+  ctx.b.globalCompositeOperation = "lighter";
   ctx.b.drawImage(canvas.a, 0, 0);
   ctx.b.restore();
 }
@@ -191,8 +199,8 @@ function draw() {
   renderGlow();
   render();
 
-	window.requestAnimationFrame(draw);
+  window.requestAnimationFrame(draw);
 }
 
-window.addEventListener('load', setup);
-window.addEventListener('resize', resize);
+window.addEventListener("load", setup);
+window.addEventListener("resize", resize);

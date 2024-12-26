@@ -8,7 +8,7 @@ from django.core.validators import RegexValidator
 from random_username.generate import generate_username
 from apps.registry.models import Major, University
 from tyf import settings
-from apps.utils.mediaTools import generate_media_path
+from apps.utils.media_tools import generate_media_path
 
 
 validator_telegram = RegexValidator(

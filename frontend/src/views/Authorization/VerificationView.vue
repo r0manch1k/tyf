@@ -118,4 +118,3 @@
 import "@/assets/styles/js/otp.js";
 import "@/assets/styles/js/timer.js";
 </script>
-

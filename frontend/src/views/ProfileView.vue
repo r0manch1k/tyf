@@ -135,11 +135,10 @@ const login = () => {
 // idk maybe we should do it in another way
 const avatarUrl = () => {
   return `${API_URL}${profile.value.avatar}`;
-}
+};
 
 onMounted(async () => {
   await store.dispatch("profile/fetchProfileByUsername", props.username);
-  console.log(profile.value);
   loading.value = false;
 });
 </script>
