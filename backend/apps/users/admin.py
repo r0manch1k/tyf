@@ -1,6 +1,5 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-from random_username.generate import generate_username
 
 from .forms import UserChangeForm, UserCreationForm
 from .models import User
@@ -12,6 +11,7 @@ class UserAdmin(BaseUserAdmin):
 
     list_display = [
         "email",
+        "otp",
         "is_staff",
         "is_active",
     ]
@@ -30,6 +30,7 @@ class UserAdmin(BaseUserAdmin):
                 "classes": ["wide"],
                 "fields": [
                     "email",
+                    "otp",
                     "password1",
                     "password2",
                     "is_staff",
@@ -57,4 +58,3 @@ class UserAdmin(BaseUserAdmin):
 
 
 admin.site.register(User, UserAdmin)
-

@@ -1,9 +1,9 @@
 import { createRouter, createWebHistory } from "vue-router";
-import IndexView from "../views/IndexView.vue";
-import NotFoundView from "../views/NotFoundView.vue";
-import LoginView from "../views/Authorization/LoginView.vue";
-import RegisterView from "../views/Authorization/RegisterView.vue";
-import ResetPasswordView from "../views/Authorization/ResetPasswordView.vue";
+import HomeView from "@/views/HomeView.vue";
+import NotFoundView from "@/views/NotFoundView.vue";
+import LoginView from "@/views/Authorization/LoginView.vue";
+import RegisterView from "@/views/Authorization/RegisterView.vue";
+import ResetPasswordView from "@/views/Authorization/ResetPasswordView.vue";
 import SetPasswordView from "@/views/Authorization/SetPasswordView.vue";
 import VerificationView from "@/views/Authorization/VerificationView.vue";
 import ProfileView from "@/views/ProfileView.vue";
@@ -11,8 +11,8 @@ import ProfileView from "@/views/ProfileView.vue";
 const routes = [
   {
     path: "/",
-    name: "index",
-    component: IndexView,
+    name: "home",
+    component: HomeView,
   },
   {
     path: "/register",

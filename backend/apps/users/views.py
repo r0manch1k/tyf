@@ -24,7 +24,7 @@ from rest_framework_simplejwt.tokens import RefreshToken, AccessToken, TokenErro
 
 User = get_user_model()
 
-from apps.utils.otpTools import (
+from apps.utils.otp_tools import (
     generateOTP,
     sendEmail,
 )

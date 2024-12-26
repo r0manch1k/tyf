@@ -73,7 +73,7 @@
   </nav> -->
   <p style="color: white">FKLDJSKLFJSDKLJFKLSDJFJSDKLJFKDJFKLjskldj</p>
   <router-link
-    :to="{ name: 'profile', params: { username: 'string' } }"
+    :to="{ name: 'profile', params: { username: 'contentBustard2' } }"
     class="nav-link dropdown-toggle ms-0"
     data-bs-toggle="dropdown"
   >

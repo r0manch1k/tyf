@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("countdown").innerHTML = ``;
 
     var m = Math.floor(remaining / 60);
-    var s = remaining % 60; 
+    var s = remaining % 60;
     m = m < 10 ? "0" + m : m;
     s = s < 10 ? "0" + s : s;
     document.getElementById("countdown").innerHTML = `Resend code in ${m}:${s}`;
