@@ -1,6 +1,6 @@
 <template>
   <div v-if="!loading">
-    <div class="min-vh-100 p-5">
+    <div class="p-5">
       <div class="row">
         <!-- Profile -->
         <div class="col-md-3 text-center">
@@ -131,6 +131,7 @@ const login = () => {
   console.log("Redirect to login");
 };
 
+// TODO: Fix header dissapearing on profile page load
 onMounted(async () => {
   await store.dispatch("profile/fetchProfileByUsername", props.username);
   loading.value = false;

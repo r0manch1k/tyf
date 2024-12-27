@@ -1,5 +1,5 @@
 <template>
-  <nav class="navbar navbar-expand bg-secondary sticky-top px-4 py-1">
+  <nav class="navbar navbar-expand bg-secondary px-4 py-1">
     <router-link :to="{ name: 'home' }" class="navbar-brand me-4">
       <img class="logo" src="@/assets/media/logo.svg" alt="tyf" />
     </router-link>
@@ -80,7 +80,6 @@ onMounted(async () => {
 });
 
 const defaultAvatarUrl = computed(() => {
-  console.log("fsdklkfsf", store.getters["profile/getDefaultAvatar"]);
   return store.getters["profile/getDefaultAvatar"];
 });
 </script>

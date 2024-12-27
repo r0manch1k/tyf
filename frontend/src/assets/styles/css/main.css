@@ -15,6 +15,12 @@
   --alert-hover: #cc0000;
 }
 
+html,
+body {
+  width: 100vw;
+  height: 100vh;
+}
+
 .bg-primary {
   background-color: var(--primary);
 }
