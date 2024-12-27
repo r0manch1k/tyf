@@ -6,7 +6,7 @@ from django.utils.text import get_valid_filename
 
 
 def generate_uuid(length=8, klass=None):
-    """Safely generate UUID given length and check if it's unique for the given class."""
+    """Safely generate UUID given length and check if it's unique for the given class (skips if None)."""
     UUID = str(uuid.uuid4())
     length = min(length, len(UUID))
     if klass:
@@ -19,7 +19,7 @@ def generate_media_path(instance, filename, key, remove_with_same_key, depth=3, 
     """
     Generate unique directory path for media files.
     'key' is a name of the field of the instance using for generating hash,
-    'remove_with_same_key' is a boolean value, if 'True' file with the same key will be deleted,
+    'remove_with_same_key' is a boolean value, if 'True' file with the same key will be deleted (otherwise it'll add a suffix),
     'depth' specifies the number of directories in the path,
     'step' specifies the number of characters in first (depth - 1) directories in path.
     """

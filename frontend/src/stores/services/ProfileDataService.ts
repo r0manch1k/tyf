@@ -2,6 +2,16 @@ import api from "@/stores/services/api";
 import ProfileModel from "@/models/ProfileModel";
 
 class ProfileDataService {
+  async getStatic(): Promise<string> {
+    let data: { data: string } = { data: "" };
+    // TODO: If you need more static data except avatar, i think it's better to create a new store module for static data
+    await api
+      .get("/profiles/avatar/")
+      .then((response: { data: string }) => (data = response))
+      .catch((error: unknown) => console.error(error));
+    return data.data;
+  }
+
   async getAllProfiles(): Promise<ProfileModel[]> {
     let data: { data: ProfileModel[] } = { data: [] as ProfileModel[] };
     await api

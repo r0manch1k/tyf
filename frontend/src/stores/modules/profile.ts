@@ -4,6 +4,7 @@ import ProfileDataService from "@/stores/services/ProfileDataService";
 
 class State {
   cachedProfiles: { [key: string]: ProfileModel } = {};
+  static: { [key: string]: unknown } = {};
 }
 
 const getters: GetterTree<State, unknown> = {
@@ -18,11 +19,17 @@ const getters: GetterTree<State, unknown> = {
     );
     return profilesArray.slice(0, value);
   },
+  getDefaultAvatar: (state) => {
+    return state.static.avatar;
+  },
 };
 
 const mutations: MutationTree<State> = {
   setCachedProfiles: (state, payload) => {
     state.cachedProfiles = payload;
+  },
+  setStatic: (state, payload) => {
+    state.static = payload;
   },
 };
 
@@ -37,6 +44,10 @@ const actions: ActionTree<State, unknown> = {
   fetchRecentProfiles: async ({ commit }) => {
     const data = await ProfileDataService.getRecentProfiles();
     commit("setCachedProfiles", data);
+  },
+  fetchStatic: async ({ commit }) => {
+    const data = await ProfileDataService.getStatic();
+    commit("setStatic", data);
   },
 };
 

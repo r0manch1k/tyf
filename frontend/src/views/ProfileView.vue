@@ -5,7 +5,7 @@
         <!-- Profile -->
         <div class="col-md-3 text-center">
           <img
-            :src="avatarUrl() || 'https://via.placeholder.com/150'"
+            :src="profile.avatar"
             alt="avatar"
             class="img-fluid rounded-circle"
           />
@@ -106,7 +106,6 @@
 import LoadingCircle from "@/components/LoadingCircle.vue";
 import { ref, computed, defineProps, onMounted } from "vue";
 import { useStore } from "vuex";
-import { API_URL } from "@/config/apiConfig";
 
 const loading = ref(true);
 
@@ -130,11 +129,6 @@ const toggleFollow = () => {
 
 const login = () => {
   console.log("Redirect to login");
-};
-
-// idk maybe we should do it in another way
-const avatarUrl = () => {
-  return `${API_URL}${profile.value.avatar}`;
 };
 
 onMounted(async () => {

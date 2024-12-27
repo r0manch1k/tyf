@@ -1,10 +1,12 @@
+<!-- TODO: ADD id="search-input" -->
 <template>
-  <div
-    class="sidebar pe-0 pb-3 border border-2 open"
+  <!-- <div
+    class="offcanvas pe-0 pb-3 border border-2 open"
     style="
       border-right: 0.1px solid var(--secondary) !important;
       background-color: var(--dark) !important;
     "
+    id="offcanvas"
   >
     <nav
       id="sidebar-nav"
@@ -20,13 +22,12 @@
         Just relax and enjoy another hour of free studying with
         <em>Tell Your Friends!</em>
       </p>
-      <!-- TODO: ADD id="search-input" -->
       <input
-        id="termin-search"
-        type="text"
-        class="form-control bg-transparent border-0 mb-4 ms-3 me-4"
-        placeholder="Search..."
-        style="
+      id="termin-search"
+      type="text"
+      class="form-control bg-transparent border-0 mb-4 ms-3 me-4"
+      placeholder="Search..."
+      style="
           border: 0.1px solid var(--primary) !important;
           border-top: 0 !important;
           border-left: 0 !important;
@@ -38,21 +39,21 @@
           font-size: smaller !important;
           border-radius: 0.2em;
           box-shadow: none !important;
-        "
+          "
       />
       <div class="navbar-nav ps-3 w-100">
         <div class="nav-item dropdown">
           <a
-            href="#"
-            class="nav-link dropdown-toggle fs-6"
-            data-bs-toggle="dropdown"
-            >📚 Collections</a
+          href="#"
+          class="nav-link dropdown-toggle fs-6"
+          data-bs-toggle="dropdown"
+          >📚 Collections</a
           >
           <div
-            id="collections"
-            class="dropdown-menu bg-transparent border-0 pt-0"
+          id="collections"
+          class="dropdown-menu bg-transparent border-0 pt-0"
           >
-            {% for collection in collections %}
+          {% for collection in collections %}
             <a
               href="#"
               onclick="collection_help('{{ collection }}')"
@@ -110,6 +111,43 @@
         class="dropdown-item"
         >🛠️ Report a bug</a
       >
+    </div>
+  </div> -->
+  <div
+    class="offcanvas offcanvas-start"
+    tabindex="-1"
+    id="offcanvas"
+    aria-labelledby="offcanvasLabel"
+  >
+    <div class="offcanvas-header">
+      <h5 class="offcanvas-title" id="offcanvasExampleLabel">Offcanvas</h5>
+      <button
+        type="button"
+        class="btn-close"
+        data-bs-dismiss="offcanvas"
+        aria-label="Закрыть"
+      ></button>
+    </div>
+    <div class="offcanvas-body">
+      <div>
+        Какой-то текст в качестве заполнителя. В реальной жизни у вас могут быть
+        элементы, которые Вы выбрали. Нравится, текст, изображения, списки и т.
+        д.
+      </div>
+      <div class="dropdown mt-3">
+        <button
+          class="btn btn-secondary dropdown-toggle"
+          type="button"
+          data-bs-toggle="dropdown"
+        >
+          Кнопка раскрывающегося списка
+        </button>
+        <ul class="dropdown-menu">
+          <li><a class="dropdown-item" href="#">Действие</a></li>
+          <li><a class="dropdown-item" href="#">Другое действие</a></li>
+          <li><a class="dropdown-item" href="#">Что-то еще здесь</a></li>
+        </ul>
+      </div>
     </div>
   </div>
 </template>

@@ -44,20 +44,20 @@ const isHome = computed(
 
 <style>
 @import "@/assets/styles/css/bootstrap.min.css";
-@import "@/assets/styles/css/edit_profile.css";
-@import "@/assets/styles/css/post_add.css";
-@import "@/assets/styles/css/post_detail.css";
-@import "@/assets/styles/css/post_edit.css";
-@import "@/assets/styles/css/post.css";
-@import "@/assets/styles/css/profile.css";
-@import "@/assets/styles/css/style.css";
+@import "@/assets/styles/css/main.css";
 
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  font-family: "JetBrains Mono";
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+  height: 100%;
+  width: 100%;
+}
+
+a.router-link-exact-active {
+  color: var(--light) !important;
 }
 
 nav {

@@ -69,7 +69,4 @@ import PasswordField from "@/components/Authorization/Fields/PasswordField.vue";
 import RepeatPasswordField from "@/components/Authorization/Fields/RepeatPasswordField.vue";
 </script>
 
-<style scoped>
-@import "@/assets/styles/css/bootstrap.min.css";
-@import "@/assets/styles/css/style.css";
-</style>
+<style scoped></style>

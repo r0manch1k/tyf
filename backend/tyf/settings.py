@@ -8,8 +8,14 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 DEBUG = int(os.getenv("DEBUG", default=0))
 ALLOWED_HOSTS = ["*"]
 
+# TODO: Change to production URL
+API_ULR = "http://localhost:8000"
+
 STATIC_URL = "/static/"
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
+
+DEFAULT_USER_AVATAR = "/static/default_avatar_light.webp"
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "mediafiles")
