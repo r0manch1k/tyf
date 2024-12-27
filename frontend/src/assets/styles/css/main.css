@@ -1,5 +1,6 @@
 :root {
   --primary: #ccff00;
+  /* --primary: #78ff73; */
   --primary-hover: #a3cc00;
   --secondary: #333333;
   --secondary-light: #555555;
@@ -45,6 +46,11 @@ body {
   background-color: var(--dark);
 }
 
+.mx-6 {
+  margin-left: 6rem;
+  margin-right: 6rem;
+}
+
 .fs-7 {
   font-size: smaller;
 }
@@ -65,9 +71,12 @@ body {
   color: var(--light);
   margin: 0;
   font-weight: 400;
-  transition: 0.5s;
+  text-decoration: underline;
+  text-decoration-color: var(--light);
+  /* transition: 0.5s; */
 }
 
 .btn-0:hover {
   color: var(--primary);
+  text-decoration-color: var(--primary);
 }

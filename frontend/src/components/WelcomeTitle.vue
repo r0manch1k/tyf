@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="w-100 mb-0 main__content container">
+    <div class="w-100 main__content container">
       <div class="main_background"></div>
       <div class="row position-relative px-4">
         {% block content %}

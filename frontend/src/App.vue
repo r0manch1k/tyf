@@ -1,9 +1,11 @@
 <template>
   <!-- TODO: Change v-if condition for isHome views -->
-  <div v-if="isHome" id="main">
+  <div v-if="isHome" class="main">
     <Header />
     <Sidebar />
-    <router-view />
+    <div class="main__content bg-dark-light mx-5">
+      <router-view />
+    </div>
     <Footer />
   </div>
   <LoginView v-else-if="isLogin" />
@@ -11,7 +13,7 @@
   <ResetPasswordView v-else-if="isResetPassword" />
   <SetPasswordView v-else-if="isSetPassword" />
   <VerificationView v-else-if="isVerification" />
-  <Background />
+  <BackgroundGraphs />
 </template>
 
 <script setup>
@@ -23,7 +25,7 @@ import RegisterView from "@/views/Authorization/RegisterView.vue";
 import ResetPasswordView from "@/views/Authorization/ResetPasswordView.vue";
 import SetPasswordView from "@/views/Authorization/SetPasswordView.vue";
 import VerificationView from "@/views/Authorization/VerificationView.vue";
-import Background from "@/components/Background.vue";
+import BackgroundGraphs from "@/components/BackgroundGraphs.vue";
 import { computed } from "vue";
 import { useRoute } from "vue-router";
 
@@ -58,9 +60,9 @@ const isHome = computed(
   width: 100%;
 }
 
-/* TODO: Make this 100% height the right way */
-#main {
-  height: 100%;
+.main__content {
+  background-color: rgba(30, 30, 30, 0.8);
+  z-index: -50;
 }
 
 a.router-link-exact-active {
