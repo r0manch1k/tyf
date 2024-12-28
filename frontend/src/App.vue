@@ -7,10 +7,10 @@
   <router-view />
 </template>
 
-<script setup>
+<!-- <script setup>
 import IndexView from "@/views/IndexView.vue";
-</script>
-
+</script> -->
+<!-- 
 <style>
 @import "@/assets/styles/css/bootstrap.min.css";
 @import "@/assets/styles/css/edit_profile.css";
@@ -41,4 +41,4 @@ nav a {
 nav a.router-link-exact-active {
   color: #42b983;
 }
-</style>
+</style> -->

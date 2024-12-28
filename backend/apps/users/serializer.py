@@ -1,13 +1,52 @@
 from django.contrib import auth
+from django.core import exceptions
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
+from social_django.models import UserSocialAuth
 from rest_framework.exceptions import AuthenticationFailed
 from django.contrib.auth.password_validation import validate_password
-from django.contrib.auth import login as login_user, logout as logout_user
-from django.core.exceptions import ValidationError as DjangoValidationError
 
 
 User = get_user_model()
+
+
+class LoginSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(max_length=50, min_length=8, write_only=True)
+    email = serializers.CharField()
+
+    class Meta:
+        model = User
+        fields = ["password", "email"]
+
+    def validate(self, attrs):
+        email = attrs.get("email", "")
+        password = attrs.get("password", "")
+
+        if UserSocialAuth.objects.filter(user__email=email).exists():
+            raise serializers.ValidationError(
+                detail={
+                    "info": "User with this Email was registered using Google/Yandex. Please sign in using same method."
+                },
+            )
+
+        if not User.objects.filter(email=email).exists():
+            raise serializers.ValidationError(
+                detail={"info": "User with this Email doesn't exists."}
+            )
+        else:
+            if not User.objects.get(email=email).is_active:
+                raise serializers.ValidationError(
+                    detail={
+                        "info": "This user has not verified Email. Please Sign Up again."
+                    }
+                )
+
+        if auth.authenticate(email=email, password=password) is None:
+            raise serializers.ValidationError(
+                detail={"info": "Incorrect Password."}
+            )
+        
+        return attrs
 
 
 class RegisterSerializer(serializers.ModelSerializer):
@@ -32,14 +71,25 @@ class RegisterSerializer(serializers.ModelSerializer):
         }
 
     def validate(self, attrs):
-        if attrs["password1"] != attrs["password2"]:
+        email = attrs.get("email", "")
+        password1 = attrs.get("password1", "")
+        password2 = attrs.get("password2", "")
+
+        if UserSocialAuth.objects.filter(user__email=email).exists():
+            raise serializers.ValidationError(
+                detail={
+                    "info": "User with this Email was registered using Google/Yandex. Please sign in using same method."
+                },
+            )
+
+        if password1 != password2:
             raise serializers.ValidationError(
                 detail={"info": "Password doesn't match."}
             )
 
         try:
-            validate_password(attrs["password1"])
-        except DjangoValidationError as e:
+            validate_password(password1)
+        except exceptions.ValidationError as e:
             error = [str(error) for error in e.messages][0]
             raise serializers.ValidationError(detail={"info": error})
 
@@ -50,45 +100,13 @@ class RegisterSerializer(serializers.ModelSerializer):
         password = validated_data.pop("password1", None)
 
         instance = self.Meta.model(**validated_data)
+
         if instance.is_superuser:
             instance.is_active = True
         else:
             instance.is_active = False
+
         if password is not None:
             instance.set_password(password)
             instance.save()
             return instance
-
-
-class LoginSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(max_length=50, min_length=8, write_only=True)
-    email = serializers.CharField()
-
-    class Meta:
-        model = User
-        fields = ["password", "email"]
-
-    def validate(self, attrs):
-        email = attrs.get("email", "")
-        password = attrs.get("password", "")
-
-        if not User.objects.filter(email=email).exists():
-            raise AuthenticationFailed(
-                {"message": "User with this Email doesn't exists.", "payload": {}}
-            )
-        if not user.is_active:
-            raise AuthenticationFailed(
-                {
-                    "message": "This user has not verified Email. Please Sign Up again.",
-                    "payload": {},
-                }
-            )
-        
-        user = auth.authenticate(email=email, password=password)
-        if not user:
-            raise AuthenticationFailed(
-                {"message": "Incorrect Password.", "payload": {}}
-            )
-        
-        login_user(self.context["request"], user)
-        return {"message": "OK", "payload": {user.email}}

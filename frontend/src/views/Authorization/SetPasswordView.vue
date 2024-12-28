@@ -35,7 +35,6 @@
             <h3 class="fs-5">Enter new password</h3>
           </div>
           <form method="post" role="form">
-            {% csrf_token %}
             <div class="form-floating mb-2">
               <input
                 type="password"
@@ -52,7 +51,6 @@
                 <label style="color: rgb(188, 28, 28)">*</label></label
               >
             </div>
-            {{ form.help_text }}
             <div class="form-floating mb-4">
               <input
                 type="password"
@@ -69,7 +67,6 @@
                 <label style="color: rgb(188, 28, 28)">*</label></label
               >
             </div>
-            {{ form.label }}{{ form.help_text | safe }}
             <button
               type="submit"
               class="btn btn-primary py-3 w-100 mb-2"

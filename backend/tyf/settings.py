@@ -15,10 +15,10 @@ MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "mediafiles")
 
 
-SESSION_COOKIE_SECURE = True
+# SESSION_COOKIE_SECURE = True
 # SECURE_SSL_REDIRECT = True
 # SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
+# CSRF_COOKIE_SECURE = True
 
 CSRF_TRUSTED_ORIGINS = ["http://localhost:8080", "http://localhost:8000"]
 
@@ -33,7 +33,9 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "corsheaders",
     "rest_framework",
+    "rest_framework_api_key",
     "rest_framework_simplejwt",
+    "rest_framework_simplejwt.token_blacklist",
     "apps.users",
     "social_django",
     "apps.profiles",
@@ -125,16 +127,22 @@ AUTH_PASSWORD_VALIDATORS = [
 
 
 REST_FRAMEWORK = {
-    # "DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.IsAuthenticated"],
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework_api_key.permissions.HasAPIKey",
+    ],
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ],
 }
 
 SIMPLE_JWT = {
+    "ROTATE_REFRESH_TOKENS": True,
+    "BLACKLIST_AFTER_ROTATION": True,
     "ACCESS_TOKEN_LIFETIME": datetime.timedelta(minutes=1),
-    "REFRESH_TOKEN_LIFETIME": datetime.timedelta(days=1),
+    "REFRESH_TOKEN_LIFETIME": datetime.timedelta(days=7),
 }
+
+API_KEY_CUSTOM_HEADER = "HTTP_X_API_KEY"
 
 LANGUAGE_CODE = "en-us"
 TIME_ZONE = "Asia/Vladivostok"
@@ -154,3 +162,6 @@ EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+
+TYF_USER_VERIFICATION_KEY = "user_verification_{token}"
+TYF_USER_VERIFICATION_TIMEOUT = 15 * 60

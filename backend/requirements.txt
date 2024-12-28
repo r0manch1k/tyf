@@ -18,6 +18,7 @@ django-resized==1.0.3
 django-stubs==5.1.1
 django-stubs-ext==5.1.1
 djangorestframework==3.14.0
+djangorestframework-api-key==3.0.0
 djangorestframework-simplejwt==5.3.1
 flake8==7.1.1
 gunicorn==20.0.4
@@ -27,6 +28,7 @@ mccabe==0.7.0
 mypy==1.13.0
 mypy-extensions==1.0.0
 oauthlib==3.2.2
+packaging==24.2
 pillow==11.0.0
 prompt_toolkit==3.0.48
 psycopg2-binary==2.9.6
@@ -49,7 +51,8 @@ sqlparse==0.5.3
 types-PyYAML==6.0.12.20241221
 typing_extensions==4.12.2
 tzdata==2024.2
+ua-parser==1.0.0
+ua-parser-builtins==0.18.0.post1
 urllib3==2.3.0
 vine==5.1.0
 wcwidth==0.2.13
-pillow==11.0.0

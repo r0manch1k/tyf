@@ -47,15 +47,15 @@ const routes = [
     component: VerificationView,
   },
   {
-    path: "/:pathMatch(.*)*",
-    name: "not-found",
-    component: NotFoundView,
-  },
-  {
     path: "/:username",
     name: "profile",
     component: ProfileView,
     props: true,
+  },
+  {
+    path: "/:pathMatch(.*)*",
+    name: "not-found",
+    component: NotFoundView,
   },
 ];
 
