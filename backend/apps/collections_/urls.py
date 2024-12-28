@@ -1,8 +1,8 @@
-from .views import CategoryViewSet
+from .views import CollectionViewSet
 from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
-router.register(r"categories", CategoryViewSet, basename="categories")
+router.register(r"collections", CollectionViewSet, basename="collections")
 
 urlpatterns = []
 

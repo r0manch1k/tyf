@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     "social_django",
     "apps.profiles",
     "apps.registry",
+    "apps.categories",
+    "apps.collections_",
 ]
 
 

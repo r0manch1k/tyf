@@ -108,7 +108,7 @@ const profile = computed(() => {
 /* TODO: Suka u menya gorit chto nelza oveeride bootstrap styles, ya prosto viebal !important */
 
 .header__search-input {
-  border-radius: 0.5em !important;
+  border-radius: 0.2em !important;
 }
 
 .header__search-input:focus {

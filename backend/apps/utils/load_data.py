@@ -2,7 +2,7 @@ import csv
 import os.path
 
 from apps.registry.models import University, Major
-from main.models import Category, Collection
+from apps.categories.models import Category
 
 # python manage.py shell
 # exec(open("apps/utils/load_data.py").read())
