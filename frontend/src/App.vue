@@ -4,7 +4,8 @@
     <Header />
     <Sidebar />
     <div class="main__content bg-dark-light mx-5">
-      <router-view />
+      <NotFoundView v-if="isError" />
+      <router-view v-else />
     </div>
     <Footer />
   </div>
@@ -17,6 +18,7 @@
 </template>
 
 <script setup>
+import NotFoundView from "@/views/NotFoundView.vue";
 import Sidebar from "@/components/Sidebar.vue";
 import Header from "@/components/Header.vue";
 import Footer from "@/components/Footer.vue";
@@ -28,8 +30,14 @@ import VerificationView from "@/views/Authorization/VerificationView.vue";
 import BackgroundGraphs from "@/components/BackgroundGraphs.vue";
 import { computed } from "vue";
 import { useRoute } from "vue-router";
+import { useStore } from "vuex";
 
 const route = useRoute();
+const store = useStore();
+
+const isError = computed(() => {
+  return store.getters["main/getShowErrorPage"];
+});
 
 const isLogin = computed(() => route.name === "login");
 const isRegister = computed(() => route.name === "register");

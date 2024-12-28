@@ -120,7 +120,8 @@ class VerifyOTP(APIView):
         token = request.data.get("token")
         if not token:
             return Response(
-                {"message": "Token is required.", "payload": {}}, status=status.HTTP_400_BAD_REQUEST
+                {"message": "Token is required.", "payload": {}},
+                status=status.HTTP_400_BAD_REQUEST,
             )
 
         try:

@@ -83,12 +83,12 @@ class LoginSerializer(serializers.ModelSerializer):
                     "payload": {},
                 }
             )
-        
+
         user = auth.authenticate(email=email, password=password)
         if not user:
             raise AuthenticationFailed(
                 {"message": "Incorrect Password.", "payload": {}}
             )
-        
+
         login_user(self.context["request"], user)
         return {"message": "OK", "payload": {user.email}}

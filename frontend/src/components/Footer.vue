@@ -7,7 +7,12 @@
       Right Reserved.
     </div>
     <div class="footer__links d-flex align-items-center">
-      <a href="https://github.com/EmotionlessDev/tyf" class="text-muted">
+      <a
+        href="https://github.com/r0manch1k/tyf"
+        class="text-muted"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
         <i class="bi bi-github fs-4"></i>
       </a>
     </div>

@@ -3,7 +3,6 @@ from rest_framework import viewsets
 from rest_framework.decorators import action
 from django.shortcuts import get_object_or_404
 from .serializer import ProfileSerializer
-from tyf import settings
 from .models import Profile
 
 
@@ -20,12 +19,8 @@ class ProfileViewSet(viewsets.ViewSet):
         return Response(serializer.data)
 
     # TODO: recent_users or recent_profiles?
-    @action(detail=False, methods=["GET"], url_path='recent', url_name='recent')
+    @action(detail=False, methods=["GET"], url_path="recent", url_name="recent")
     def recent_users(self, request):
-        queryset = Profile.objects.all().order_by('-date_joined')[:5]
+        queryset = Profile.objects.all().order_by("-date_joined")[:5]
         serializer = ProfileSerializer(queryset, many=True)
         return Response(serializer.data)
-
-    @action(detail=False, methods=["GET"], url_path='avatar', url_name='avatar')
-    def default_avatar(self, request):
-        return Response({"avatar": settings.API_ULR + settings.DEFAULT_USER_AVATAR})

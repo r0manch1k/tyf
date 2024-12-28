@@ -10,7 +10,7 @@ class ProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Profile
-        fields = '__all__'
+        fields = "__all__"
 
     def get_avatar(self, obj):
         return settings.API_ULR + obj.get_avatar

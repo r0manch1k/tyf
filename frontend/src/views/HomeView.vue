@@ -1,7 +1,7 @@
 <template>
   <div class="content open">
     <div class="content__header">
-      <WelcomeTitle />
+      <TablistHome />
     </div>
     <div class="content__body">
       <div class="content__body__container">
@@ -14,7 +14,7 @@
 </template>
 
 <script lang="ts" setup>
-import WelcomeTitle from "@/components/WelcomeTitle.vue";
+import TablistHome from "@/components/TablistHome.vue";
 </script>
 
 <style scoped></style>

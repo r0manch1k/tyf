@@ -116,6 +116,7 @@ const props = defineProps({
 const store = useStore();
 
 const profile = computed(() => {
+  console.log("Getting profile", props.username);
   return store.getters["profile/getProfileByUsername"](props.username);
 });
 
