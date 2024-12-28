@@ -1,12 +1,12 @@
 import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "@/views/HomeView.vue";
-import NotFoundView from "@/views/NotFoundView.vue";
 import LoginView from "@/views/Authorization/LoginView.vue";
 import RegisterView from "@/views/Authorization/RegisterView.vue";
 import ResetPasswordView from "@/views/Authorization/ResetPasswordView.vue";
 import SetPasswordView from "@/views/Authorization/SetPasswordView.vue";
 import VerificationView from "@/views/Authorization/VerificationView.vue";
 import ProfileView from "@/views/ProfileView.vue";
+import store from "@/stores";
 
 const routes = [
   {
@@ -18,11 +18,6 @@ const routes = [
     path: "/register",
     name: "register",
     component: RegisterView,
-  },
-  {
-    path: "/login",
-    name: "login",
-    component: LoginView,
   },
   {
     path: "/login",
@@ -47,11 +42,6 @@ const routes = [
     component: VerificationView,
   },
   {
-    path: "/:pathMatch(.*)*",
-    name: "not-found",
-    component: NotFoundView,
-  },
-  {
     path: "/:username",
     name: "profile",
     component: ProfileView,
@@ -62,6 +52,17 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(),
   routes,
+});
+
+// router.beforeEach((to, from, next) => {
+//   store.commit("main/setShowErrorPage", false);
+//   next();
+// });
+
+// TODO: In all tutorials they use beforeEach, but here's the big problem i can explain you
+// So I use afterEach
+router.afterEach(() => {
+  store.commit("main/setShowErrorPage", false);
 });
 
 export default router;

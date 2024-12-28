@@ -1,7 +1,7 @@
 import { createApp } from "vue";
-import App from "./App.vue";
-import router from "./router";
-import store from "./stores";
+import App from "@/App.vue";
+import router from "@/router";
+import store from "@/stores";
 import { Tabs, Tab } from "vue3-tabs-component";
 
 createApp(App)

@@ -1,16 +1,20 @@
 <template>
-  <Sidebar />
   <div class="content open">
-    <Header />
-    <!-- <WelcomeTitle /> -->
-    <router-view />
-    <Footer />
+    <div class="content__header">
+      <TablistHome />
+    </div>
+    <div class="content__body">
+      <div class="content__body__container">
+        <div class="content__body__container__left">
+          <div class="content__body__container__left__text"></div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+import TablistHome from "@/components/TablistHome.vue";
+</script>
 
-<style scoped>
-@import "@/assets/styles/css/bootstrap.min.css";
-@import "@/assets/styles/css/style.css";
-</style>
+<style scoped></style>

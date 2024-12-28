@@ -1,9 +1,12 @@
 <template>
   <!-- TODO: Change v-if condition for isHome views -->
-  <div v-if="isHome">
+  <div v-if="isHome" class="main">
     <Header />
     <Sidebar />
-    <router-view />
+    <div class="main__content bg-dark-light mx-5">
+      <NotFoundView v-if="isError" />
+      <router-view v-else />
+    </div>
     <Footer />
   </div>
   <LoginView v-else-if="isLogin" />
@@ -11,9 +14,11 @@
   <ResetPasswordView v-else-if="isResetPassword" />
   <SetPasswordView v-else-if="isSetPassword" />
   <VerificationView v-else-if="isVerification" />
+  <BackgroundGraphs />
 </template>
 
 <script setup>
+import NotFoundView from "@/views/NotFoundView.vue";
 import Sidebar from "@/components/Sidebar.vue";
 import Header from "@/components/Header.vue";
 import Footer from "@/components/Footer.vue";
@@ -22,10 +27,17 @@ import RegisterView from "@/views/Authorization/RegisterView.vue";
 import ResetPasswordView from "@/views/Authorization/ResetPasswordView.vue";
 import SetPasswordView from "@/views/Authorization/SetPasswordView.vue";
 import VerificationView from "@/views/Authorization/VerificationView.vue";
+import BackgroundGraphs from "@/components/BackgroundGraphs.vue";
 import { computed } from "vue";
 import { useRoute } from "vue-router";
+import { useStore } from "vuex";
 
 const route = useRoute();
+const store = useStore();
+
+const isError = computed(() => {
+  return store.getters["main/getShowErrorPage"];
+});
 
 const isLogin = computed(() => route.name === "login");
 const isRegister = computed(() => route.name === "register");
@@ -44,20 +56,25 @@ const isHome = computed(
 
 <style>
 @import "@/assets/styles/css/bootstrap.min.css";
-@import "@/assets/styles/css/edit_profile.css";
-@import "@/assets/styles/css/post_add.css";
-@import "@/assets/styles/css/post_detail.css";
-@import "@/assets/styles/css/post_edit.css";
-@import "@/assets/styles/css/post.css";
-@import "@/assets/styles/css/profile.css";
-@import "@/assets/styles/css/style.css";
+@import "@/assets/styles/css/main.css";
 
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  font-family: "JetBrains Mono";
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+  height: 100%;
+  width: 100%;
+}
+
+.main__content {
+  background-color: rgba(30, 30, 30, 0.8);
+  z-index: -50;
+}
+
+a.router-link-exact-active {
+  color: var(--light) !important;
 }
 
 nav {

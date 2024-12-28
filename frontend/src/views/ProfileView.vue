@@ -1,11 +1,11 @@
 <template>
   <div v-if="!loading">
-    <div class="min-vh-100 p-5">
+    <div class="p-5">
       <div class="row">
         <!-- Profile -->
         <div class="col-md-3 text-center">
           <img
-            :src="avatarUrl() || 'https://via.placeholder.com/150'"
+            :src="profile.avatar"
             alt="avatar"
             class="img-fluid rounded-circle"
           />
@@ -106,7 +106,6 @@
 import LoadingCircle from "@/components/LoadingCircle.vue";
 import { ref, computed, defineProps, onMounted } from "vue";
 import { useStore } from "vuex";
-import { API_URL } from "@/config/apiConfig";
 
 const loading = ref(true);
 
@@ -117,6 +116,7 @@ const props = defineProps({
 const store = useStore();
 
 const profile = computed(() => {
+  console.log("Getting profile", props.username);
   return store.getters["profile/getProfileByUsername"](props.username);
 });
 
@@ -132,11 +132,7 @@ const login = () => {
   console.log("Redirect to login");
 };
 
-// idk maybe we should do it in another way
-const avatarUrl = () => {
-  return `${API_URL}${profile.value.avatar}`;
-};
-
+// TODO: Fix header dissapearing on profile page load
 onMounted(async () => {
   await store.dispatch("profile/fetchProfileByUsername", props.username);
   loading.value = false;

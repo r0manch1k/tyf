@@ -7,8 +7,8 @@ from django_resized import ResizedImageField
 from django.core.validators import RegexValidator
 from random_username.generate import generate_username
 from apps.registry.models import Major, University
-from tyf import settings
 from apps.utils.media_tools import generate_media_path
+from tyf import settings
 
 
 validator_telegram = RegexValidator(
@@ -57,7 +57,7 @@ class Profile(models.Model):
     bio = models.TextField(blank=True, null=True)
     avatar = ResizedImageField(
         crop=["middle", "center"],
-        size=[300, 300],
+        size=[350, 350],
         force_format="WEBP",
         quality=100,
         upload_to=partial(generate_media_path, key="email", remove_with_same_key=True),
@@ -90,9 +90,9 @@ class Profile(models.Model):
         update_fields=None,
         **kwargs,
     ):
-        if self.avatar != self.__original_mode:
-            self.__original_mode = self.avatar
-            # self.save_thumbnail()
+        # if self.avatar != self.__original_mode:
+        #     self.__original_mode = self.avatar
+        #     self.save_thumbnail()
 
         if not self.username:
             username = generate_username()[0]
@@ -125,9 +125,6 @@ class Profile(models.Model):
             return self.avatar.url
         return settings.DEFAULT_USER_AVATAR
 
-    def __str__(self):
-        return self.username
-
     @property
     def get_telegram(self):
         if self.telegram:
@@ -139,3 +136,6 @@ class Profile(models.Model):
         if self.vkontakte:
             return self.vkontakte.split("/")[-1]
         return None
+
+    def __str__(self):
+        return self.username

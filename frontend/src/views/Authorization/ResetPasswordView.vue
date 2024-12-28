@@ -59,7 +59,4 @@
 import EmailField from "@/components/Authorization/Fields/EmailField.vue";
 </script>
 
-<style scoped>
-@import "@/assets/styles/css/bootstrap.min.css";
-@import "@/assets/styles/css/style.css";
-</style>
+<style scoped></style>

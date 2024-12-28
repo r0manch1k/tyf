@@ -3,15 +3,15 @@ import type ProfileModel from "@/models/ProfileModel";
 import ProfileDataService from "@/stores/services/ProfileDataService";
 
 class State {
-  cachedProfiles: { [key: string]: ProfileModel } = {};
+  storedProfiles: { [key: string]: ProfileModel } = {};
 }
 
 const getters: GetterTree<State, unknown> = {
   getProfileByUsername: (state) => (username: string) => {
-    return state.cachedProfiles[username];
+    return state.storedProfiles[username];
   },
   getRecentProfiles: (state) => (value: number) => {
-    const profilesArray = Object.values(state.cachedProfiles);
+    const profilesArray = Object.values(state.storedProfiles);
     profilesArray.sort(
       (a, b) =>
         new Date(b.date_joined).getTime() - new Date(a.date_joined).getTime()
@@ -21,22 +21,22 @@ const getters: GetterTree<State, unknown> = {
 };
 
 const mutations: MutationTree<State> = {
-  setCachedProfiles: (state, payload) => {
-    state.cachedProfiles = payload;
+  setStoredProfiles: (state, payload) => {
+    state.storedProfiles = payload;
   },
 };
 
 const actions: ActionTree<State, unknown> = {
   fetchProfileByUsername: async ({ commit, state }, username: string) => {
     const data = await ProfileDataService.getProfileByUsername(username);
-    commit("setCachedProfiles", {
-      ...state.cachedProfiles,
+    commit("setStoredProfiles", {
+      ...state.storedProfiles,
       [username]: data,
     });
   },
   fetchRecentProfiles: async ({ commit }) => {
     const data = await ProfileDataService.getRecentProfiles();
-    commit("setCachedProfiles", data);
+    commit("setStoredProfiles", data);
   },
 };
 
