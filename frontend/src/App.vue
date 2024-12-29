@@ -3,7 +3,7 @@
   <div v-if="isHome" class="main">
     <Header />
     <Sidebar />
-    <div class="main__content bg-dark-light mx-5">
+    <div class="main__content bg-dark-light mx-0">
       <NotFoundView v-if="isError" />
       <router-view v-else />
     </div>
@@ -59,7 +59,7 @@ const isHome = computed(
 @import "@/assets/styles/css/main.css";
 
 #app {
-  font-family: "JetBrains Mono";
+  font-family: "Arial";
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
@@ -69,7 +69,11 @@ const isHome = computed(
 }
 
 .main__content {
-  background-color: rgba(30, 30, 30, 0.8);
+  background-color: rgba(30, 30, 35, 0.5);
+  /* background-color: rgba(51, 51, 51, 0.8); */
+  /* background: transparent; */
+  /* border-top: 1px solid var(--dark-light); */
+  /* border-bottom: 1px solid var(--dark-light); */
   z-index: -50;
 }
 

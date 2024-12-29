@@ -52,19 +52,19 @@ body {
 }
 
 .fs-7 {
-  font-size: smaller;
+  font-size: 0.9rem;
 }
 
 .fs-8 {
-  font-size: small;
+  font-size: smaller;
 }
 
 .fs-9 {
-  font-size: x-small;
+  font-size: small;
 }
 
 .fs-10 {
-  font-size: xx-small;
+  font-size: x-small;
 }
 
 .btn-0 {
