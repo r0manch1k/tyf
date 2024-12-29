@@ -23,6 +23,9 @@ migrate-app-dev:
 createsuperuser-dev:
 	$(DOCKER_COMPOSE_DEV) exec backend bash -c "cd backend && python manage.py createsuperuser"
 
+shell-dev:
+	$(DOCKER_COMPOSE_DEV) exec backend bash -c "cd backend && python manage.py shell"
+
 makemigrations-dev:
 	$(DOCKER_COMPOSE_DEV) exec backend bash -c "cd backend && python manage.py makemigrations"
 
@@ -56,6 +59,9 @@ migrate-prod:
 
 createsuperuser-prod:
 	$(DOCKER_COMPOSE_PROD) exec backend bash -c "cd backend && python manage.py createsuperuser"
+
+shell-prod:
+	$(DOCKER_COMPOSE_PROD) exec backend bash -c "cd backend && python manage.py shell"
 
 makemigrations-prod:
 	$(DOCKER_COMPOSE_PROD) exec backend bash -c "cd backend && python manage.py makemigrations"

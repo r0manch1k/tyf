@@ -3,14 +3,12 @@ import os.path
 
 from apps.registry.models import University, Major
 from apps.categories.models import Category
+from apps.collections_.models import Collection
 
-# python manage.py shell
+# make shell-dev
 # exec(open("apps/utils/load_data.py").read())
 
-# python backend/manage.py shell
-# exec(open("backend/apps/utils/load_data.py").read())
-
-with open(os.path.abspath("utils/data/universities_Russia.csv")) as f:
+with open(os.path.abspath("apps/utils/data/universities_Russia.csv")) as f:
     reader = csv.reader(f)
     for row in reader:
         if University.objects.filter(name=row[0]).exists():
@@ -21,7 +19,7 @@ with open(os.path.abspath("utils/data/universities_Russia.csv")) as f:
             country="Россия",
         )
 
-with open(os.path.abspath("utils/data/majors_Russia.csv")) as f:
+with open(os.path.abspath("apps/utils/data/majors_Russia.csv")) as f:
     reader = csv.reader(f)
     for row in reader:
         if Major.objects.filter(name=row[1]).exists():
@@ -31,7 +29,7 @@ with open(os.path.abspath("utils/data/majors_Russia.csv")) as f:
             code=row[1],
         )
 
-with open(os.path.abspath("utils/data/categories.csv")) as f:
+with open(os.path.abspath("apps/utils/data/categories.csv")) as f:
     reader = csv.reader(f)
     for row in reader:
         if Category.objects.filter(name=row[0]).exists():
@@ -41,7 +39,7 @@ with open(os.path.abspath("utils/data/categories.csv")) as f:
             description=row[1],
         )
 
-with open(os.path.abspath("utils/data/collections.csv")) as f:
+with open(os.path.abspath("apps/utils/data/collections.csv")) as f:
     reader = csv.reader(f)
     for row in reader:
         if Collection.objects.filter(name=row[0]).exists():

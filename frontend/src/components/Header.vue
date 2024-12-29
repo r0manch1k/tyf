@@ -54,7 +54,7 @@
             :src="profile.avatar"
             v-if="!loading && profile"
           />
-          <a v-else class="header__profile-img btn-0 fs-6">Log In</a>
+          <a v-else class="header__profile-img btn-0 fs-6">Login</a>
         </router-link>
 
         <div
@@ -63,13 +63,13 @@
           <router-link
             :to="{ name: 'profile', params: { username: 'lazyRaisins9' } }"
             class="header__profile-button dropdown-item"
-            ><i class="bi bi-person"></i> Profile</router-link
+            >Profile</router-link
           >
 
           <router-link
             :to="{ name: 'login' }"
             class="header__login-button dropdown-item"
-            ><i class="bi bi-box-arrow-in-right"></i> Log In</router-link
+            >Login</router-link
           >
 
           <!-- <router-link :to="{ name: 'login' }" class="header__logout-button dropdown-item"
@@ -108,7 +108,7 @@ const profile = computed(() => {
 /* TODO: Suka u menya gorit chto nelza oveeride bootstrap styles, ya prosto viebal !important */
 
 .header__search-input {
-  border-radius: 0.2em !important;
+  border-radius: 0.4em !important;
 }
 
 .header__search-input:focus {
