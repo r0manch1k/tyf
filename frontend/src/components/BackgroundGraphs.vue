@@ -21,6 +21,7 @@ canvas {
   position: fixed;
   top: 0;
   left: 0;
+  background-color: #232828;
   z-index: -100;
 }
 </style>

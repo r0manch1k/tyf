@@ -2,7 +2,7 @@
   <div
     class="footer container-fluid bg-secondary d-flex align-items-center justify-content-between p-4"
   >
-    <div class="footer__authors text-sm-start fs-7 text-muted">
+    <div class="footer__authors text-sm-start fs-6 text-muted">
       <router-link :to="{ name: 'home' }">Tell Your Friends</router-link>, All
       Right Reserved.
     </div>

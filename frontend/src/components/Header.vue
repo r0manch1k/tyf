@@ -11,7 +11,7 @@
       data-bs-target="#offcanvas"
       aria-controls="offcanvas"
     >
-      <i class="bi bi-list fs-3 text-light"></i>
+      <i class="bi bi-list fs-4 text-light"></i>
     </a>
 
     <div class="header__search ms-4 w-100">
@@ -102,7 +102,7 @@ const profile = computed(() => {
 
 <style>
 .logo {
-  height: 35px;
+  height: 30px;
 }
 
 /* TODO: Suka u menya gorit chto nelza oveeride bootstrap styles, ya prosto viebal !important */
