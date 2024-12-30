@@ -17,14 +17,14 @@
               :class="isFollowing ? 'action-checked' : 'action-unchecked'"
               @click="toggleFollow"
             >
-              {{ isFollowing ? "Unfollow" : "Follow" }}
+              {{ isFollowing ? "Отписаться" : "Подписаться" }}
             </button>
             <button
               v-else
               class="btn btn-outline-primary w-100 mt-2 action-unchecked"
               @click="login"
             >
-              Follow
+              Подписаться
             </button>
           </div>
           <hr class="mt-3" />
@@ -32,13 +32,13 @@
             <li>
               <div class="d-flex align-items-center gap-1 mb-0">
                 <span class="badge bg-secondary">{{ profile.points }}</span>
-                Points
+                Очки
               </div>
             </li>
             <li>
               <div class="d-flex align-items-center gap-1 mb-0">
                 <span class="badge bg-secondary">{{ profile.awards }}</span>
-                Awards
+                Награды
               </div>
             </li>
           </ul>
@@ -52,38 +52,38 @@
             nav-item-link-class="nav-item-link"
             nav-class="tab-panels-wrapper"
           >
-            <Tab name="About" :selected="true">
+            <Tab name="Общее" :selected="true">
               <div class="mt-4 text-start">
                 <p v-if="profile.bio">
-                  <em class="about-field">Bio: </em>{{ profile.bio }}
+                  <em class="about-field">О себе: </em>{{ profile.bio }}
                 </p>
                 <p v-if="profile.email">
-                  <em class="about-field">Email: </em>{{ profile.email }}
+                  <em class="about-field">Почта: </em>{{ profile.email }}
                 </p>
                 <p v-if="profile.date_of_birth">
-                  <em class="about-field">Date of Birth: </em
+                  <em class="about-field">Дата рождения: </em
                   >{{ profile.date_of_birth }}
                 </p>
                 <p v-if="profile.date_joined">
-                  <em class="about-field">Joined: </em
+                  <em class="about-field">Дата регистрации: </em
                   >{{ new Date(profile.date_joined).toLocaleDateString() }}
                 </p>
                 <p v-if="profile.university">
-                  <em class="about-field">University: </em
+                  <em class="about-field">Университет: </em
                   >{{ profile.university }}
                 </p>
                 <p v-if="profile.major">
-                  <em class="about-field">Major: </em>{{ profile.major }}
+                  <em class="about-field">Напрваление: </em>{{ profile.major }}
                 </p>
               </div>
             </Tab>
-            <Tab name="Posts">
+            <Tab name="Посты">
               <div class="tab-pane">
                 <p
                   v-if="!profile.posts || !profile.posts.length"
                   class="text-secondary fs-7 mt-4 text-center"
                 >
-                  {{ profile.username }} doesn't have any posts yet.
+                  {{ profile.username }} ничего не публиковал.
                 </p>
                 <ul v-else>
                   <li v-for="post in profile.posts" :key="post.id">

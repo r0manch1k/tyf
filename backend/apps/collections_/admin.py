@@ -14,3 +14,6 @@ class CollectionAdmin(admin.ModelAdmin):
 
     class Meta:
         model = Collection
+
+
+admin.site.register(Collection, CollectionAdmin)

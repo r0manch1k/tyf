@@ -9,7 +9,7 @@
           role="tab"
           aria-selected="true"
         >
-          All
+          Все
         </button>
       </li>
       <li v-for="tab in tablist" :key="tab.id" class="nav-item">

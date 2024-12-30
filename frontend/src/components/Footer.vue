@@ -1,10 +1,10 @@
 <template>
   <div
-    class="footer container-fluid bg-secondary d-flex align-items-center justify-content-between p-4"
+    class="footer container-fluid bg-secondary d-flex align-items-center justify-content-between p-3"
   >
-    <div class="footer__authors text-sm-start fs-6 text-muted">
-      <router-link :to="{ name: 'home' }">Tell Your Friends</router-link>, All
-      Right Reserved.
+    <div class="footer__authors text-sm-start fs-7 text-muted">
+      <router-link :to="{ name: 'home' }">Tell Your Friends</router-link>,
+      Правила.
     </div>
     <div class="footer__links d-flex align-items-center">
       <a
