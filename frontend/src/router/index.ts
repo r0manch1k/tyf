@@ -6,7 +6,10 @@ import ResetPasswordView from "@/views/Authorization/ResetPasswordView.vue";
 import SetPasswordView from "@/views/Authorization/SetPasswordView.vue";
 import VerificationView from "@/views/Authorization/VerificationView.vue";
 import ProfileView from "@/views/ProfileView.vue";
+import PostDetailView from "@/views/PostDetailView.vue";
 import store from "@/stores";
+
+// TODO: Change _ to - in router names
 
 const routes = [
   {
@@ -45,6 +48,12 @@ const routes = [
     path: "/:username",
     name: "profile",
     component: ProfileView,
+    props: true,
+  },
+  {
+    path: "/posts/:identifier",
+    name: "post-detail",
+    component: PostDetailView,
     props: true,
   },
 ];

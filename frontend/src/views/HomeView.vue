@@ -7,7 +7,10 @@
     <div class="home__body">
       <div class="home__body__container">
         <div class="home__body__container__left">
-          <div class="home__body__container__left__text"></div>
+          <div class="home__body__container__left__text">
+            <h1>Latest Posts</h1>
+            <Post v-for="post in posts" :key="post.identifier" :post="post" />
+          </div>
         </div>
       </div>
     </div>
@@ -18,7 +21,9 @@
 <script lang="ts" setup>
 import LoadingCircle from "@/components/LoadingCircle.vue";
 import Tablist from "@/components/Tablist.vue";
-import { ref, onMounted, computed } from "vue";
+import Post from "@/components/Post.vue";
+import PostDataService from "@/stores/services/PostDataService";
+import { ref, onMounted, computed, shallowRef } from "vue";
 import { useStore } from "vuex";
 
 const loading = ref(true);
@@ -27,11 +32,15 @@ const store = useStore();
 
 const categories = computed(() => store.getters["category/getCategories"]);
 const collections = computed(() => store.getters["collection/getCollections"]);
+import type PostModel from "@/models/PostModel";
+
+const posts = shallowRef<PostModel[]>([]);
 
 onMounted(async () => {
   await Promise.all([
     store.dispatch("category/fetchCategories"),
     store.dispatch("collection/fetchCollections"),
+    (posts.value = await PostDataService.getAllPosts()),
   ]).then(() => {
     loading.value = false;
   });

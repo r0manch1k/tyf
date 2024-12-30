@@ -18,7 +18,7 @@
       <input
         class="header__search-input form-control fs-6 bg-secondary-light border-0"
         type="search"
-        placeholder="Search"
+        placeholder="Поиск"
       />
     </div>
 
@@ -26,7 +26,7 @@
       :to="{ name: 'home' }"
       class="header__create-button btn-0 fs-6 ms-4"
       v-if="profile"
-      >Create</router-link
+      >Добавить пост</router-link
     >
 
     <!-- <router-link
@@ -45,7 +45,7 @@
     <div class="header__dropdown-container navbar-nav align-items-center ms-0">
       <div class="header__profile-container nav-item dropdown ms-4">
         <router-link
-          :to="{ name: 'profile', params: { username: 'lazyRaisins9' } }"
+          :to="{ name: 'profile', params: { username: 'somberCod0' } }"
           class="header__profile-img-container nav-link dropdown-toggle"
           data-bs-toggle="dropdown"
         >
@@ -54,22 +54,22 @@
             :src="profile.avatar"
             v-if="!loading && profile"
           />
-          <a v-else class="header__profile-img btn-0 fs-6">Login</a>
+          <a v-else class="header__profile-img btn-0 fs-6">Вход</a>
         </router-link>
 
         <div
           class="header__dropdown dropdown-menu dropdown-menu-dark dropdown-menu-end bg-secondary-light border-0 rounded-0 rounded-bottom fs-6"
         >
           <router-link
-            :to="{ name: 'profile', params: { username: 'lazyRaisins9' } }"
+            :to="{ name: 'profile', params: { username: 'somberCod0' } }"
             class="header__profile-button dropdown-item"
-            >Profile</router-link
+            >Профиль</router-link
           >
 
           <router-link
             :to="{ name: 'login' }"
             class="header__login-button dropdown-item"
-            >Login</router-link
+            >Вход</router-link
           >
 
           <!-- <router-link :to="{ name: 'login' }" class="header__logout-button dropdown-item"
@@ -141,5 +141,9 @@ input[type="search"]::-webkit-search-cancel-button {
 .header__profile-img {
   width: 30px !important;
   height: 30px !important;
+}
+
+.header__create-button {
+  white-space: nowrap;
 }
 </style>
