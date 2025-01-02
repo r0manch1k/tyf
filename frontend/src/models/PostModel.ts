@@ -19,4 +19,7 @@ export default interface PostModel {
   updated_at: string;
   author: ProfileModel;
   bookmarks: number;
+  description: string;
+  filetypes: string[];
+  thumbnail: string;
 }

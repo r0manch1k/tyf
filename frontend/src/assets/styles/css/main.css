@@ -14,12 +14,25 @@
   --shadow: #767676;
   --alert: #ff0000;
   --alert-hover: #cc0000;
+  --text-color: #ccff00;
 }
 
 html,
 body {
   width: 100vw;
   height: 100vh;
+}
+
+.text-secondary {
+  color: var(--secondary);
+}
+
+.text-secondary-light {
+  color: var(--secondary-light);
+}
+
+.text-secondary-x-light {
+  color: var(--secondary-x-light);
 }
 
 .bg-primary {
@@ -73,10 +86,19 @@ body {
   font-weight: 400;
   text-decoration: underline;
   text-decoration-color: var(--light);
-  /* transition: 0.5s; */
 }
 
 .btn-0:hover {
   color: var(--primary);
   text-decoration-color: var(--primary);
+}
+
+.btn-1 {
+  color: var(--light);
+  margin: 0;
+  font-weight: 400;
+}
+
+.btn-1:hover {
+  color: var(--primary);
 }

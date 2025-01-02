@@ -7,6 +7,20 @@ class ProfileSerializer(serializers.ModelSerializer):
     avatar = serializers.SerializerMethodField()
     telegram_alias = serializers.SerializerMethodField()
     vkontakte_alias = serializers.SerializerMethodField()
+    date_joined = serializers.DateTimeField(
+        format="%Y-%m-%d %H:%M:%S",
+        input_formats=[
+            "%d.%m.%Y",
+            "iso-8601",
+        ],
+    )
+    date_of_birth = serializers.DateField(
+        format="%Y-%m-%d",
+        input_formats=[
+            "%d.%m.%Y",
+            "iso-8601",
+        ],
+    )
 
     class Meta:
         model = Profile
