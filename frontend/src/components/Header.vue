@@ -24,20 +24,20 @@
 
     <router-link
       :to="{ name: 'home' }"
-      class="header__create-button btn-0 fs-6 ms-4"
+      class="header__create-button btn-light fs-6 ms-4"
       v-if="profile"
       >Добавить пост</router-link
     >
 
     <!-- <router-link
       :to="{ name: 'home' }"
-      class="header__notifications-button btn-0 fs-6 ms-4"
+      class="header__notifications-button btn-light fs-6 ms-4"
       >Notifications(10)</router-link
     > -->
 
     <a
       href="notifications"
-      class="header__notifications-button btn-0 fs-5 ms-4"
+      class="header__notifications-button btn-light fs-5 ms-4"
       v-if="profile"
       ><i class="bi bi-bell"></i
     ></a>
@@ -54,7 +54,7 @@
             :src="profile.avatar"
             v-if="!loading && profile"
           />
-          <a v-else class="header__profile-img btn-0 fs-6">Вход</a>
+          <a v-else class="header__profile-img btn-light fs-6">Вход</a>
         </router-link>
 
         <div

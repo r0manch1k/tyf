@@ -49,6 +49,17 @@ ul {
   overflow-y: auto;
   scrollbar-width: none;
   -ms-overflow-style: none;
+
+  /* --mask: linear-gradient(
+      to Right,
+      rgba(0, 0, 0, 1) 0,
+      rgba(0, 0, 0, 1) 95%,
+      rgba(0, 0, 0, 0) 99%,
+      rgba(0, 0, 0, 0) 0
+    )
+    100% 50% / 100% 100% repeat-x;
+  -webkit-mask: var(--mask);
+  mask: var(--mask); */
 }
 
 .nav {
