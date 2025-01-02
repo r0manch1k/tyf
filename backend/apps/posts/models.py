@@ -1,9 +1,11 @@
 import os
 import markdown
+from functools import partial
 from django.db import models
 from django.contrib.contenttypes.fields import GenericRelation
 from mdeditor.fields import MDTextField
-from apps.utils.media_tools import generate_uuid
+from django_resized import ResizedImageField
+from apps.utils.media_tools import generate_uuid, generate_media_path
 
 # from apps.comments.models import Comment
 from apps.media.models import Media
@@ -25,6 +27,19 @@ class Post(models.Model):
     author = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="posts")
     title = models.CharField(max_length=255)
     content = MDTextField()
+    description = models.TextField()
+    thumbnail = ResizedImageField(
+        crop=["middle", "center"],
+        size=[650, 350],
+        quality=100,
+        upload_to=partial(
+            generate_media_path, key="identifier", remove_with_same_key=True
+        ),
+        force_format="WEBP",
+        blank=True,
+        null=True,
+        verbose_name="Thumbnail",
+    )
     stars = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
