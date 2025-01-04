@@ -84,12 +84,14 @@ body {
   color: var(--light);
   margin: 0;
   font-weight: 400;
+  background: transparent;
   text-decoration: underline;
   text-decoration-color: var(--light);
 }
 
 .btn-light:hover {
   color: var(--primary);
+  background: transparent;
   text-decoration-color: var(--primary);
 }
 

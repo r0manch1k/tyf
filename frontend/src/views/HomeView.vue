@@ -22,7 +22,7 @@
 import LoadingCircle from "@/components/LoadingCircle.vue";
 import Tablist from "@/components/Tablist.vue";
 import Post from "@/components/Post.vue";
-import PostDataService from "@/stores/services/PostDataService";
+import PostDataService from "@/services/PostDataService";
 import type PostModel from "@/models/PostModel";
 import type CategoryModel from "@/models/CategoryModel";
 import type CollectionModel from "@/models/CollectionModel";

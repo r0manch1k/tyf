@@ -1,6 +1,6 @@
 import { GetterTree, MutationTree, ActionTree } from "vuex";
 import type CategoryModel from "@/models/CategoryModel";
-import CategoryDataService from "@/stores/services/CategoryDataService";
+import CategoryDataService from "@/services/CategoryDataService";
 
 class State {
   storedCategories: CategoryModel[] = [];
