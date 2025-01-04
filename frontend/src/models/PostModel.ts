@@ -8,7 +8,7 @@ export default interface PostModel {
   category: CategoryModel;
   collections: CollectionModel[];
   tags: TagModel[];
-  media: number;
+  media: string[];
   comments: number;
   active: boolean;
   title: string;

@@ -80,25 +80,27 @@ body {
   font-size: x-small;
 }
 
-.btn-0 {
+.btn-light {
   color: var(--light);
   margin: 0;
   font-weight: 400;
+  background: transparent;
   text-decoration: underline;
   text-decoration-color: var(--light);
 }
 
-.btn-0:hover {
+.btn-light:hover {
   color: var(--primary);
+  background: transparent;
   text-decoration-color: var(--primary);
 }
 
-.btn-1 {
-  color: var(--light);
+.btn-secondary-x-light {
+  color: var(--secondary-x-light);
   margin: 0;
   font-weight: 400;
 }
 
-.btn-1:hover {
-  color: var(--primary);
+.btn-secondary-x-light:hover {
+  color: var(--secondary-light);
 }

@@ -7,6 +7,7 @@ import SetPasswordView from "@/views/Authorization/SetPasswordView.vue";
 import VerificationView from "@/views/Authorization/VerificationView.vue";
 import ProfileView from "@/views/ProfileView.vue";
 import PostDetailView from "@/views/PostDetailView.vue";
+import PostCreateView from "@/views/PostCreateView.vue";
 import store from "@/stores";
 
 // TODO: Change _ to - in router names
@@ -49,6 +50,11 @@ const routes = [
     name: "profile",
     component: ProfileView,
     props: true,
+  },
+  {
+    path: "/posts/new",
+    name: "post-create",
+    component: PostCreateView,
   },
   {
     path: "/posts/:identifier",

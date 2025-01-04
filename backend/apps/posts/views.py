@@ -17,3 +17,9 @@ class PostViewSet(viewsets.ViewSet):
         post = get_object_or_404(queryset, identifier=pk)
         serializer = PostSerializer(post)
         return Response(serializer.data)
+
+    def create(self, request):
+        serializer = PostSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=201)

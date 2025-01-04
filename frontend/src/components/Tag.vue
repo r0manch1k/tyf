@@ -1,7 +1,7 @@
 <template>
   <router-link :to="{ name: 'home' }" class="tag">
     <span class="tag__container" :style="'background-color: ' + tag.color">
-      <span class="tag__content fs-7">{{ tag.name }}</span>
+      <span class="tag__content fs-8">{{ tag.name }}</span>
     </span>
   </router-link>
 </template>
@@ -19,9 +19,9 @@ const props = defineProps({
 </script>
 
 <style scoped>
-.tag__container {
+/* .tag__container {
   display: inline-block !important;
-}
+} */
 .tag__content {
   filter: invert(1) !important;
   display: inline-block !important;

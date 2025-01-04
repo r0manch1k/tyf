@@ -17,13 +17,14 @@
             style="width: 40px; height: 40px"
           />
         </router-link>
-        <div class="d-flex flex-column align-items-center gap-0">
+        <div class="d-flex flex-column">
           <router-link
             :to="{
               name: 'profile',
               params: { username: post.author.username },
             }"
-            class="btn-1 fs-6"
+            class="btn-1 fs-6 fw-bold"
+            style="height: 20px"
           >
             {{ post.author.username }}
           </router-link>
@@ -32,14 +33,11 @@
               name: 'post-detail',
               params: { identifier: post.identifier },
             }"
-            class="text-secondary-x-light fs-6"
+            class="btn-secondary-x-light fs-7"
           >
-            <time :datetime="post.created_at">{{ created_at }}</time>
+            {{ created_at }}
           </router-link>
         </div>
-      </div>
-      <div class="d-flex flex-row gap-2" v-if="post.tags">
-        <Tag v-for="tag in post.tags" :key="tag.id" :tag="tag" />
       </div>
     </div>
 
@@ -50,23 +48,50 @@
           params: { identifier: post.identifier },
         }"
       >
-        <h5 class="card-title text-light">{{ post.title }}</h5>
+        <h5 class="card-title text-light m-0">{{ post.title }}</h5>
       </router-link>
+      <div class="d-flex flex-column">
+        <div class="d-flex flex-row align-items-center gap-2">
+          <!-- <i class="bi bi-dash btn-secondary-x-light"></i> -->
+
+          <router-link
+            :to="{
+              name: 'post-detail',
+              params: { identifier: post.identifier },
+            }"
+            class="btn-secondary-x-light fst-italic"
+          >
+            {{ post.category.name }}
+          </router-link>
+        </div>
+
+        <div
+          class="d-flex flex-row align-items-center gap-2"
+          v-if="post.tags.length > 0"
+        >
+          <div class="d-flex flex-row gap-2">
+            <Tag v-for="tag in post.tags" :key="tag.id" :tag="tag" />
+          </div>
+        </div>
+      </div>
       <img
         v-if="post.thumbnail"
         :src="post.thumbnail"
-        class="card-img-top my-3"
+        class="card-img-top rounded-2 my-2"
         alt="post-thumbnail"
       />
-      <p class="card-text text-light">{{ post.description }}</p>
+      <p class="card-text text-light m-0">
+        {{ post.description }}
+        <span></span>
+      </p>
       <router-link
         :to="{
           name: 'post-detail',
           params: { identifier: post.identifier },
         }"
-        class="btn btn-primary"
+        class="btn-secondary-x-light fw-bold text-decoration-underline"
       >
-        Читать полностью
+        Читать далее...
       </router-link>
     </div>
     <div
@@ -78,7 +103,7 @@
             name: 'post-detail',
             params: { identifier: post.identifier },
           }"
-          class="d-flex align-items-center gap-2 fs-8 text-secondary-x-light"
+          class="d-flex align-items-center gap-2 fs-8 btn-secondary-x-light"
         >
           <i class="bi bi-chat-square-fill" style="margin-top: 0.1rem"></i>
           <p class="m-0 p-0">{{ post.comments }}</p>
@@ -88,7 +113,7 @@
             name: 'post-detail',
             params: { identifier: post.identifier },
           }"
-          class="d-flex align-items-center gap-2 fs-9 text-secondary-x-light"
+          class="d-flex align-items-center gap-2 fs-9 btn-secondary-x-light"
         >
           <i class="bi bi-bookmark-fill"></i>
           <p class="m-0 p-0">{{ post.bookmarks }}</p>
@@ -96,15 +121,6 @@
       </div>
 
       <div class="d-flex align-items-center gap-2">
-        <router-link
-          :to="{
-            name: 'post-detail',
-            params: { identifier: post.identifier },
-          }"
-          class="text-secondary-x-light fs-7"
-        >
-          {{ post.category.name }}
-        </router-link>
         <router-link
           v-for="filetype in post.filetypes"
           :key="filetype"
@@ -143,6 +159,10 @@ const created_at = moment(props.post.created_at).fromNow();
 </script>
 
 <style scoped>
+.card {
+  border-radius: 0.4em !important;
+}
+
 .btn-primary {
   border-color: var(--primary);
   color: var(--primary);
