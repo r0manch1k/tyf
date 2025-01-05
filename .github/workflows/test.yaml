@@ -40,4 +40,4 @@ jobs:
         run: cd frontend && npm install
 
       - name: Run JavaScript linter
-        run: npm run lint
+        run: cd frontend && npm run lint
