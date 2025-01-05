@@ -67,7 +67,4 @@ import EmailField from "@/components/Authorization/Fields/EmailField.vue";
 import PasswordField from "@/components/Authorization/Fields/PasswordField.vue";
 </script>
 
-<style>
-@import "@/assets/styles/css/bootstrap.min.css";
-@import "@/assets/styles/css/style.css";
-</style>
+<style scoped></style>

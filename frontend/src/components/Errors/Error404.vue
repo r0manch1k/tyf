@@ -17,9 +17,7 @@
         </p>
         <router-link to="/">
           <a class="btn btn-primary rounded-pill py-3 px-5"
-            ><label style="color: var(--dark) !important"
-              >Go to Tell Your Friends</label
-            ></a
+            ><label style="color: var(--dark) !important">Go home</label></a
           >
         </router-link>
       </div>

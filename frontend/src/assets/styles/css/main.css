@@ -1,0 +1,106 @@
+:root {
+  --primary: #ccff00;
+  /* --primary: #78ff73; */
+  --primary-hover: #a3cc00;
+  --secondary: #333333;
+  --secondary-light: #555555;
+  --secondary-x-light: #777777;
+  --secondary-xx-light: #aaaaaa;
+  --thirdary: #7d80da;
+  --light: #f2f2f2;
+  --dark-light: #222222;
+  --dark: #111111;
+  --text-color: #f2f2f2;
+  --shadow: #767676;
+  --alert: #ff0000;
+  --alert-hover: #cc0000;
+  --text-color: #ccff00;
+}
+
+html,
+body {
+  width: 100vw;
+  height: 100vh;
+}
+
+.text-secondary {
+  color: var(--secondary);
+}
+
+.text-secondary-light {
+  color: var(--secondary-light);
+}
+
+.text-secondary-x-light {
+  color: var(--secondary-x-light);
+}
+
+.bg-primary {
+  background-color: var(--primary);
+}
+
+.bg-primary-hover {
+  background-color: var(--primary-hover);
+}
+
+.bg-secondary {
+  background-color: var(--secondary);
+}
+
+.bg-secondary-light {
+  background-color: var(--secondary-light);
+}
+
+.bg-dark-light {
+  background-color: var(--dark-light);
+}
+
+.bg-dark {
+  background-color: var(--dark);
+}
+
+.mx-6 {
+  margin-left: 6rem;
+  margin-right: 6rem;
+}
+
+.fs-7 {
+  font-size: 0.9rem;
+}
+
+.fs-8 {
+  font-size: smaller;
+}
+
+.fs-9 {
+  font-size: small;
+}
+
+.fs-10 {
+  font-size: x-small;
+}
+
+.btn-light {
+  color: var(--light);
+  margin: 0;
+  font-weight: 400;
+  background: transparent;
+  text-decoration: underline;
+  text-decoration-color: var(--light);
+}
+
+.btn-light:hover {
+  color: var(--primary);
+  background: transparent;
+  text-decoration-color: var(--primary);
+}
+
+.btn-secondary-x-light {
+  color: var(--secondary-x-light);
+  margin: 0;
+  font-weight: 400;
+}
+
+.btn-secondary-x-light:hover {
+  color: var(--secondary-light);
+}

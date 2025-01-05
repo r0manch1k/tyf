@@ -1,8 +1,9 @@
-from django.urls import path
-from .views import *
+from .views import ProfileViewSet
+from rest_framework.routers import DefaultRouter
 
-urlpatterns = [
-    path("all/", AllProfiles),
-    path("<str:username>/", ProfileByUsername),
-    # path('add/', addItem),
-]
+router = DefaultRouter()
+router.register(r"profiles", ProfileViewSet, basename="profile")
+
+urlpatterns = []
+
+urlpatterns += router.urls

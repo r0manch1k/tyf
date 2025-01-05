@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 const rayCount = 500;
 const rayPropCount = 8;
@@ -17,7 +17,7 @@ const noiseStrength = 100;
 const xOff = 0.0015;
 const yOff = 0.0015;
 const zOff = 0.0015;
-const backgroundColor = 'hsla(220,60%,3%,1)';
+const backgroundColor = "hsla(220,60%,3%,1)";
 
 let container;
 let canvas;
@@ -28,10 +28,10 @@ let simplex;
 let rayProps;
 
 function setup() {
-	createCanvas();
+  createCanvas();
   resize();
   initRays();
-	draw();
+  draw();
 }
 
 function initRays() {
@@ -74,7 +74,13 @@ function drawRays() {
 }
 
 function updateRay(i) {
-  let i2=1+i, i3=2+i, i4=3+i, i5=4+i, i6=5+i, i7=6+i, i8=7+i;
+  let i2 = 1 + i,
+    i3 = 2 + i,
+    i4 = 3 + i,
+    i5 = 4 + i,
+    i6 = 5 + i,
+    i7 = 6 + i,
+    i8 = 7 + i;
   let x, y1, y2, life, ttl, width, speed, hue;
 
   x = rayProps[i];
@@ -121,37 +127,37 @@ function checkBounds(x) {
 }
 
 function createCanvas() {
-  container = document.querySelector('.content--canvas');
-	canvas = {
-		a: document.createElement('canvas'),
-		b: document.createElement('canvas')
-	};
-	canvas.b.style = `
+  container = document.querySelector(".content--canvas");
+  canvas = {
+    a: document.createElement("canvas"),
+    b: document.createElement("canvas"),
+  };
+  canvas.b.style = `
 		position: fixed;
 		top: 0;
 		left: 0;
 		width: 100%;
 		height: 100%;
 	`;
-	container.appendChild(canvas.b);
-	ctx = {
-		a: canvas.a.getContext('2d'),
-		b: canvas.b.getContext('2d')
+  container.appendChild(canvas.b);
+  ctx = {
+    a: canvas.a.getContext("2d"),
+    b: canvas.b.getContext("2d"),
   };
   center = [];
 }
 
 function resize() {
-	const { innerWidth, innerHeight } = window;
-	
-	canvas.a.width = innerWidth;
+  const { innerWidth, innerHeight } = window;
+
+  canvas.a.width = innerWidth;
   canvas.a.height = innerHeight;
 
   ctx.a.drawImage(canvas.b, 0, 0);
 
-	canvas.b.width = innerWidth;
+  canvas.b.width = innerWidth;
   canvas.b.height = innerHeight;
-  
+
   ctx.b.drawImage(canvas.a, 0, 0);
 
   center[0] = 0.5 * canvas.a.width;
@@ -160,8 +166,8 @@ function resize() {
 
 function render() {
   ctx.b.save();
-  ctx.b.filter = 'blur(12px)';
-  ctx.a.globalCompositeOperation = 'lighter';
+  ctx.b.filter = "blur(12px)";
+  ctx.a.globalCompositeOperation = "lighter";
   ctx.b.drawImage(canvas.a, 0, 0);
   ctx.b.restore();
 }
@@ -174,8 +180,8 @@ function draw() {
   drawRays();
   render();
 
-	window.requestAnimationFrame(draw);
+  window.requestAnimationFrame(draw);
 }
 
-window.addEventListener('load', setup);
-window.addEventListener('resize', resize);
+window.addEventListener("load", setup);
+window.addEventListener("resize", resize);

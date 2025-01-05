@@ -1,18 +1,22 @@
 import { createRouter, createWebHistory } from "vue-router";
-import IndexView from "../views/IndexView.vue";
-import NotFoundView from "../views/NotFoundView.vue";
-import LoginView from "../views/Authorization/LoginView.vue";
-import RegisterView from "../views/Authorization/RegisterView.vue";
-import ResetPasswordView from "../views/Authorization/ResetPasswordView.vue";
+import HomeView from "@/views/HomeView.vue";
+import LoginView from "@/views/Authorization/LoginView.vue";
+import RegisterView from "@/views/Authorization/RegisterView.vue";
+import ResetPasswordView from "@/views/Authorization/ResetPasswordView.vue";
 import SetPasswordView from "@/views/Authorization/SetPasswordView.vue";
 import VerificationView from "@/views/Authorization/VerificationView.vue";
 import ProfileView from "@/views/ProfileView.vue";
+import PostDetailView from "@/views/PostDetailView.vue";
+import PostCreateView from "@/views/PostCreateView.vue";
+import store from "@/stores";
+
+// TODO: Change _ to - in router names
 
 const routes = [
   {
     path: "/",
-    name: "index",
-    component: IndexView,
+    name: "home",
+    component: HomeView,
   },
   {
     path: "/register",
@@ -48,15 +52,32 @@ const routes = [
     props: true,
   },
   {
-    path: "/:pathMatch(.*)*",
-    name: "not-found",
-    component: NotFoundView,
+    path: "/posts/new",
+    name: "post-create",
+    component: PostCreateView,
+  },
+  {
+    path: "/posts/:identifier",
+    name: "post-detail",
+    component: PostDetailView,
+    props: true,
   },
 ];
 
 const router = createRouter({
   history: createWebHistory(),
   routes,
+});
+
+// router.beforeEach((to, from, next) => {
+//   store.commit("main/setShowErrorPage", false);
+//   next();
+// });
+
+// TODO: In all tutorials they use beforeEach, but here's the big problem i can explain you
+// So I use afterEach
+router.afterEach(() => {
+  store.commit("main/setShowErrorPage", false);
 });
 
 export default router;
