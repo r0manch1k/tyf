@@ -37,7 +37,7 @@ jobs:
           node-version: '18.x'
 
       - name: Install Node.js dependencies
-        run: npm install
+        run: cd frontend && npm install
 
       - name: Run JavaScript linter
         run: npm run lint
