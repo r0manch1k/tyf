@@ -1,5 +1,4 @@
 import os
-import uuid
 import random
 import string
 import hashlib
@@ -49,5 +48,6 @@ def getHash(data: str):
 
 def generateVerifyToken():
     return secrets.token_urlsafe(32)
+
 
 AccountActivationToken = PasswordResetTokenGenerator()

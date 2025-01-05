@@ -41,10 +41,7 @@ class LoginSerializer(serializers.ModelSerializer):
                 )
 
         if auth.authenticate(email=email, password=password) is None:
-            raise serializers.ValidationError(
-                detail={"info": "Incorrect Password."}
-            )
-        
+            raise serializers.ValidationError(detail={"info": "Incorrect Password."})
         return attrs
 
 

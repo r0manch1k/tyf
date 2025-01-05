@@ -331,9 +331,7 @@ class Verification(APIView):
         token = request.data.get("token", "")
 
         try:
-            user = User.objects.get(
-                pk=force_str(urlsafe_base64_decode(uid))
-            )
+            user = User.objects.get(pk=force_str(urlsafe_base64_decode(uid)))
         except BaseException:
             return Response(
                 {

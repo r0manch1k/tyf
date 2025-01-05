@@ -2,7 +2,7 @@ from django.conf import settings
 from django.core.cache import cache
 from apps.utils.verifyTools import (
     getHash,
-    generateVerifyToken,
+    # generateVerifyToken,
     AccountActivationToken,
 )
 from django.utils.encoding import force_str
