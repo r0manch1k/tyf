@@ -1,4 +1,4 @@
-name: Project CI Test
+name: CI
 
 on:
   push:
@@ -9,35 +9,8 @@ on:
       - main
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
-    env:
-      PYTHON_FOLDER: backend
-
-    # services:
-    #   postgres:
-    #     image: postgres:12.0-alpine
-    #     env:
-    #       POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
-    #       POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-    #       POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
-    #     ports:
-    #       - 5432:5432
-    #     options: >-
-    #       --health-cmd pg_isready
-    #       --health-interval 10s
-    #       --health-timeout 5s
-    #       --health-retries 5
-
-    #   redis:
-    #     image: redis:5.0.6-alpine
-    #     ports:
-    #       - 6379:6379
-    #     options: >-
-    #       --health-cmd "redis-cli ping"
-    #       --health-interval 10s
-    #       --health-timeout 5s
-    #       --health-retries 5
+  build:
+    runs-on: ubuntu-22.04
 
     steps:
       - name: Checkout code
@@ -46,58 +19,24 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: "3.11"
+          python-version: '3.x'
 
-      - name: Install dependencies (backend)
+      - name: Install Python dependencies
         run: |
-          python -m venv .venv
-          source .venv/bin/activate
+          python -m pip install --upgrade pip
           pip install -r backend/requirements.txt
 
-      - name: Analysing the code with pylint
+      - name: Run Python linter
         run: |
-          pylint -j 0 --fail-under=8.0 "${{ env.PYTHON_FOLDER }}/*.py" > pylint_recommendations.txt
-        working-directory: ${{ github.workspace }}
-        continue-on-error: true
+          flake8 backend --config=backend/.flake8
 
-      # - name: Run migrations (backend)
-      #   env:
-      #     SECRET_KEY: ${{ secrets.SECRET_KEY }}
-      #     DEBUG: ${{ secrets.DEBUG }}
-      #     POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
-      #     POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-      #     POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
-      #     POSTGRES_HOST: ${{ secrets.POSTGRES_HOST }}
-      #     POSTGRES_PORT: ${{ secrets.POSTGRES_PORT }}
-      #     REDIS_LOCATION: ${{ secrets.REDIS_LOCATION }}
-      #   run: |
-      #     source .venv/bin/activate
-      #     python backend/manage.py makemigrations
-      #     python backend/manage.py migrate
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '18.x'
 
-      # - name: Run tests (backend)
-      #   env:
-      #     SECRET_KEY: ${{ secrets.SECRET_KEY }}
-      #     DEBUG: ${{ secrets.DEBUG }}
-      #     POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
-      #     POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-      #     POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
-      #     POSTGRES_HOST: ${{ secrets.POSTGRES_HOST }}
-      #     POSTGRES_PORT: ${{ secrets.POSTGRES_PORT }}
-      #     REDIS_LOCATION: ${{ secrets.REDIS_LOCATION }}
-      #   run: |
-      #     source .venv/bin/activate
-      #     python backend/manage.py test
-      
-      - name: Install ESLint (frontend)
-        run: |
-          npm install eslint@8.10.0
-      
-      - name: Run ESLint (frontend)
-        run: |
-          cd frontend
-          npx eslint .
-          --config .eslintrc.js
-          --ext .js,.jsx,.ts,.tsx
-        continue-on-error: true
+      - name: Install Node.js dependencies
+        run: cd frontend && npm install
 
+      - name: Run Node.js linter
+        run: cd frontend && npm run lint
