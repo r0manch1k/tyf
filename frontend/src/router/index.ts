@@ -25,11 +25,6 @@ const routes = [
     component: LoginView,
   },
   {
-    path: "/login",
-    name: "login",
-    component: LoginView,
-  },
-  {
     path: "/login/reset_password",
     name: "reset_password",
     component: ResetPasswordView,

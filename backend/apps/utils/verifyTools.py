@@ -3,6 +3,7 @@ import uuid
 import random
 import string
 import hashlib
+import secrets
 from django.conf import settings
 from django.utils.html import strip_tags
 from django.core.mail import EmailMultiAlternatives
@@ -46,10 +47,7 @@ def getHash(data: str):
     return hashlib.pbkdf2_hmac("sha256", data.encode("utf-8"), SALT, 100000).hex()
 
 
-def generateVerifyToken(data: str):
-    return uuid.uuid5(
-        namespace=uuid.NAMESPACE_URL,
-        name=data,
-    ).hex
+def generateVerifyToken():
+    return secrets.token_urlsafe(32)
 
 AccountActivationToken = PasswordResetTokenGenerator()

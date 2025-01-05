@@ -3,7 +3,6 @@ from django.core import exceptions
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from social_django.models import UserSocialAuth
-from rest_framework.exceptions import AuthenticationFailed
 from django.contrib.auth.password_validation import validate_password
 
 
@@ -19,7 +18,7 @@ class LoginSerializer(serializers.ModelSerializer):
         fields = ["password", "email"]
 
     def validate(self, attrs):
-        email = attrs.get("email", "")
+        email = attrs.get("email", "").lower()
         password = attrs.get("password", "")
 
         if UserSocialAuth.objects.filter(user__email=email).exists():
@@ -71,7 +70,7 @@ class RegisterSerializer(serializers.ModelSerializer):
         }
 
     def validate(self, attrs):
-        email = attrs.get("email", "")
+        email = attrs.get("email", "").lower()
         password1 = attrs.get("password1", "")
         password2 = attrs.get("password2", "")
 
@@ -110,3 +109,39 @@ class RegisterSerializer(serializers.ModelSerializer):
             instance.set_password(password)
             instance.save()
             return instance
+
+
+class SetPasswordSerializer(serializers.ModelSerializer):
+    password1 = serializers.CharField(
+        write_only=True,
+        min_length=8,
+        max_length=50,
+        required=True,
+    )
+    password2 = serializers.CharField(
+        write_only=True,
+        min_length=8,
+        max_length=50,
+        required=True,
+    )
+
+    class Meta:
+        model = User
+        fields = ["password1", "password2"]
+
+    def validate(self, attrs):
+        password1 = attrs.get("password1", "")
+        password2 = attrs.get("password2", "")
+
+        if password1 != password2:
+            raise serializers.ValidationError(
+                detail={"info": "Password doesn't match."}
+            )
+
+        try:
+            validate_password(password1)
+        except exceptions.ValidationError as e:
+            error = [str(error) for error in e.messages][0]
+            raise serializers.ValidationError(detail={"info": error})
+
+        return attrs

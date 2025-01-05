@@ -30,23 +30,16 @@ class VerificationPermissions(BasePermission):
             print("1")
             return False
 
-        if incoming_token != generateVerifyToken(f"""{remote_addr}-{user.email}-{user.pk}"""):
+        redis_key = settings.TYF_USER_VERIFICATION_KEY.format(
+            token=getHash(f"{incoming_token}-{remote_addr}")
+        )
+        if cache.get(redis_key) is None:
             print("2")
             return False
 
-        redis_key = settings.TYF_USER_VERIFICATION_KEY.format(
-            token=getHash(incoming_token)
-        )
-        if cache.get(redis_key) is None:
-            print("3")
-            return False
-
         redis_data = cache.get(redis_key)
-        if not (
-            user is not None
-            and AccountActivationToken.check_token(user, redis_data["user_token"])
-        ):
-            print("4")
+        if not AccountActivationToken.check_token(user, redis_data["user_token"]):
+            print("3")
             return False
 
         return True
