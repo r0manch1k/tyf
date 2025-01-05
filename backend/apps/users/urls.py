@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import apiOverview, Login, Register, VerifyOTP, ResendOTP
+from .views import *
 
 urlpatterns = [
     path("users/login/", Login.as_view()),
