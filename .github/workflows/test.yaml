@@ -30,9 +30,6 @@ jobs:
       - name: Run Python linter
         run: |
           flake8 backend --config=backend/.flake8
-        env:
-          PYTHON_LINTER_ERROR: "0"
-        continue-on-error: true
 
       - name: Set up Node.js
         uses: actions/setup-node@v2
@@ -44,12 +41,3 @@ jobs:
 
       - name: Run Node.js linter
         run: cd frontend && npm run lint
-        env:
-          JS_LINTER_ERROR: "0"
-        continue-on-error: true
-
-      - name: Check for errors
-        run: |
-          if [ "$PYTHON_LINTER_ERROR" -eq "1" ] || [ "$JS_LINTER_ERROR" -eq "1" ]; then
-            echo "There were errors in the previous steps"
-          fi
