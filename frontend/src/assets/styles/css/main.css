@@ -80,6 +80,14 @@ body {
   font-size: x-small;
 }
 
+.link-primary {
+  color: var(--primary);
+}
+
+.link-primary:hover {
+  color: var(--primary);
+}
+
 .btn-light {
   color: var(--light);
   margin: 0;
@@ -102,5 +110,5 @@ body {
 }
 
 .btn-secondary-x-light:hover {
-  color: var(--secondary-light);
+  color: var(--secondary-x-light);
 }

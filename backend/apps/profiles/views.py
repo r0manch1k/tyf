@@ -4,6 +4,7 @@ from rest_framework.decorators import action
 from django.shortcuts import get_object_or_404
 from .serializer import ProfileSerializer
 from .models import Profile
+from django.db.models import Count
 
 
 class ProfileViewSet(viewsets.ViewSet):
@@ -22,5 +23,15 @@ class ProfileViewSet(viewsets.ViewSet):
     @action(detail=False, methods=["GET"], url_path="recent", url_name="recent")
     def recent_users(self, request):
         queryset = Profile.objects.all().order_by("-date_joined")[:5]
+        serializer = ProfileSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+    @action(
+        detail=False, methods=["GET"], url_path="most-active", url_name="most-active"
+    )
+    def most_active_users(self, request):
+        queryset = Profile.objects.annotate(nposts=Count("posts")).order_by("-nposts")[
+            :5
+        ]
         serializer = ProfileSerializer(queryset, many=True)
         return Response(serializer.data)

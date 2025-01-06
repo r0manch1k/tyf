@@ -40,11 +40,12 @@ with open(os.path.abspath("apps/utils/data/categories.csv")) as f:
         )
 
 with open(os.path.abspath("apps/utils/data/collections.csv")) as f:
-    reader = csv.reader(f)
+    reader = csv.reader(f, delimiter=";")
     for row in reader:
         if Collection.objects.filter(name=row[0]).exists():
             continue
         _, created = Collection.objects.get_or_create(
             name=row[0],
             description=row[1],
+            emoji=row[2],
         )

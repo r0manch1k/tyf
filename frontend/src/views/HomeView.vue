@@ -1,8 +1,8 @@
 <template>
   <div class="home content open px-5 py-2" v-if="!loading">
     <div class="home__header mb-2">
-      <Tablist v-bind:tablist="categories" />
-      <!-- <Tablist v-bind:tablist="collections" /> -->
+      <!-- <Tablist v-bind:tablist="categories" /> -->
+      <!-- <CollectionsTablist v-bind:collections="collections" /> -->
     </div>
     <div class="home__body container-fluid p-0">
       <div class="home__body__container row">
@@ -11,7 +11,12 @@
             <Post v-for="post in posts" :key="post.identifier" :post="post" />
           </div>
         </div>
-        <div class="home__body__container__right col-3"></div>
+        <div
+          class="home__body__container__right col-3 d-flex flex-column gap-3"
+        >
+          <MostActiveUsersBar />
+          <TyeHighscoresBar />
+        </div>
       </div>
     </div>
   </div>
@@ -20,12 +25,15 @@
 
 <script lang="ts" setup>
 import LoadingCircle from "@/components/LoadingCircle.vue";
-import Tablist from "@/components/Tablist.vue";
+import CollectionsTablist from "@/components/CollectionsTablist.vue";
+import MostActiveUsersBar from "@/components/MostActiveUsersBar.vue";
+import TyeHighscoresBar from "@/tye_frontend/components/TyeHighscoresBar.vue";
 import Post from "@/components/Post.vue";
 import PostDataService from "@/services/PostDataService";
-import type PostModel from "@/models/PostModel";
+import type PostListItemModel from "@/models/PostModel";
 import type CategoryModel from "@/models/CategoryModel";
 import type CollectionModel from "@/models/CollectionModel";
+
 import { ref, onMounted, computed, shallowRef } from "vue";
 import { useStore } from "vuex";
 
@@ -39,7 +47,7 @@ const categories = computed<CategoryModel[]>(
 const collections = computed<CollectionModel[]>(
   () => store.getters["collection/getCollections"]
 );
-const posts = shallowRef<PostModel[]>([]);
+const posts = shallowRef<PostListItemModel[]>([]);
 
 onMounted(async () => {
   await Promise.all([

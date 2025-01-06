@@ -21,6 +21,7 @@ class ProfileSerializer(serializers.ModelSerializer):
             "iso-8601",
         ],
     )
+    posts_count = serializers.IntegerField(source="posts.count", read_only=True)
 
     class Meta:
         model = Profile

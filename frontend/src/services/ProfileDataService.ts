@@ -29,6 +29,15 @@ class ProfileDataService {
     return data.data;
   }
 
+  async getMostActiveProfiles(): Promise<ProfileModel[]> {
+    let data: { data: ProfileModel[] } = { data: [] as ProfileModel[] };
+    await api
+      .get("/profiles/most-active/")
+      .then((response: { data: ProfileModel[] }) => (data = response))
+      .catch((error: unknown) => console.error(error));
+    return data.data;
+  }
+
   //   async createProfile(profile: ProfileModel): Promise<ProfileModel> {
   //     let data: { data: ProfileModel } = { data: {} as ProfileModel };
   //     await api

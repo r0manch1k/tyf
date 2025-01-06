@@ -1,4 +1,5 @@
 export default interface ProfileModel {
+  id: number;
   email: string;
   username: string;
   first_name: string;
@@ -15,4 +16,5 @@ export default interface ProfileModel {
   telegram: string;
   vkontakte: string;
   thumbnail: string;
+  posts_count: number;
 }
