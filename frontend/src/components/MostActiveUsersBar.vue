@@ -1,5 +1,5 @@
 <template>
-  <div class="most-active-users card bg-secondary" v-if="!loading">
+  <div class="most-active-users card bg-dark-light" v-if="!loading">
     <div class="most-active-users__header card-header py-2 text-start">
       <h2
         class="most-active-users__title card-title fs-6 text-light text-decoration-underline m-0"
@@ -45,3 +45,5 @@ onMounted(async () => {
   loading.value = false;
 });
 </script>
+
+<style scoped></style>

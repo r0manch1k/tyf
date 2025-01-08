@@ -1,5 +1,5 @@
 <template>
-  <div class="post card text-start bg-secondary mb-3">
+  <div class="post card text-start bg-dark-light mb-3">
     <div
       class="post__header card-header d-flex flex-row align-items-center justify-content-between py-2"
     >
@@ -23,7 +23,7 @@
               name: 'profile',
               params: { username: post.author.username },
             }"
-            class="link-primary fw-bold fst-italic fs-6"
+            class="link-primary fw-bold fs-6"
             style="height: 20px"
           >
             {{ post.author.username }}
@@ -81,7 +81,7 @@
       <img
         v-if="post.thumbnail"
         :src="post.thumbnail"
-        class="card-img-top rounded-2 my-3"
+        class="card-img-top rounded-1 my-3"
         alt="post-thumbnail"
       />
       <p class="card-text text-light m-0">
@@ -163,17 +163,15 @@ const created_at = moment(props.post.created_at).fromNow();
 </script>
 
 <style scoped>
-.card {
-  border-radius: 0.4em !important;
-  /* border-bottom: 1px solid var(--secondary-x-light);
-  border-right: 1px solid var(--secondary-x-light); */
-  transition: all 0.3s;
-}
+/* .card:hover {
+  border-bottom: 1px solid var(--secondary-light);
+  border-right: 1px solid var(--secondary-light);
+} */
 
-.card:hover {
-  /* border-bottom: 1px solid var(--secondary-light);
-  border-right: 1px solid var(--secondary-light); */
-}
+/* .post:hover {
+  border-bottom: 1px solid var(--primary) !important;
+  border-right: 1px solid var(--primary) !important;
+} */
 
 .btn-primary {
   border-color: var(--primary);

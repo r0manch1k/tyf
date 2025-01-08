@@ -65,7 +65,7 @@ const scores = ref([
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  border-radius: 0.4rem;
+  border-radius: 0.4rem !important;
   padding: 1rem;
 }
 

@@ -1,8 +1,8 @@
 <template>
   <div
-    class="footer container-fluid bg-secondary d-flex align-items-center justify-content-between p-3"
+    class="footer container-fluid bg-dark-light d-flex align-items-center justify-content-between p-3"
   >
-    <div class="footer__authors text-sm-start fs-7 text-muted">
+    <div class="footer__authors text-sm-start fs-6 text-muted">
       <router-link :to="{ name: 'home' }">Tell Your Friends</router-link>,
       Правила.
     </div>

@@ -1,5 +1,5 @@
 <template>
-  <nav class="header navbar navbar-expand bg-secondary px-4 py-1">
+  <nav class="header navbar navbar-expand bg-dark-light px-4 py-1">
     <router-link :to="{ name: 'home' }" class="header__logo navbar-brand me-4">
       <img class="logo" src="@/assets/media/logo.svg" alt="tyf" />
     </router-link>
@@ -16,7 +16,7 @@
 
     <div class="header__search ms-4 w-100">
       <input
-        class="header__search-input form-control fs-6 bg-secondary-light border-0"
+        class="header__search-input form-control fs-6 bg-dark-light border-0"
         type="search"
         placeholder="Поиск"
       />
@@ -113,7 +113,7 @@ const profile = computed(() => {
 
 .header__search-input:focus {
   color: var(--light) !important;
-  background-color: var(--secondary-light) !important;
+  background-color: var(--dark-light) !important;
   outline: var(--primary) solid 0.1em !important;
 }
 

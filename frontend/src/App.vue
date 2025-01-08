@@ -81,6 +81,13 @@ a.router-link-exact-active {
   color: var(--light) !important;
 }
 
+.card {
+  border-radius: 0.4em !important;
+  border-bottom: 1px solid var(--secondary);
+  border-right: 1px solid var(--secondary);
+  /* transition: all 0.3s; */
+}
+
 nav {
   padding: 30px;
 }
