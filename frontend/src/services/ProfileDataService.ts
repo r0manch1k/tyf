@@ -1,39 +1,58 @@
 import api from "@/stores/services/api";
-import ProfileModel from "@/models/ProfileModel";
+import type ProfileListItemModel from "@/models/ProfileModel";
+import type ProfileDetailModel from "@/models/ProfileModel";
+import type PostListItemModel from "@/models/PostModel";
 
 class ProfileDataService {
-  async getAllProfiles(): Promise<ProfileModel[]> {
-    let data: { data: ProfileModel[] } = { data: [] as ProfileModel[] };
+  async getAllProfiles(): Promise<ProfileListItemModel[]> {
+    let data: { data: ProfileListItemModel[] } = {
+      data: [] as ProfileListItemModel[],
+    };
     await api
       .get("/profiles/")
-      .then((response: { data: ProfileModel[] }) => (data = response))
+      .then((response: { data: ProfileListItemModel[] }) => (data = response))
       .catch((error: unknown) => console.error(error));
     return data.data;
   }
 
-  async getProfileByUsername(username: string): Promise<ProfileModel> {
-    let data: { data: ProfileModel } = { data: {} as ProfileModel };
+  async getProfileByUsername(username: string): Promise<ProfileDetailModel> {
+    let data: { data: ProfileDetailModel } = { data: {} as ProfileDetailModel };
     await api
       .get(`/profiles/${username}/`)
-      .then((response: { data: ProfileModel }) => (data = response))
+      .then((response: { data: ProfileDetailModel }) => (data = response))
       .catch((error: unknown) => console.error(error));
     return data.data;
   }
 
-  async getRecentProfiles(): Promise<ProfileModel[]> {
-    let data: { data: ProfileModel[] } = { data: [] as ProfileModel[] };
+  async getRecentProfiles(): Promise<ProfileListItemModel[]> {
+    let data: { data: ProfileListItemModel[] } = {
+      data: [] as ProfileListItemModel[],
+    };
     await api
       .get("/profiles/recent/")
-      .then((response: { data: ProfileModel[] }) => (data = response))
+      .then((response: { data: ProfileListItemModel[] }) => (data = response))
       .catch((error: unknown) => console.error(error));
     return data.data;
   }
 
-  async getMostActiveProfiles(): Promise<ProfileModel[]> {
-    let data: { data: ProfileModel[] } = { data: [] as ProfileModel[] };
+  async getMostActiveProfiles(): Promise<ProfileListItemModel[]> {
+    let data: { data: ProfileListItemModel[] } = {
+      data: [] as ProfileListItemModel[],
+    };
     await api
       .get("/profiles/most-active/")
-      .then((response: { data: ProfileModel[] }) => (data = response))
+      .then((response: { data: ProfileListItemModel[] }) => (data = response))
+      .catch((error: unknown) => console.error(error));
+    return data.data;
+  }
+
+  async getProfilePosts(username: string): Promise<PostListItemModel[]> {
+    let data: { data: PostListItemModel[] } = {
+      data: [] as PostListItemModel[],
+    };
+    await api
+      .get(`/profiles/${username}/posts/`)
+      .then((response: { data: PostListItemModel[] }) => (data = response))
       .catch((error: unknown) => console.error(error));
     return data.data;
   }

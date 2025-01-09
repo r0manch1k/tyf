@@ -5,12 +5,12 @@ from apps.media.serializer import MediaSerializer
 from apps.comments.serializer import CommentSerializer
 from apps.tags.serializer import TagSerializer
 from apps.collections_.serializer import CollectionSerializer
-from apps.profiles.serializer import ProfileSerializer
+from apps.profiles.serializer import ProfileListSerializer
 from tyf import settings
 
 
 class BookmarkPostSerializer(serializers.ModelSerializer):
-    profile = ProfileSerializer()
+    profile = ProfileListSerializer()
 
     class Meta:
         model = BookmarkPost
@@ -18,7 +18,7 @@ class BookmarkPostSerializer(serializers.ModelSerializer):
 
 
 class PostListSerializer(serializers.ModelSerializer):
-    author = ProfileSerializer()
+    author = ProfileListSerializer()
     category = CategorySerializer()
     collections = CollectionSerializer(many=True)
     tags = TagSerializer(many=True)
@@ -78,7 +78,7 @@ class PostListSerializer(serializers.ModelSerializer):
 
 
 class PostDetailSerializer(serializers.ModelSerializer):
-    author = ProfileSerializer()
+    author = ProfileListSerializer()
     category = CategorySerializer()
     collections = CollectionSerializer(many=True)
     tags = TagSerializer(many=True)

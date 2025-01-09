@@ -1,13 +1,15 @@
 <template>
-  <div class="home content open px-5 py-2" v-if="!loading">
-    <div class="home__header mb-2">
-      <!-- <Tablist v-bind:tablist="categories" /> -->
-      <!-- <CollectionsTablist v-bind:collections="collections" /> -->
-    </div>
+  <div class="home content open px-5" v-if="!loading">
+    <!-- <div class="home__header mb-2">
+      <Tablist v-bind:tablist="categories" />
+      <CollectionsTablist v-bind:collections="collections" />
+    </div> -->
     <div class="home__body container-fluid p-0">
       <div class="home__body__container row">
         <div class="home__body__container__left col-9">
-          <div class="home__body__container__left__text p-0">
+          <div
+            class="home__body__container__left__text d-flex flex-column gap-3 p-0"
+          >
             <Post v-for="post in posts" :key="post.identifier" :post="post" />
           </div>
         </div>

@@ -1,5 +1,5 @@
 <template>
-  <div class="post card text-start bg-dark-light mb-3">
+  <div class="post card text-start bg-dark-light">
     <div
       class="post__header card-header d-flex flex-row align-items-center justify-content-between py-2"
     >

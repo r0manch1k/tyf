@@ -1,6 +1,6 @@
 <template>
   <div
-    class="footer container-fluid bg-dark-light d-flex align-items-center justify-content-between p-3"
+    class="footer container-fluid bg-dark-light d-flex align-items-center justify-content-between p-4"
   >
     <div class="footer__authors text-sm-start fs-6 text-muted">
       <router-link :to="{ name: 'home' }">Tell Your Friends</router-link>,
@@ -19,9 +19,13 @@
   </div>
 </template>
 
-<style>
+<style scoped>
 .footer {
   bottom: 0;
   width: 100%;
+}
+
+a {
+  color: var(--light);
 }
 </style>

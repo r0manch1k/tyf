@@ -13,7 +13,11 @@
       </h3> -->
     </div>
     <div class="most-active-users__list card-body">
-      <div v-for="user in users" :key="user.id" class="most-active-users__user">
+      <div
+        v-for="user in users"
+        :key="user.username"
+        class="most-active-users__user"
+      >
         <div class="d-flex align-items-center justify-content-between">
           <ProfileListItem :profile="user" />
           <router-link
@@ -33,12 +37,12 @@
 import LoadingCircle from "@/components/LoadingCircle.vue";
 import ProfileListItem from "@/components/ProfileListItem.vue";
 import ProfileDataService from "@/services/ProfileDataService";
-import type ProfileModel from "@/models/ProfileModel";
+import type ProfileListItemModel from "@/models/ProfileModel";
 import { ref, onMounted } from "vue";
 
 const loading = ref(true);
 
-const users = ref<ProfileModel[]>([]);
+const users = ref<ProfileListItemModel[]>([]);
 
 onMounted(async () => {
   users.value = await ProfileDataService.getMostActiveProfiles();

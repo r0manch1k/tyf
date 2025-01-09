@@ -1,10 +1,33 @@
 from rest_framework import serializers
 from .models import Profile
+from apps.registry.serializer import MajorListSerializer, UniversityListSerializer
 from tyf import settings
 
 
-class ProfileSerializer(serializers.ModelSerializer):
+class ProfileListSerializer(serializers.ModelSerializer):
     avatar = serializers.SerializerMethodField()
+    date_joined = serializers.DateTimeField(
+        format="%Y-%m-%d %H:%M:%S",
+        input_formats=[
+            "%d.%m.%Y",
+            "iso-8601",
+        ],
+    )
+    points = serializers.IntegerField(read_only=True)
+    posts_count = serializers.IntegerField(source="posts.count", read_only=True)
+
+    class Meta:
+        model = Profile
+        fields = ["username", "avatar", "date_joined", "posts_count", "points"]
+
+    def get_avatar(self, obj):
+        return settings.API_ULR + obj.get_avatar
+
+
+class ProfileDetailSerializer(serializers.ModelSerializer):
+    avatar = serializers.SerializerMethodField()
+    telegram = serializers.URLField()
+    vkontakte = serializers.URLField()
     telegram_alias = serializers.SerializerMethodField()
     vkontakte_alias = serializers.SerializerMethodField()
     date_joined = serializers.DateTimeField(
@@ -21,11 +44,33 @@ class ProfileSerializer(serializers.ModelSerializer):
             "iso-8601",
         ],
     )
-    posts_count = serializers.IntegerField(source="posts.count", read_only=True)
+    major = MajorListSerializer()
+    university = UniversityListSerializer()
+    points = serializers.IntegerField(read_only=True)
+    awards = serializers.IntegerField(read_only=True)
+    following = serializers.SerializerMethodField()
+    followers = serializers.SerializerMethodField()
 
     class Meta:
         model = Profile
-        fields = "__all__"
+        fields = [
+            "username",
+            "avatar",
+            "date_joined",
+            "date_of_birth",
+            "bio",
+            "telegram_alias",
+            "vkontakte_alias",
+            "posts",
+            "major",
+            "university",
+            "points",
+            "awards",
+            "following",
+            "followers",
+            "telegram",
+            "vkontakte",
+        ]
 
     def get_avatar(self, obj):
         return settings.API_ULR + obj.get_avatar
@@ -35,3 +80,9 @@ class ProfileSerializer(serializers.ModelSerializer):
 
     def get_vkontakte_alias(self, obj):
         return obj.get_vkontakte
+
+    def get_following(self, obj):
+        return ProfileListSerializer(obj.following.all(), many=True).data
+
+    def get_followers(self, obj):
+        return ProfileListSerializer(obj.followers.all(), many=True).data

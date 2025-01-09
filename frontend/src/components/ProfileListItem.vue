@@ -39,12 +39,12 @@
 
 <script setup lang="ts">
 import { defineProps, inject } from "vue";
-import type ProfileModel from "@/models/ProfileModel";
+import type ProfileListItem from "@/models/ProfileModel";
 
 const moment = inject("moment") as any;
 
 const props = defineProps<{
-  profile: ProfileModel;
+  profile: ProfileListItem;
 }>();
 
 const created_at = moment(props.profile.date_joined).fromNow();

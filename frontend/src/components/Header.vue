@@ -1,5 +1,5 @@
 <template>
-  <nav class="header navbar navbar-expand bg-dark-light px-4 py-1">
+  <nav class="header navbar navbar-expand bg-dark-light fixed-top px-4 py-1">
     <router-link :to="{ name: 'home' }" class="header__logo navbar-brand me-4">
       <img class="logo" src="@/assets/media/logo.svg" alt="tyf" />
     </router-link>
@@ -58,7 +58,7 @@
         </router-link>
 
         <div
-          class="header__dropdown dropdown-menu dropdown-menu-dark dropdown-menu-end bg-secondary-light border-0 rounded-0 rounded-bottom fs-6"
+          class="header__dropdown dropdown-menu dropdown-menu-dark dropdown-menu-end bg-secondary border-0 rounded-0 rounded-bottom fs-6"
         >
           <router-link
             :to="{ name: 'profile', params: { username: 'somberCod0' } }"

@@ -64,6 +64,18 @@ body {
   margin-right: 6rem;
 }
 
+.pt-6 {
+  padding-top: 3.5rem !important;
+}
+
+.pb-6 {
+  padding-bottom: 3.5rem !important;
+}
+
+.pt-7 {
+  padding-top: 4rem !important;
+}
+
 .fs-7 {
   font-size: 0.9rem;
 }
@@ -93,6 +105,7 @@ body {
   margin: 0;
   font-weight: 400;
   background: transparent;
+  border: 0;
   text-decoration: underline;
   text-decoration-color: var(--light);
 }
@@ -101,6 +114,22 @@ body {
   color: var(--primary);
   background: transparent;
   text-decoration-color: var(--primary);
+}
+
+.btn-light:active {
+  color: var(--light) !important;
+  background: transparent !important;
+  text-decoration-color: var(--light) !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+.btn-light:focus {
+  color: var(--light) !important;
+  background: transparent !important;
+  text-decoration-color: var(--light) !important;
+  border: 0 !important;
+  box-shadow: none !important;
 }
 
 .btn-secondary-x-light {
