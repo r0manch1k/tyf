@@ -3,7 +3,7 @@
   <div v-if="isHome" class="main">
     <Header />
     <Sidebar />
-    <div class="main__content bg-dark-light mx-0">
+    <div class="main__content bg-dark-light mx-0 pb-3 pt-7">
       <NotFoundView v-if="isError" />
       <router-view v-else />
     </div>
@@ -59,7 +59,7 @@ const isHome = computed(
 @import "@/assets/styles/css/main.css";
 
 #app {
-  font-family: "Arial";
+  font-family: "Arial", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
@@ -69,9 +69,9 @@ const isHome = computed(
 }
 
 .main__content {
-  background-color: rgba(30, 30, 35, 0.5);
+  /* background-color: rgba(30, 30, 35, 0.5); */
   /* background-color: rgba(51, 51, 51, 0.8); */
-  /* background: transparent; */
+  background: transparent;
   /* border-top: 1px solid var(--dark-light); */
   /* border-bottom: 1px solid var(--dark-light); */
   z-index: -50;
@@ -79,6 +79,13 @@ const isHome = computed(
 
 a.router-link-exact-active {
   color: var(--light) !important;
+}
+
+.card {
+  border-radius: 0.4em !important;
+  /* border-bottom: 1px solid var(--secondary);
+  border-right: 1px solid var(--secondary); */
+  /* transition: all 0.3s; */
 }
 
 nav {

@@ -8,7 +8,7 @@ build-dev:
 up-dev:
 	$(DOCKER_COMPOSE_DEV) up -d
 
-up-dev-logs:
+up-logs-dev:
 	$(DOCKER_COMPOSE_DEV) up
 
 down-dev:
@@ -48,7 +48,7 @@ build-prod:
 up-prod:
 	$(DOCKER_COMPOSE_PROD) up -d
 
-up-prod-logs:
+up-logs-prod:
 	$(DOCKER_COMPOSE_PROD) up
 
 down-prod:

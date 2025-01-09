@@ -6,6 +6,7 @@ class CollectionAdmin(admin.ModelAdmin):
     list_display = (
         "name",
         "description",
+        "emoji",
     )
 
     list_filter = ("name",)

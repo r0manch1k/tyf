@@ -113,6 +113,12 @@ class Profile(models.Model):
     #     self.thumbnail = thumb_filename
     #     return True
 
+    def get_followers(self):
+        return self.followers.all()
+
+    def get_following(self):
+        return self.following.all()
+
     def is_following(self, profile):
         return self.following.filter(following_id=profile.id).exists()
 

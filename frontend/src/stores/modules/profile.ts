@@ -3,41 +3,44 @@ import type ProfileModel from "@/models/ProfileModel";
 import ProfileDataService from "@/services/ProfileDataService";
 
 class State {
-  storedProfiles: { [key: string]: ProfileModel } = {};
+  profile: ProfileModel | null = {
+    email: "",
+    username: "",
+    first_name: "",
+    last_name: "",
+    middle_name: "",
+    university: "",
+    major: "",
+    date_of_birth: "",
+    date_joined: "",
+    bio: "",
+    avatar: "",
+    points: 0,
+    awards: 0,
+    telegram: "",
+    vkontakte: "",
+    telegram_alias: "",
+    vkontakte_alias: "",
+    posts_count: 0,
+    followers: [],
+    following: [],
+    posts: [],
+  };
 }
 
 const getters: GetterTree<State, unknown> = {
-  getProfileByUsername: (state) => (username: string) => {
-    return state.storedProfiles[username];
-  },
-  getRecentProfiles: (state) => (value: number) => {
-    const profilesArray = Object.values(state.storedProfiles);
-    profilesArray.sort(
-      (a, b) =>
-        new Date(b.date_joined).getTime() - new Date(a.date_joined).getTime()
-    );
-    return profilesArray.slice(0, value);
-  },
+  getProfile: (state) => state.profile,
 };
 
 const mutations: MutationTree<State> = {
-  setStoredProfiles: (state, payload) => {
-    state.storedProfiles = payload;
-  },
+  setProfile: (state, profile: ProfileModel) => (state.profile = profile),
 };
 
 const actions: ActionTree<State, unknown> = {
-  fetchProfileByUsername: async ({ commit, state }, username: string) => {
-    const data = await ProfileDataService.getProfileByUsername(username);
-    commit("setStoredProfiles", {
-      ...state.storedProfiles,
-      [username]: data,
-    });
-  },
-  fetchRecentProfiles: async ({ commit }) => {
-    const data = await ProfileDataService.getRecentProfiles();
-    commit("setStoredProfiles", data);
-  },
+  // async fetchProfile({ commit }) {
+  //   const profile = await ProfileDataService.getProfile();
+  //   commit("setProfile", profile);
+  // },
 };
 
 export default {

@@ -1,6 +1,6 @@
 <template>
   <div class="tablist">
-    <ul class="nav nav-pills fs-7">
+    <ul class="nav nav-pills fs-6">
       <li class="nav-item">
         <button
           class="nav-link active"
@@ -12,7 +12,11 @@
           Все
         </button>
       </li>
-      <li v-for="tab in tablist" :key="tab.id" class="nav-item">
+      <li
+        v-for="collection in collections"
+        :key="collection.id"
+        class="nav-item"
+      >
         <button
           class="nav-link"
           data-bs-toggle="pill"
@@ -20,22 +24,23 @@
           role="tab"
           aria-selected="true"
         >
-          {{ tab.name }}
+          {{ collection.name + " " + collection.emoji }}
         </button>
       </li>
     </ul>
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onMounted, defineProps } from "vue";
+import type CollectionModel from "@/models/CollectionModel";
 
 const props = defineProps({
-  tablist: Array,
+  collections: Array as () => CollectionModel[],
 });
 
 onMounted(() => {
-  console.log(props.tablist);
+  console.log(props.collections);
 });
 </script>
 
@@ -74,6 +79,8 @@ ul {
 
 .nav-pills .nav-link.active {
   background-color: var(--primary);
+  /* border-bottom: 1px solid var(--secondary) !important;
+  border-right: 1px solid var(--secondary) !important; */
   color: var(--dark);
 }
 
@@ -82,7 +89,9 @@ ul {
   border-radius: 0.4rem;
   font-weight: bold;
   padding: 0.3rem 0.8rem;
-  background-color: var(--dark);
+  background-color: var(--dark-light);
   color: var(--light);
+  /* border-bottom: 1px solid var(--primary) !important;
+  border-right: 1px solid var(--primary) !important; */
 }
 </style>
