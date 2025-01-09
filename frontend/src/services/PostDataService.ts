@@ -22,6 +22,14 @@ class PostDataService {
       .catch((error: unknown) => console.error(error));
     return data.data;
   }
+  async getPostByIdentifier(identifier: string): Promise<PostModel> {
+    let data: { data: PostModel } = { data: {} as PostModel };
+    await api
+      .get(`/posts/${identifier}/`)
+      .then((response: { data: PostModel }) => (data = response))
+      .catch((error: unknown) => console.error(error));
+    return data.data;
+  }
   getNewPost(): PostModel {
     return {
       id: 0,
