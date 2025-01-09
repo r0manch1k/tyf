@@ -173,6 +173,10 @@ const created_at = moment(props.post.created_at).fromNow();
   border-right: 1px solid var(--primary) !important;
 } */
 
+a.router-link-exact-active {
+  color: var(--primary);
+}
+
 .btn-primary {
   border-color: var(--primary);
   color: var(--primary);

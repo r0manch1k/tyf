@@ -78,7 +78,7 @@ const isHome = computed(
 }
 
 a.router-link-exact-active {
-  color: var(--light) !important;
+  color: var(--light);
 }
 
 .card {

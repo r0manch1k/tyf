@@ -1,4 +1,3 @@
-{% load static %}
 <!DOCTYPE html>
 <html lang="ru">
   <head>
@@ -9,90 +8,88 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <style>
+      @font-face {
+        font-family: "Klarissa";
+        font-style: normal;
+        font-weight: normal;
+        /* TODO: Change the URL to the production path */
+        src: url("http://localhost:8000/static/fonts/Klarissa.woff")
+          format("woff");
+      }
+
       body {
-        font-family: "Arial", sans-serif;
+        font-family: "Klarissa", sans-serif;
         background-color: #333333 !important;
         margin: 0;
         padding: 0;
       }
-      .email-container {
+
+      .email {
         max-width: 600px;
         margin: 0 auto;
-        background-color: #111111;
-        text-align: center;
+        background-color: #222222;
+        color: #f2f2f2;
+        text-align: left;
         padding: 20px;
         border-radius: 8px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
       }
-      .img {
-        text-align: center;
-        margin-bottom: 5px;
+
+      .email__header {
+        font-size: 24px;
+        font-weight: 100;
+        margin: 0 0 10px 0;
       }
 
-      .header a {
-        font-family: "Anton SC", sans-serif;
-        font-size: 24px;
-        color: #ccff00;
-      }
-      .content {
-        padding: 5px 0;
+      .email__text {
         color: #f2f2f2;
       }
-      .content p {
-        font-size: 15px;
-        font-weight: 100;
-        margin-bottom: 10px;
+
+      .email__footer__header {
+        margin-bottom: 3px;
       }
-      .verification-code {
-        font-size: 24px;
-        font-family: "Anton SC", sans-serif;
+
+      .email__code {
+        font-family: "Arial", sans-serif;
         font-weight: bold;
-        text-align: center;
         color: #ccff00;
-        margin: 20px 0;
+        margin: 5px 0 10px 0;
       }
-      .footer {
-        text-align: center;
-        font-size: 12px;
+
+      .email__footer {
+        text-align: right;
+        font-size: 18px;
         color: #ccff00;
         font-weight: 100;
         padding-top: 20px;
       }
+
       hr {
         border: 0;
         height: 0.1px;
         background: #555555;
         margin: 0;
       }
+
+      a,
+      span {
+        color: #ccff00;
+        text-decoration: none;
+      }
     </style>
   </head>
   <body>
-    <div class="email-container">
-      <a href="www.tellyourfriends.ru" class="navbar-brand d-flex me-4">
-        <img
-          class=""
-          src="{% static 'img/logo.svg' %}"
-          alt=""
-          style="height: 35px"
-        />
-      </a>
+    <div class="email">
+      <p class="email__header">
+        <span class="email__text">Verification Code:</span>
+        <span class="email__code">{{ otp_key }}</span>
+      </p>
       <hr />
-      <div class="content">
-        <p>Hello,</p>
-        <p>We received a request to {{ context }} for your account.</p>
-        <p>
-          To proceed with {{ context }}, please enter the following verification
-          code on the verification page:
-        </p>
-        <div class="verification-code">{{ otp_key }}</div>
-        <p>
-          If you did not request {{ context }}, please ignore this email. Your
-          account is safe.
-        </p>
-      </div>
-      <hr />
-      <div class="footer">
-        <p>Best regards,<br /><strong>Tell Your Friends</strong></p>
+      <div class="email_footer">
+        <p class="email__footer__header">Best regards,</p>
+        <a href="https://tellyourfriends.ru" class="email__footer__link">
+          <strong>Tell Your Friends</strong>
+        </a>
       </div>
     </div>
   </body>

@@ -83,7 +83,7 @@
                     >{{ profile.university.name }}
                   </p>
                   <p v-if="profile.major">
-                    <span class="field">Направление: </span
+                    <span class="field">Направление : </span
                     >{{ profile.major.name + " (" + profile.major.code + ")" }}
                   </p>
                   <p v-if="profile.bio">
