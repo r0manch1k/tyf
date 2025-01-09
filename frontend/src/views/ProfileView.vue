@@ -1,34 +1,27 @@
 <template>
   <div v-if="!loading">
-    <div class="p-5">
+    <div class="px-5 py-4">
       <div class="row">
-        <!-- Profile -->
-        <div class="col-md-3 text-center">
+        <div class="col-md-3 text-center pt-6">
           <img
             :src="profile.avatar"
             alt="avatar"
             class="img-fluid rounded-circle"
+            style="width: 15rem; height: 15rem"
           />
-          <p class="mt-3 fs-4 text-break">{{ profile.username }}</p>
-          <div class="action-buttons">
+          <h1 class="fs-3 mt-3 text-light">{{ profile.username }}</h1>
+          <div class="action-buttons fs-5">
             <button
               v-if="isAuthenticated"
-              class="btn btn-outline-primary w-100 mt-2"
-              :class="isFollowing ? 'action-checked' : 'action-unchecked'"
+              class="btn-light mt-2"
               @click="toggleFollow"
             >
               {{ isFollowing ? "Отписаться" : "Подписаться" }}
             </button>
-            <button
-              v-else
-              class="btn btn-outline-primary w-100 mt-2 action-unchecked"
-              @click="login"
-            >
-              Подписаться
-            </button>
+            <button v-else class="btn-light" @click="login">Подписаться</button>
           </div>
           <hr class="mt-3" />
-          <ul class="list-unstyled d-flex flex-column fs-7">
+          <!-- <ul class="list-unstyled d-flex flex-column fs-7">
             <li>
               <div class="d-flex align-items-center gap-1 mb-0">
                 <span class="badge bg-secondary">{{ profile.points }}</span>
@@ -41,40 +34,76 @@
                 Награды
               </div>
             </li>
-          </ul>
+          </ul> -->
         </div>
 
-        <!-- Tabs -->
-        <div class="col-md-9 fs-7">
+        <div class="col-md-9">
           <Tabs
             nav-item-class="nav-item"
             nav-item-active-class="nav-item-active"
             nav-item-link-class="nav-item-link"
             nav-class="tab-panels-wrapper"
           >
-            <Tab name="Общее" :selected="true">
-              <div class="mt-4 text-start">
-                <p v-if="profile.bio">
-                  <em class="about-field">О себе: </em>{{ profile.bio }}
-                </p>
-                <p v-if="profile.email">
-                  <em class="about-field">Почта: </em>{{ profile.email }}
-                </p>
-                <p v-if="profile.date_of_birth">
-                  <em class="about-field">Дата рождения: </em
-                  >{{ profile.date_of_birth }}
-                </p>
-                <p v-if="profile.date_joined">
-                  <em class="about-field">Дата регистрации: </em
-                  >{{ new Date(profile.date_joined).toLocaleDateString() }}
-                </p>
-                <p v-if="profile.university">
-                  <em class="about-field">Университет: </em
-                  >{{ profile.university }}
-                </p>
-                <p v-if="profile.major">
-                  <em class="about-field">Напрваление: </em>{{ profile.major }}
-                </p>
+            <Tab name="Информация" :selected="true">
+              <div class="card bg-dark-light text-start">
+                <!-- <div class="card-header">
+                  <h2 class="fs-5 text-light fw-normal mb-0">
+                    Информация о пользователе
+                    {{ profile.username }}
+                  </h2>
+                </div> -->
+                <div class="card-body d-flex flex-column gap-2 fs-6 pt-3 pb-3">
+                  <p v-if="profile.first_name">
+                    <span class="field">Имя: </span>{{ profile.first_name }}
+                  </p>
+                  <p v-if="profile.last_name">
+                    <span class="field">Фамилия: </span>{{ profile.last_name }}
+                  </p>
+                  <p v-if="profile.middle_name">
+                    <span class="field">Отчество: </span
+                    >{{ profile.middle_name }}
+                  </p>
+                  <p v-if="profile.username">
+                    <span class="field">Имя пользователя: </span
+                    >{{ profile.username }}
+                  </p>
+                  <p v-if="profile.email">
+                    <span class="field">Почта: </span>{{ profile.email }}
+                  </p>
+                  <p v-if="profile.date_of_birth">
+                    <span class="field">Дата рождения: </span
+                    >{{ new Date(profile.date_of_birth).toLocaleDateString() }}
+                  </p>
+                  <p v-if="profile.date_joined">
+                    <span class="field">Дата регистрации: </span
+                    >{{ new Date(profile.date_joined).toLocaleDateString() }}
+                  </p>
+                  <p v-if="profile.university">
+                    <span class="field">Университет: </span
+                    >{{ profile.university.name }}
+                  </p>
+                  <p v-if="profile.major">
+                    <span class="field">Направление: </span
+                    >{{ profile.major.name + " (" + profile.major.code + ")" }}
+                  </p>
+                  <p v-if="profile.bio">
+                    <span class="field">О себе: </span>{{ profile.bio }}
+                  </p>
+                  <div
+                    v-if="profile.telegram"
+                    class="d-flex align-items-center gap-1"
+                  >
+                    <span class="field">Telegram: </span>
+                    <a :href="profile.telegram">{{ profile.telegram }}</a>
+                  </div>
+                  <div
+                    v-if="profile.vkontakte"
+                    class="d-flex align-items-center gap-1"
+                  >
+                    <span class="field">VK: </span>
+                    <a :href="profile.vkontakte">{{ profile.vkontakte }}</a>
+                  </div>
+                </div>
               </div>
             </Tab>
             <Tab name="Посты">
@@ -85,11 +114,71 @@
                 >
                   {{ profile.username }} ничего не публиковал.
                 </p>
-                <ul v-else>
-                  <li v-for="post in profile.posts" :key="post.id">
-                    {{ post.content }}
-                  </li>
-                </ul>
+                <div v-else class="d-flex flex-column gap-3">
+                  <Post
+                    v-for="post in profile.posts"
+                    :key="post.identifier"
+                    :post="post"
+                  />
+                </div>
+              </div>
+            </Tab>
+            <Tab name="Подписчики">
+              <div class="tab-pane">
+                <p
+                  v-if="!profile.followers || !profile.followers.length"
+                  class="text-secondary fs-7 mt-4 text-center"
+                >
+                  {{ profile.username }} пока никого не подписался.
+                </p>
+                <div v-else class="d-flex flex-column gap-3">
+                  <div
+                    v-for="follower in profile.followers"
+                    :key="follower.username"
+                    class="d-flex align-items-center gap-2"
+                  >
+                    <img
+                      :src="follower.avatar"
+                      alt="avatar"
+                      class="img-fluid rounded-circle"
+                      style="width: 3rem; height: 3rem"
+                    />
+                    <div>
+                      <a :href="'/profile/' + follower.username">
+                        {{ follower.username }}
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </Tab>
+            <Tab name="Подписки">
+              <div class="tab-pane">
+                <p
+                  v-if="!profile.following || !profile.following.length"
+                  class="text-secondary fs-7 mt-4 text-center"
+                >
+                  {{ profile.username }} пока ни на кого не подписался.
+                </p>
+                <div v-else class="d-flex flex-column gap-3">
+                  <div
+                    v-for="following in profile.following"
+                    :key="following.username"
+                    class="d-flex align-items-center gap-2"
+                  >
+                    <img
+                      :src="following.avatar"
+                      alt="avatar"
+                      class="img-fluid rounded-circle"
+                      style="width: 3rem; height: 3rem"
+                    />
+                    <div>
+                      <a :href="'/profile/' + following.username">
+                        {{ following.username }}
+                      </a>
+                    </div>
+                  </div>
+                </div>
               </div>
             </Tab>
           </Tabs>
@@ -104,21 +193,26 @@
 
 <script setup lang="ts">
 import LoadingCircle from "@/components/LoadingCircle.vue";
+import Post from "@/components/Post.vue";
+import { Tabs, Tab } from "vue3-tabs-component";
 import { ref, computed, defineProps, onMounted } from "vue";
+import ProfileDataService from "@/services/ProfileDataService";
+import type ProfileDetailModel from "@/models/ProfileModel";
+import type PostListItemModel from "@/models/PostModel";
 import { useStore } from "vuex";
 
 const loading = ref(true);
 
 const props = defineProps({
-  username: String,
+  username: {
+    type: String,
+    default: "",
+  },
 });
 
 const store = useStore();
 
-const profile = computed(() => {
-  console.log("Getting profile", props.username);
-  return store.getters["profile/getProfileByUsername"](props.username);
-});
+let profile = ref<ProfileDetailModel>(store.getters["profile/getProfile"]);
 
 // TODO: Implement follow/unfollow functionality
 const isAuthenticated = ref(true);
@@ -132,27 +226,55 @@ const login = () => {
   console.log("Redirect to login");
 };
 
-// TODO: Fix header dissapearing on profile page load
 onMounted(async () => {
-  await store.dispatch("profile/fetchProfileByUsername", props.username);
-  loading.value = false;
+  await Promise.all([
+    (profile.value = await ProfileDataService.getProfileByUsername(
+      props.username
+    )),
+    (profile.value.posts = await ProfileDataService.getProfilePosts(
+      props.username
+    )),
+  ]).then(() => {
+    loading.value = false;
+  });
 });
 </script>
 
 <style>
+ul {
+  padding-left: 0 !important;
+}
+
 .nav-item {
   width: 100%;
   display: block;
-  border: none;
-  border-bottom: 1px solid var(--secondary);
-  background: none;
+  background-color: var(--dark-light);
+  color: var(--light);
+  border-radius: 0.4rem !important;
   padding: 0.5rem 1rem;
-  font-weight: 500;
+  font-weight: 700;
+}
+
+.nav-item:hover {
+  color: var(--light) !important;
 }
 
 .nav-item-active {
-  border-bottom: 1px solid var(--primary);
+  background-color: var(--secondary);
+  color: var(--dark-light);
 }
+
+/* .nav-item-active:hover {
+  color: var(--dark-light);
+}
+
+.nav-item-link.is-active {
+  color: var(--dark-light);
+}
+
+.nav-item-link.is-active:hover {
+  color: var(--dark-light);
+} */
 
 .nav-item-link {
   display: flex;
@@ -162,66 +284,28 @@ onMounted(async () => {
 
 .tab-panels-wrapper {
   display: flex;
+  gap: 1rem;
 }
 </style>
 
 <style scoped>
-/* BUTTONS */
-
-.action-checked:focus,
-.action-unchecked:focus {
-  outline: none !important;
-  box-shadow: none !important;
+a {
+  color: var(--primary);
+  text-decoration: underline;
 }
 
-.action-unchecked,
-.action-checked:hover {
-  color: var(--light);
-  background-color: var(--dark);
-  font-size: smaller;
-  outline: none !important;
-  box-shadow: none;
+a:hover {
+  color: var(--primary);
 }
 
-.action-checked,
-.action-unchecked:hover {
-  color: var(--dark);
-  background-color: var(--primary);
-  border-right: 1px solid var(--light);
-  border-bottom: 1px solid var(--light);
-  font-size: smaller;
-  outline: none !important;
-  box-shadow: none;
-}
-
-.avatars-block {
-  display: inline-flex;
-}
-
-.avatar {
-  width: 1.6em;
-  height: 1.6em;
-  border-radius: 50%;
-  border: 2px solid var(--dark);
-}
-
-.avatar-bigger {
-  width: 4em;
-  height: 4em;
-  border-radius: 50%;
-  border: 2px solid var(--dark);
-}
-
-.reduce-margin-right {
-  margin-right: -0.5em;
-}
-
-.about-field {
+p {
   color: var(--secondary-xx-light);
-  font-weight: 100;
-  /* text-decoration: underline;
-    text-decoration-color: var(--primary);
-    text-decoration-thickness: 0.01em; */
+  margin: 0;
+}
+
+.field {
+  font-weight: bold;
+  color: var(--secondary-xx-light);
 }
 
 #posts-nav button.active {
