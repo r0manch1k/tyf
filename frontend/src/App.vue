@@ -59,7 +59,7 @@ const isHome = computed(
 @import "@/assets/styles/css/main.css";
 
 #app {
-  font-family: "Arial", sans-serif;
+  font-family: "MesloLGS NF", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
