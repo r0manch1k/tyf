@@ -41,8 +41,8 @@ const isError = computed(() => {
 
 const isLogin = computed(() => route.name === "login");
 const isRegister = computed(() => route.name === "register");
-const isResetPassword = computed(() => route.name === "reset_password");
-const isSetPassword = computed(() => route.name === "reset_password_confirm");
+const isResetPassword = computed(() => route.name === "reset-password");
+const isSetPassword = computed(() => route.name === "reset-password-confirm");
 const isVerification = computed(() => route.name === "verification");
 const isHome = computed(
   () =>
@@ -58,7 +58,7 @@ const isHome = computed(
 @import "@/assets/styles/css/bootstrap.min.css";
 @import "@/assets/styles/css/main.css";
 
-#app {
+/* #app {
   font-family: "Arial";
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -66,7 +66,7 @@ const isHome = computed(
   color: #2c3e50;
   height: 100%;
   width: 100%;
-}
+} */
 
 .main__content {
   background-color: rgba(30, 30, 35, 0.5);
@@ -77,12 +77,12 @@ const isHome = computed(
   z-index: -50;
 }
 
-a.router-link-exact-active {
+/* a.router-link-exact-active {
   color: var(--light) !important;
 }
 
 nav {
-  padding: 30px;
+padding: 30px;
 }
 
 nav a {
@@ -92,5 +92,5 @@ nav a {
 
 nav a.router-link-exact-active {
   color: #42b983;
-}
+} */
 </style>

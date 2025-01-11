@@ -5,9 +5,11 @@ import RegisterView from "@/views/Authorization/RegisterView.vue";
 import ResetPasswordView from "@/views/Authorization/ResetPasswordView.vue";
 import SetPasswordView from "@/views/Authorization/SetPasswordView.vue";
 import VerificationView from "@/views/Authorization/VerificationView.vue";
+import NotFoundView from '@/views/NotFoundView.vue';
 import ProfileView from "@/views/ProfileView.vue";
 import PostDetailView from "@/views/PostDetailView.vue";
 import PostCreateView from "@/views/PostCreateView.vue";
+import LogoutView from "@/views/Authorization/LogoutView.vue";
 import store from "@/stores";
 
 // TODO: Change _ to - in router names
@@ -30,18 +32,16 @@ const routes = [
   },
   {
     path: "/login/reset_password",
-    name: "reset_password",
+    name: "reset-password",
     component: ResetPasswordView,
   },
   {
-    // path: "/login/set_password/:uid/:token",
     path: "/login/set_password",
-    name: "reset_password_confirm",
+    name: "reset-password-confirm/:uid/:token",
     component: SetPasswordView,
   },
   {
-    // path: "/verify/:uid/:token",
-    path: "/verify",
+    path: "/verify/:uid/:token",
     name: "verification",
     component: VerificationView,
   },
@@ -62,6 +62,16 @@ const routes = [
     component: PostDetailView,
     props: true,
   },
+  {
+    path: "/:catchAll(.*)",
+    name: "NotFound",
+    component: NotFoundView,
+  },
+  {
+    path: "/logout",
+    name: "logout",
+    component: LogoutView,
+  }
 ];
 
 const router = createRouter({

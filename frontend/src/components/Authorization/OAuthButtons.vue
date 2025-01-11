@@ -10,8 +10,10 @@
         width="24"
         height="24"
       />
-      <span class="text-center" style="margin: 0% !important"
-        >Continue with Google</span
+      <span
+        class="text-center"
+        style="margin: 0% !important; color: var(--light)"
+        >Продолжить с Google</span
       >
     </a>
     <a
@@ -24,8 +26,10 @@
         width="24"
         height="24"
       />
-      <span class="text-center" style="margin: 0% !important"
-        >Continue with Yandex</span
+      <span
+        class="text-center"
+        style="margin: 0% !important; color: var(--light)"
+        >Продолжить с Яндекс</span
       >
     </a>
   </div>

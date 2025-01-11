@@ -1,5 +1,5 @@
-import api from "@/stores/services/api";
 import ProfileModel from "@/models/ProfileModel";
+import api from "@/stores/services/api";
 
 class ProfileDataService {
   async getAllProfiles(): Promise<ProfileModel[]> {

@@ -12,6 +12,7 @@ from apps.utils.verifyTools import (
 )
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from django.utils.translation import gettext
 from django.contrib.auth import get_user_model
 from .permissions import VerificationPermissions
 from rest_framework.exceptions import ValidationError
@@ -61,7 +62,9 @@ class Login(GenericAPIView):
             elif e.detail.keys().__contains__("info"):
                 error = e.detail.get("info")[0].capitalize()
             else:
-                error = "Something went wrong, please try again later."
+                error = "Что-то пошло не так, повторите попытку позже."
+
+            error = gettext(error)
 
             return Response(
                 {"message": error, "payload": {}},
@@ -103,7 +106,7 @@ class Register(CreateAPIView):
                     verify_token = generateVerifyToken()
                     redis_key = settings.TYF_USER_VERIFICATION_KEY.format(
                         token=getHash(
-                            f"{verify_token}-{request.META.get("REMOTE_ADDR")}"
+                            f"""{verify_token}-{request.META.get("REMOTE_ADDR")}"""
                         )
                     )
                     if cache.get(redis_key) is None:
@@ -118,7 +121,7 @@ class Register(CreateAPIView):
 
             verify_token = generateVerifyToken()
             redis_key = settings.TYF_USER_VERIFICATION_KEY.format(
-                token=getHash(f"{verify_token}-{request.META.get("REMOTE_ADDR")}")
+                token=getHash(f"""{verify_token}-{request.META.get("REMOTE_ADDR")}""")
             )
             uid = urlsafe_base64_encode(force_bytes(user.pk))
             cache.set(
@@ -130,11 +133,10 @@ class Register(CreateAPIView):
                 },
                 timeout=settings.TYF_USER_VERIFICATION_TIMEOUT,
             )
-            print(settings.TYF_USER_VERIFICATION_TIMEOUT)
 
             otp = generateOTP()
             user.otp = getHash(otp)
-            sendEmail(user=user, otp=otp, reset_password=False, register_cofirm=True)
+            sendEmail(user=user, otp=otp, reset_password=False, register_confirm=True)
 
             user.save()
 
@@ -151,6 +153,8 @@ class Register(CreateAPIView):
         except ValidationError as e:
             if e.detail.keys().__contains__("password1"):
                 error = e.detail.get("password1")[0].capitalize()
+            elif e.detail.keys().__contains__("password2"):
+                error = e.detail.get("password2")[0].capitalize()
             elif e.detail.keys().__contains__("email"):
                 error = e.detail.get("email")[0].capitalize()
             elif e.detail.keys().__contains__("info"):
@@ -158,15 +162,18 @@ class Register(CreateAPIView):
             else:
                 error = "Something went wrong, please try again later."
 
+            error = gettext(error)
+
             return Response(
                 {"message": error, "payload": {}},
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
         except BaseException:
+            error = "Что-то пошло не так, повторите попытку позже."
             return Response(
                 {
-                    "message": "Something went wrong, please try again later.",
+                    "message": error,
                     "payload": {},
                 },
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -181,7 +188,7 @@ class ResetPassword(APIView):
             if not User.objects.filter(email=email).exists():
                 return Response(
                     {
-                        "message": "User with this email does not exist.",
+                        "message": gettext("User with this email does not exist."),
                         "payload": {},
                     },
                     status=status.HTTP_400_BAD_REQUEST,
@@ -190,7 +197,9 @@ class ResetPassword(APIView):
             if not User.objects.get(email=email).is_active:
                 return Response(
                     {
-                        "message": "Your account doesn't verified. Please Sign Up again!",
+                        "message": gettext(
+                            "Your account doesn't verified. Please Sign Up again!"
+                        ),
                         "payload": {},
                     },
                     status=status.HTTP_400_BAD_REQUEST,
@@ -200,7 +209,7 @@ class ResetPassword(APIView):
 
             verify_token = generateVerifyToken()
             redis_key = settings.TYF_USER_VERIFICATION_KEY.format(
-                token=getHash(f"{verify_token}-{request.META.get("REMOTE_ADDR")}")
+                token=getHash(f"""{verify_token}-{request.META.get("REMOTE_ADDR")}""")
             )
             uid = urlsafe_base64_encode(force_bytes(user.pk))
             cache.set(
@@ -215,7 +224,7 @@ class ResetPassword(APIView):
 
             otp = generateOTP()
             user.otp = getHash(otp)
-            sendEmail(user=user, otp=otp, reset_password=True, register_cofirm=False)
+            sendEmail(user=user, otp=otp, reset_password=True, register_confirm=False)
             print(otp)
 
             user.save()
@@ -233,12 +242,16 @@ class ResetPassword(APIView):
         except ValidationError as e:
             if e.detail.keys().__contains__("password1"):
                 error = e.detail.get("password1")[0].capitalize()
+            elif e.detail.keys().__contains__("password2"):
+                error = e.detail.get("password2")[0].capitalize()
             elif e.detail.keys().__contains__("email"):
                 error = e.detail.get("email")[0].capitalize()
             elif e.detail.keys().__contains__("info"):
                 error = e.detail.get("info")[0].capitalize()
             else:
-                error = "Something went wrong, please try again later."
+                error = "Что-то пошло не так, повторите попытку позже."
+
+            error = gettext(error)
 
             return Response(
                 {"message": error, "payload": {}},
@@ -248,7 +261,7 @@ class ResetPassword(APIView):
         except BaseException:
             return Response(
                 {
-                    "message": "Something went wrong, please try again later.",
+                    "message": "Что-то пошло не так, повторите попытку позже.",
                     "payload": {},
                 },
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -274,7 +287,7 @@ class SetPassword(GenericAPIView):
 
             redis_key = settings.TYF_USER_VERIFICATION_KEY.format(
                 token=getHash(
-                    f"{request.data.get("token")}-{request.META.get("REMOTE_ADDR")}"
+                    f"""{request.data.get("token")}-{request.META.get("REMOTE_ADDR")}"""
                 )
             )
             cache.delete(
@@ -283,7 +296,7 @@ class SetPassword(GenericAPIView):
 
             return Response(
                 {
-                    "message": "Password changed successfully",
+                    "message": "Пароль успешно сменён!",
                     "payload": {},
                 },
                 status=status.HTTP_200_OK,
@@ -293,20 +306,23 @@ class SetPassword(GenericAPIView):
                 error = e.detail.get("password1")[0].capitalize()
             elif e.detail.keys().__contains__("password2"):
                 error = e.detail.get("password2")[0].capitalize()
+            elif e.detail.keys().__contains__("password2"):
+                error = e.detail.get("password2")[0].capitalize()
             elif e.detail.keys().__contains__("info"):
                 error = e.detail.get("info")[0].capitalize()
             else:
-                error = "Something went wrong, please try again later."
+                error = "Что-то пошло не так, повторите попытку позже."
+
+            gettext(error)
 
             return Response(
                 {"message": error, "payload": {}},
                 status=status.HTTP_400_BAD_REQUEST,
             )
         except BaseException as e:
-            print(e)
             return Response(
                 {
-                    "message": "Something went wrong, please try again later.",
+                    "message": "Что-то пошло не так, повторите попытку позже.",
                     "payload": {},
                 },
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -316,7 +332,7 @@ class SetPassword(GenericAPIView):
 class Verification(APIView):
     permission_classes = [VerificationPermissions]
 
-    def get(self, request):
+    def get(self, _):
         return Response(
             {
                 "message": "OK",
@@ -326,9 +342,9 @@ class Verification(APIView):
         )
 
     def post(self, request):
-        uid = request.data.get("uid", "")
         otp = request.data.get("otp", "")
-        token = request.data.get("token", "")
+        uid = request.query_params.get("uid", "")
+        token = request.query_params.get("token", "")
 
         try:
             user = User.objects.get(pk=force_str(urlsafe_base64_decode(uid)))
@@ -346,7 +362,10 @@ class Verification(APIView):
             mins_difference = (timezone.now() - time_difference).total_seconds() / 60
             if mins_difference >= 1:
                 return Response(
-                    {"message": "OTP code expired. Try again.", "payload": {}},
+                    {
+                        "message": "Ваш код истёк. Запросите новый код и попробуйте снова.",
+                        "payload": {},
+                    },
                     status=status.HTTP_400_BAD_REQUEST,
                 )
 
@@ -355,14 +374,14 @@ class Verification(APIView):
             user.save()
 
             redis_key = settings.TYF_USER_VERIFICATION_KEY.format(
-                token=getHash(f"{token}-{request.META.get("REMOTE_ADDR")}")
+                token=getHash(f"""{token}-{request.META.get("REMOTE_ADDR")}""")
             )
             if cache.get(redis_key)["is_register_confirm"]:
                 cache.delete(redis_key)
 
             return Response(
                 {
-                    "message": "Account verified successfully",
+                    "message": "Ваш аккаунт успешно подтверждён",
                     "payload": {
                         "token": request.data.get("token"),
                         "uid": request.data.get("uid"),
@@ -372,19 +391,19 @@ class Verification(APIView):
             )
         else:
             return Response(
-                {"message": "Invalid OTP.", "payload": {}},
+                {"message": "Неверный код.", "payload": {}},
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
     def patch(self, request):
         user = User.objects.get(
-            pk=force_str(urlsafe_base64_decode(request.data.get("uid")))
+            pk=force_str(urlsafe_base64_decode(request.query_params.get("uid")))
         )
 
         if user.otp is None:
             return Response(
                 {
-                    "message": "Your account does not require email verification",
+                    "message": gettext("Ваш аккаунт не нуждается в подтверждении."),
                     "payload": {},
                 },
                 status=status.HTTP_400_BAD_REQUEST,
@@ -392,11 +411,11 @@ class Verification(APIView):
         otp = generateOTP()
         user.otp = getHash(otp)
         user.save()
-        sendEmail(user=user, otp=otp, reset_password=False, register_cofirm=True)
+        sendEmail(user=user, otp=otp, reset_password=False, register_confirm=True)
         print(otp)
 
         response = {
-            "message": "New code has been sent to your email!",
+            "message": gettext("Новый код был отправлен на адрес вашей эл. почты!"),
             "payload": {},
         }
         return Response(response, status=status.HTTP_200_OK)

@@ -1,9 +1,9 @@
-import api from "@/stores/services/api";
-import type PostModel from "@/models/PostModel";
 import type CategoryModel from "@/models/CategoryModel";
 import type CollectionModel from "@/models/CollectionModel";
-import type TagModel from "@/models/TagModel";
+import type PostModel from "@/models/PostModel";
 import type ProfileModel from "@/models/ProfileModel";
+import type TagModel from "@/models/TagModel";
+import api from "@/stores/services/api";
 
 class PostDataService {
   async getAllPosts(): Promise<PostModel[]> {

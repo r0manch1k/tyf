@@ -19,11 +19,11 @@ def generateOTP(length=6):
     return otp
 
 
-def sendEmail(user, otp, reset_password=False, register_cofirm=False):
+def sendEmail(user, otp, reset_password=False, register_confirm=False):
     if reset_password:
         subject = "Reset Password - Tell Your Friends"
         context = "reset your password"
-    elif register_cofirm:
+    elif register_confirm:
         subject = "Confirm Registration - Tell Your Friends"
         context = "confirm registration"
     else:
@@ -48,5 +48,6 @@ def getHash(data: str):
 
 def generateVerifyToken():
     return secrets.token_urlsafe(32)
+
 
 AccountActivationToken = PasswordResetTokenGenerator()

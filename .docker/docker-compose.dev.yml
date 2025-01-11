@@ -56,7 +56,7 @@ services:
 
   redis:
     container_name: tyf_redis
-    image: redis:5.0.6-alpine
+    image: redis:latest
     restart: unless-stopped
     healthcheck:
       test:

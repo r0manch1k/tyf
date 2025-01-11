@@ -24,24 +24,24 @@ class LoginSerializer(serializers.ModelSerializer):
         if UserSocialAuth.objects.filter(user__email=email).exists():
             raise serializers.ValidationError(
                 detail={
-                    "info": "User with this Email was registered using Google/Yandex. Please sign in using same method."
+                    "info": "Пользователь с этим адресом эл. почты был зарегистрирован с помощью Google/Яндекс. Пожалуйста, войдите в систему, используя тот же метод."
                 },
             )
 
         if not User.objects.filter(email=email).exists():
             raise serializers.ValidationError(
-                detail={"info": "User with this Email doesn't exists."}
+                detail={"info": "Пользователь с этим адресом эл. почты не существует"}
             )
         else:
             if not User.objects.get(email=email).is_active:
                 raise serializers.ValidationError(
                     detail={
-                        "info": "This user has not verified Email. Please Sign Up again."
+                        "info": "Этот пользователь не подтвердил адрес электронной почты. Пожалуйста, зарегистрируйтесь еще раз."
                     }
                 )
 
         if auth.authenticate(email=email, password=password) is None:
-            raise serializers.ValidationError(detail={"info": "Incorrect Password."})
+            raise serializers.ValidationError(detail={"info": "Неверный пароль."})
         return attrs
 
 
@@ -61,10 +61,7 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ["pk", "email", "password1", "password2"]
-        extra_kwargs = {
-            "pk": {"read_only": True},
-        }
+        fields = ["email", "password1", "password2"]
 
     def validate(self, attrs):
         email = attrs.get("email", "").lower()
@@ -74,13 +71,13 @@ class RegisterSerializer(serializers.ModelSerializer):
         if UserSocialAuth.objects.filter(user__email=email).exists():
             raise serializers.ValidationError(
                 detail={
-                    "info": "User with this Email was registered using Google/Yandex. Please sign in using same method."
+                    "info": "Пользователь с этим адресом эл. почты был зарегистрирован с помощью Google/Яндекс. Пожалуйста, войдите в систему, используя тот же метод."
                 },
             )
 
         if password1 != password2:
             raise serializers.ValidationError(
-                detail={"info": "Password doesn't match."}
+                detail={"info": "Пароли не совпадают."}
             )
 
         try:
@@ -132,7 +129,7 @@ class SetPasswordSerializer(serializers.ModelSerializer):
 
         if password1 != password2:
             raise serializers.ValidationError(
-                detail={"info": "Password doesn't match."}
+                detail={"info": "Пароли не совпадают."}
             )
 
         try:

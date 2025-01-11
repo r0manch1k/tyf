@@ -20,13 +20,13 @@
 
 <script lang="ts" setup>
 import LoadingCircle from "@/components/LoadingCircle.vue";
-import Tablist from "@/components/Tablist.vue";
 import Post from "@/components/Post.vue";
-import PostDataService from "@/services/PostDataService";
-import type PostModel from "@/models/PostModel";
+import Tablist from "@/components/Tablist.vue";
 import type CategoryModel from "@/models/CategoryModel";
 import type CollectionModel from "@/models/CollectionModel";
-import { ref, onMounted, computed, shallowRef } from "vue";
+import type PostModel from "@/models/PostModel";
+import PostDataService from "@/services/PostDataService";
+import { computed, onMounted, ref, shallowRef } from "vue";
 import { useStore } from "vuex";
 
 const loading = ref(true);

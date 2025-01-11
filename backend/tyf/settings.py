@@ -1,6 +1,7 @@
 import os
 import datetime
 from pathlib import Path
+from corsheaders.defaults import default_headers
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -26,7 +27,22 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "mediafiles")
 # SESSION_COOKIE_SECURE = True
 # CSRF_COOKIE_SECURE = True
 
-CSRF_TRUSTED_ORIGINS = ["http://localhost:8080", "http://localhost:8000"]
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:8080",
+    "http://localhost:8000",
+    "http://127.0.0.1:8080",
+    "http://127.0.0.1:8000",
+]
+CORS_ALLOW_HEADERS = list(default_headers) + [
+    "X-Api-Key",
+]
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:8080",
+    "http://localhost:8000",
+    "http://127.0.0.1:8080",
+    "http://127.0.0.1:8000",
+]
+
 
 AUTH_USER_MODEL = "users.User"
 
@@ -163,7 +179,7 @@ REST_FRAMEWORK = {
 SIMPLE_JWT = {
     "ROTATE_REFRESH_TOKENS": True,
     "BLACKLIST_AFTER_ROTATION": True,
-    "ACCESS_TOKEN_LIFETIME": datetime.timedelta(minutes=1),
+    "ACCESS_TOKEN_LIFETIME": datetime.timedelta(days=1),
     "REFRESH_TOKEN_LIFETIME": datetime.timedelta(days=7),
 }
 
@@ -263,3 +279,10 @@ MDEDITOR_CONFIGS = {
 }
 
 SELECT2_CACHE_BACKEND = "select2"
+
+LANGUAGE_CODE = "ru"
+
+LANGUAGES = [
+    ("ru", "Русский"),
+    ("en", "English"),
+]
