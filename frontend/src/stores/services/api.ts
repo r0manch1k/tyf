@@ -29,20 +29,19 @@ api.interceptors.request.use(
 )
 
 api.interceptors.response.use(async response => {
-	if (response.status >= 400 && response.status != 401) {
-		store.commit('main/setShowErrorPage', response.status)
-	}
-
 	if (response.status === 401 && response.data.code === 'token_not_valid') {
 		const originalRequest = response.config
 		try {
 			await updateTokens()
-			const newAccessToken = localStorage.getItem('accessToken')
-			originalRequest.headers['Authorization'] = `Bearer ${newAccessToken}`
+			const accessToken = localStorage.getItem('accessToken')
+			originalRequest.headers['Authorization'] = `Bearer ${accessToken}`
 			return api(originalRequest)
 		} catch (updateError) {
 			return Promise.reject(updateError)
 		}
+	}
+	if (response.status >= 400) {
+		store.commit('main/setShowErrorPage', response.status)
 	}
 	return response
 })
