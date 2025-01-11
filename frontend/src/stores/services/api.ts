@@ -35,7 +35,7 @@ api.interceptors.response.use(async response => {
 			await updateTokens()
 			const accessToken = localStorage.getItem('accessToken')
 			originalRequest.headers['Authorization'] = `Bearer ${accessToken}`
-			return api(originalRequest)
+			return await api(originalRequest)
 		} catch (updateError) {
 			return Promise.reject(updateError)
 		}
