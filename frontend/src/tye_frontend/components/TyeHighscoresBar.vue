@@ -39,7 +39,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref } from "vue";
+// import { onMounted } from "vue";
 // import HighscoreDataService from "@/services/HighscoreDataService";
 // import type HighscoreModel from "@/models/HighscoreModel";
 

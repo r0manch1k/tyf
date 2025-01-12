@@ -120,7 +120,7 @@ onMounted(async () => {
 				showErrorPage.value = true
 			}
 		})
-		.catch(error => {
+		.catch(() => {
 			showErrorPage.value = true
 		})
 	loading.value = false
@@ -188,7 +188,7 @@ const verifySubmit = async () => {
 				}
 			}
 		})
-		.catch(error => {
+		.catch(() => {
 			loading.value = false
 			if (messagesComponent.value) {
 				messagesComponent.value.addMessage({
@@ -237,7 +237,7 @@ const resendOTP = async () => {
 				}
 			}
 		})
-		.catch(error => {
+		.catch(() => {
 			loading.value = false
 			if (messagesComponent.value) {
 				messagesComponent.value.addMessage({

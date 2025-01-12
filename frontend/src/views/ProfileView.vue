@@ -195,10 +195,11 @@
 import LoadingCircle from "@/components/LoadingCircle.vue";
 import Post from "@/components/Post.vue";
 import { Tabs, Tab } from "vue3-tabs-component";
-import { ref, computed, defineProps, onMounted } from "vue";
+import { ref, defineProps, onMounted } from "vue";
+// import { computed } from "vue";
 import ProfileDataService from "@/services/ProfileDataService";
 import type ProfileDetailModel from "@/models/ProfileModel";
-import type PostListItemModel from "@/models/PostModel";
+// import type PostListItemModel from "@/models/PostModel";
 import { useStore } from "vuex";
 
 const loading = ref(true)
@@ -289,6 +290,7 @@ ul {
 </style>
 
 <style scoped>
+<<<<<<< HEAD
 a {
   color: var(--primary);
   text-decoration: underline;
@@ -306,6 +308,64 @@ p {
 .field {
   font-weight: bold;
   color: var(--secondary-xx-light);
+=======
+/* BUTTONS */
+
+.action-checked:focus,
+.action-unchecked:focus {
+	outline: none !important;
+	box-shadow: none !important;
+}
+
+.action-unchecked,
+.action-checked:hover {
+	color: var(--light);
+	background-color: var(--dark);
+	font-size: smaller;
+	outline: none !important;
+	box-shadow: none;
+}
+
+.action-checked,
+.action-unchecked:hover {
+	color: var(--dark);
+	background-color: var(--primary);
+	border-right: 1px solid var(--light);
+	border-bottom: 1px solid var(--light);
+	font-size: smaller;
+	outline: none !important;
+	box-shadow: none;
+}
+
+.avatars-block {
+	display: inline-flex;
+}
+
+.avatar {
+	width: 1.6em;
+	height: 1.6em;
+	border-radius: 50%;
+	border: 2px solid var(--dark);
+}
+
+.avatar-bigger {
+	width: 4em;
+	height: 4em;
+	border-radius: 50%;
+	border: 2px solid var(--dark);
+}
+
+.reduce-margin-right {
+	margin-right: -0.5em;
+}
+
+.about-field {
+	color: var(--secondary-xx-light);
+	font-weight: 100;
+	/* text-decoration: underline;
+    text-decoration-color: var(--primary);
+    text-decoration-thickness: 0.01em; */
+>>>>>>> 7-authorization-system
 }
 
 #posts-nav button.active {

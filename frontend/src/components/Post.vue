@@ -150,7 +150,7 @@ import Tag from "@/components/Tag.vue";
 import type PostListItemModel from "@/models/PostModel";
 
 // TODO: Figure out how to import extarnal libraries in Vue 3
-const moment = inject("moment") as any;
+const moment = inject("moment");
 
 const props = defineProps({
   post: {
@@ -159,6 +159,7 @@ const props = defineProps({
   },
 });
 
+// @ts-expect-error: Unreachable code error
 const created_at = moment(props.post.created_at).fromNow();
 </script>
 

@@ -318,7 +318,7 @@ class SetPassword(GenericAPIView):
                 {"message": error, "payload": {}},
                 status=status.HTTP_400_BAD_REQUEST,
             )
-        except BaseException as e:
+        except BaseException:
             return Response(
                 {
                     "message": "Что-то пошло не так, повторите попытку позже.",

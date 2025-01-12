@@ -45,7 +45,7 @@
 <script lang="ts" setup>
 import store from '@/stores'
 import api from '@/stores/services/api'
-import { computed, onMounted, ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 import PasswordField from '@/components/Authorization/Fields/PasswordField.vue'
@@ -81,7 +81,7 @@ onMounted(async () => {
 				showErrorPage.value = true
 			}
 		})
-		.catch(error => {
+		.catch(() => {
 			showErrorPage.value = true
 		})
 	loading.value = false
@@ -130,7 +130,7 @@ const setPasswordSubmit = async () => {
 				}
 			}
 		})
-		.catch(error => {
+		.catch(() => {
 			loading.value = false
 			if (messagesComponent.value) {
 				messagesComponent.value.addMessage({

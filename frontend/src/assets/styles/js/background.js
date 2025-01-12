@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 var canvas = document.getElementById('background'),
 	can_w = parseInt(canvas.getAttribute('width')),
 	can_h = parseInt(canvas.getAttribute('height')),
@@ -6,16 +8,17 @@ var canvas = document.getElementById('background'),
 // console.log.log(typeof can_w);
 var BALL_NUM = 40
 
-var ball = {
-		x: 0,
-		y: 0,
-		vx: 0,
-		vy: 0,
-		r: 0,
-		alpha: 1,
-		phase: 0,
-	},
-	ball_color = {
+// var ball = {
+// 	x: 0,
+// 	y: 0,
+// 	vx: 0,
+// 	vy: 0,
+// 	r: 0,
+// 	alpha: 1,
+// 	phase: 0,
+// }
+
+var ball_color = {
 		r: 204,
 		g: 204,
 		b: 0,
@@ -23,11 +26,11 @@ var ball = {
 	R = 2,
 	balls = [],
 	alpha_f = 0.03,
-	alpha_phase = 0,
+	// alpha_phase = 0,
 	// Line
 	link_line_width = 0.8,
 	dis_limit = 260,
-	add_mouse_point = true,
+	// add_mouse_point = true,
 	mouse_in = false,
 	mouse_ball = {
 		x: 0,
@@ -122,7 +125,7 @@ function randomSidePos(length) {
 // Draw Ball
 function renderBalls() {
 	Array.prototype.forEach.call(balls, function (b) {
-		if (!b.hasOwnProperty('type')) {
+		if (!Object.prototype.hasOwnProperty.call(b, 'type')) {
 			ctx.fillStyle =
 				'rgba(' +
 				ball_color.r +
@@ -162,7 +165,7 @@ function updateBalls() {
 }
 
 // loop alpha
-function loopAlphaInf() {}
+// function loopAlphaInf() {}
 
 // Draw lines
 function renderLines() {
@@ -239,7 +242,7 @@ function initCanvas() {
 	can_w = parseInt(canvas.getAttribute('width'))
 	can_h = parseInt(canvas.getAttribute('height'))
 }
-window.addEventListener('resize', function (e) {
+window.addEventListener('resize', function () {
 	// console.log.log("Window Resize...");
 	initCanvas()
 })
@@ -262,15 +265,15 @@ canvas.addEventListener('mouseleave', function () {
 	mouse_in = false
 	var new_balls = []
 	Array.prototype.forEach.call(balls, function (b) {
-		if (!b.hasOwnProperty('type')) {
+		if (!Object.prototype.hasOwnProperty.call(b, 'type')) {
 			new_balls.push(b)
 		}
 	})
 	balls = new_balls.slice(0)
 })
 canvas.addEventListener('mousemove', function (e) {
-	var e = e || window.event
-	mouse_ball.x = e.pageX
-	mouse_ball.y = e.pageY
+	var err = e || window.event
+	mouse_ball.x = err.pageX
+	mouse_ball.y = err.pageY
 	// console.log.log(mouse_ball);
 })

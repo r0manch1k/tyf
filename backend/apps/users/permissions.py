@@ -39,7 +39,6 @@ class VerificationPermissions(BasePermission):
                 return False
         except BaseException:
             return False
-        
         try:
             redis_data = cache.get(redis_key)
             if not AccountActivationToken.check_token(user, redis_data["user_token"]):

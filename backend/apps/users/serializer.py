@@ -76,9 +76,7 @@ class RegisterSerializer(serializers.ModelSerializer):
             )
 
         if password1 != password2:
-            raise serializers.ValidationError(
-                detail={"info": "Пароли не совпадают."}
-            )
+            raise serializers.ValidationError(detail={"info": "Пароли не совпадают."})
 
         try:
             validate_password(password1)
@@ -103,7 +101,7 @@ class RegisterSerializer(serializers.ModelSerializer):
             instance.set_password(password)
             instance.save()
             return instance
-        
+
 
 class ResetPasswordSerializer(serializers.ModelSerializer):
     email = serializers.CharField()
@@ -111,7 +109,7 @@ class ResetPasswordSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ["email"]
-    
+
     def validate(self, attrs):
         email = attrs.get("email", "").lower()
 
@@ -119,7 +117,6 @@ class ResetPasswordSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 detail={"info": "Пользователя с таким адресом эл. почты не существует."}
             )
-            
         if UserSocialAuth.objects.filter(user__email=email).exists():
             raise serializers.ValidationError(
                 detail={
@@ -160,9 +157,7 @@ class SetPasswordSerializer(serializers.ModelSerializer):
         password2 = attrs.get("password2", "")
 
         if password1 != password2:
-            raise serializers.ValidationError(
-                detail={"info": "Пароли не совпадают."}
-            )
+            raise serializers.ValidationError(detail={"info": "Пароли не совпадают."})
 
         try:
             validate_password(password1)

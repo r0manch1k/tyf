@@ -1,6 +1,6 @@
 import { GetterTree, MutationTree, ActionTree } from "vuex";
 import type ProfileModel from "@/models/ProfileModel";
-import ProfileDataService from "@/services/ProfileDataService";
+// import ProfileDataService from "@/services/ProfileDataService";
 
 class State {
   profile: ProfileModel | null = {
