@@ -1,10 +1,11 @@
 from django.urls import path
-from .views import apiOverview, Login, Register, VerifyOTP, ResendOTP
+from .views import Login, Logout, Register, Verification, SetPassword, ResetPassword
 
 urlpatterns = [
-    path("overview/", apiOverview),
-    path("login/", Login.as_view()),
-    path("register/", Register.as_view()),
-    path("verify-otp/", VerifyOTP.as_view()),
-    path("resend-otp/", ResendOTP.as_view()),
+    path("users/login/", Login.as_view()),
+    path("users/logout/", Logout.as_view()),
+    path("users/register/", Register.as_view()),
+    path("users/verification/", Verification.as_view()),
+    path("users/set_password/", SetPassword.as_view()),
+    path("users/reset_password/", ResetPassword.as_view()),
 ]

@@ -1,5 +1,5 @@
-import api from "@/stores/services/api";
 import CategoryModel from "@/models/CategoryModel";
+import api from "@/stores/services/api";
 
 class CategoryDataService {
   async getAllCategories(): Promise<CategoryModel[]> {

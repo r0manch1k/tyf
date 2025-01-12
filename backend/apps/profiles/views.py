@@ -7,8 +7,16 @@ from apps.posts.serializer import PostListSerializer
 from .models import Profile
 from django.db.models import Count
 
+# from rest_framework_simplejwt.authentication import JWTAuthentication
+# from rest_framework.permissions import IsAuthenticated
+
 
 class ProfileViewSet(viewsets.ViewSet):
+    # TODO: example for permissions
+    # permission_classes = [IsAuthenticated]
+    # authentication_classes = [JWTAuthentication]
+    # request.user -> is current user (by token)
+
     def list(self, request):
         queryset = Profile.objects.all()
         serializer = ProfileListSerializer(queryset, many=True)

@@ -36,7 +36,7 @@
     "src/**/*.vue",
     "tests/**/*.ts",
     "tests/**/*.tsx"
-  ],
+, "src/assets/styles/js/otp.js"  ],
   "exclude": [
     "node_modules",
     "src/**/*.js",

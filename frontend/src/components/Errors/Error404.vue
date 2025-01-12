@@ -9,15 +9,13 @@
       <div class="col-md-6 text-center p-4">
         <i class="bi bi-exclamation-triangle display-1 text-primary"></i>
         <h1 class="display-1 fw-bold">404</h1>
-        <h1 class="mb-4">Page Not Found</h1>
+        <h1 class="mb-4">Страница не найдена</h1>
         <p class="mb-4">
-          We’re sorry, the page you have looked for does not exist or has
-          expired in our website! Maybe go to our home page or try to use a
-          search?
+          К сожалению, страница, которую вы искали, не существует или срок ее действия на нашем сайте истек! Вы можете зайти на нашу домашнюю страницу и попробовать воспользоваться поиском.
         </p>
         <router-link to="/">
           <a class="btn btn-primary rounded-pill py-3 px-5"
-            ><label style="color: var(--dark) !important">Go home</label></a
+            ><label style="color: var(--dark) !important">Перейти на домашнюю страницу</label></a
           >
         </router-link>
       </div>

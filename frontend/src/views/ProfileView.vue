@@ -201,7 +201,7 @@ import type ProfileDetailModel from "@/models/ProfileModel";
 import type PostListItemModel from "@/models/PostModel";
 import { useStore } from "vuex";
 
-const loading = ref(true);
+const loading = ref(true)
 
 const props = defineProps({
   username: {
@@ -210,21 +210,21 @@ const props = defineProps({
   },
 });
 
-const store = useStore();
+const store = useStore()
 
 let profile = ref<ProfileDetailModel>(store.getters["profile/getProfile"]);
 
 // TODO: Implement follow/unfollow functionality
-const isAuthenticated = ref(true);
-const isFollowing = ref(false);
+const isAuthenticated = ref(true)
+const isFollowing = ref(false)
 
 const toggleFollow = () => {
-  isFollowing.value = !isFollowing.value;
-};
+	isFollowing.value = !isFollowing.value
+}
 
 const login = () => {
-  console.log("Redirect to login");
-};
+	console.log('Redirect to login')
+}
 
 onMounted(async () => {
   await Promise.all([
@@ -277,9 +277,9 @@ ul {
 } */
 
 .nav-item-link {
-  display: flex;
-  justify-content: center;
-  color: var(--light);
+	display: flex;
+	justify-content: center;
+	color: var(--light);
 }
 
 .tab-panels-wrapper {
@@ -309,6 +309,6 @@ p {
 }
 
 #posts-nav button.active {
-  border-bottom: 1px solid var(--secondary-x-light);
+	border-bottom: 1px solid var(--secondary-x-light);
 }
 </style>

@@ -1,5 +1,5 @@
-import api from "@/stores/services/api";
 import CollectionModel from "@/models/CollectionModel";
+import api from "@/stores/services/api";
 
 class CollectionDataService {
   async getAllCollections(): Promise<CollectionModel[]> {
