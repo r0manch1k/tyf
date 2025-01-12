@@ -20,12 +20,18 @@
 			/>
 		</symbol>
 	</svg>
-	<div v-if="showMessage" style="width: 100% !important;">
+
+	<div v-if="showMessage">
 		<CAlert
 			v-if="msg.type == 'success'"
 			class="alert alert-success d-flex align-items-center"
 			style="width: 100% !important; border-radius: 1rem !important"
-			dismissible @close="() => { showMessage = false }"
+			dismissible
+			@close="
+				() => {
+					showMessage = false
+				}
+			"
 		>
 			<svg
 				class="bi flex-shrink-0 me-2"
@@ -43,7 +49,12 @@
 			v-if="msg.type == 'info'"
 			class="alert alert-info d-flex align-items-center"
 			style="width: 100% !important; border-radius: 1rem !important"
-			dismissible @close="() => { showMessage = false }"
+			dismissible
+			@close="
+				() => {
+					showMessage = false
+				}
+			"
 		>
 			<svg
 				class="bi flex-shrink-0 me-2"
@@ -61,7 +72,12 @@
 			v-if="msg.type == 'warning'"
 			class="alert alert-warning d-flex align-items-center"
 			style="width: 100% !important; border-radius: 1rem !important"
-			dismissible @close="() => { showMessage = false }"
+			dismissible
+			@close="
+				() => {
+					showMessage = false
+				}
+			"
 		>
 			<svg
 				class="bi flex-shrink-0 me-2"
@@ -79,7 +95,12 @@
 			v-if="msg.type == 'error'"
 			class="alert alert-danger d-flex align-items-center"
 			style="width: 100% !important; border-radius: 1rem !important"
-			dismissible @close="() => { showMessage = false }"
+			dismissible
+			@close="
+				() => {
+					showMessage = false
+				}
+			"
 		>
 			<svg
 				class="bi flex-shrink-0 me-2"
@@ -102,7 +123,7 @@ import { defineExpose, ref } from 'vue'
 const msg = ref(null)
 const showMessage = ref(false)
 
-const addMessage = (message) => {
+const addMessage = message => {
 	msg.value = message
 	showMessage.value = true
 }

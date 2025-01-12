@@ -95,6 +95,9 @@ CORS_ALLOWED_ORIGINS = [
 ROOT_URLCONF = "tyf.urls"
 
 
+REST_USE_JWT = True
+
+
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
@@ -127,12 +130,16 @@ DATABASES = {
 }
 
 
+TYF_USER_VERIFICATION_KEY = "user_verification_{token}"
+TYF_USER_VERIFICATION_TIMEOUT = 15 * 60
+
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
         "LOCATION": os.getenv("REDIS_LOCATION"),
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            "TIMEOUT": TYF_USER_VERIFICATION_TIMEOUT,
         },
     },
     "select2": {
@@ -204,8 +211,6 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 
-TYF_USER_VERIFICATION_KEY = "user_verification_{token}"
-TYF_USER_VERIFICATION_TIMEOUT = 15 * 60
 
 MDEDITOR_CONFIGS = {
     "default": {

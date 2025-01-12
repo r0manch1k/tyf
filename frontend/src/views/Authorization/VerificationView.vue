@@ -106,6 +106,31 @@ const showErrorPage = ref(false)
 const otpNumbers = ref(['', '', '', '', '', ''])
 const messagesComponent = ref<MessagesComponent | null>(null)
 
+onMounted(async () => {
+	await api
+		.get('users/verification/', {
+			params: {
+				token: route.params.token ?? '',
+				uid: route.params.uid ?? '',
+			},
+		})
+		.then(response => {
+			console.log(response)
+			if (response.status >= 400) {
+				showErrorPage.value = true
+			}
+		})
+		.catch(error => {
+			showErrorPage.value = true
+		})
+	loading.value = false
+
+	if (!showErrorPage.value) {
+		startTimer(60)
+		OTPInput()
+	}
+})
+
 const verifySubmit = async () => {
 	loading.value = true
 	const otp = otpNumbers.value.join('')
@@ -125,13 +150,26 @@ const verifySubmit = async () => {
 		)
 		.then(response => {
 			loading.value = false
+			console.log(response.status, response.status == 201)
 			if (response.status == 200) {
 				store.commit('main/setAuthMessage', {
 					text: response.data.message,
 					type: 'success',
 				})
-				console.log()
 				router.push('/login')
+			} else if (response.status == 201) {
+				const resetPasswordToken = response.data.payload.token ?? ''
+				const uid = response.data.payload.uid ?? ''
+				console.log(resetPasswordToken, uid, resetPasswordToken && uid)
+				if (resetPasswordToken && uid) {
+					router.push(`/login/set_password/${uid}/${resetPasswordToken}`)
+				} else {
+					store.commit('main/setAuthMessage', {
+						text: 'Что-то пошло не так. Пройдите процесс смены пароля заново.',
+						type: 'info',
+					})
+					router.push('login/')
+				}
 			} else if (response.status == 401) {
 				store.commit('main/setAuthMessage', {
 					text: 'Ваша сессия подтверждения аккаунта истекла. Пройдите процесс регистрации заново.',
@@ -209,31 +247,6 @@ const resendOTP = async () => {
 			}
 		})
 }
-
-onMounted(async () => {
-	await api
-		.get('users/verification/', {
-			params: {
-				token: route.params.token ?? '',
-				uid: route.params.uid ?? '',
-			},
-		})
-		.then(response => {
-			console.log(response)
-			if (response.status >= 400) {
-				showErrorPage.value = true
-			}
-		})
-		.catch(error => {
-			showErrorPage.value = true
-		})
-	loading.value = false
-
-	if (!showErrorPage.value) {
-		startTimer(60)
-		OTPInput()
-	}
-})
 
 function OTPInput() {
 	const inputs = document.querySelectorAll<HTMLInputElement>('#otp > *[id]')

@@ -20,7 +20,12 @@ from django.utils.encoding import force_bytes, force_str
 from rest_framework.generics import CreateAPIView, GenericAPIView
 from rest_framework_simplejwt.tokens import RefreshToken, TokenError
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from .serializer import RegisterSerializer, LoginSerializer, SetPasswordSerializer
+from .serializer import (
+    RegisterSerializer,
+    LoginSerializer,
+    SetPasswordSerializer,
+    ResetPasswordSerializer,
+)
 
 
 User = get_user_model()
@@ -106,7 +111,7 @@ class Register(CreateAPIView):
                     verify_token = generateVerifyToken()
                     redis_key = settings.TYF_USER_VERIFICATION_KEY.format(
                         token=getHash(
-                            f"""{verify_token}-{request.META.get("REMOTE_ADDR")}"""
+                            f"""{verify_token}-{request.META.get("REMOTE_ADDR")}-{user.email}"""
                         )
                     )
                     if cache.get(redis_key) is None:
@@ -121,7 +126,9 @@ class Register(CreateAPIView):
 
             verify_token = generateVerifyToken()
             redis_key = settings.TYF_USER_VERIFICATION_KEY.format(
-                token=getHash(f"""{verify_token}-{request.META.get("REMOTE_ADDR")}""")
+                token=getHash(
+                    f"""{verify_token}-{request.META.get("REMOTE_ADDR")}-{user.email}"""
+                )
             )
             uid = urlsafe_base64_encode(force_bytes(user.pk))
             cache.set(
@@ -180,36 +187,23 @@ class Register(CreateAPIView):
             )
 
 
-class ResetPassword(APIView):
+class ResetPassword(GenericAPIView):
+    queryset = User.objects.all()
+    serializer_class = ResetPasswordSerializer
+
     def post(self, request):
         try:
+            serializer = self.get_serializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+
             email = request.data.get("email").lower()
-
-            if not User.objects.filter(email=email).exists():
-                return Response(
-                    {
-                        "message": gettext("User with this email does not exist."),
-                        "payload": {},
-                    },
-                    status=status.HTTP_400_BAD_REQUEST,
-                )
-
-            if not User.objects.get(email=email).is_active:
-                return Response(
-                    {
-                        "message": gettext(
-                            "Your account doesn't verified. Please Sign Up again!"
-                        ),
-                        "payload": {},
-                    },
-                    status=status.HTTP_400_BAD_REQUEST,
-                )
-
             user = User.objects.get(email=email)
 
             verify_token = generateVerifyToken()
             redis_key = settings.TYF_USER_VERIFICATION_KEY.format(
-                token=getHash(f"""{verify_token}-{request.META.get("REMOTE_ADDR")}""")
+                token=getHash(
+                    f"""{verify_token}-{request.META.get("REMOTE_ADDR")}-{user.email}"""
+                )
             )
             uid = urlsafe_base64_encode(force_bytes(user.pk))
             cache.set(
@@ -225,7 +219,6 @@ class ResetPassword(APIView):
             otp = generateOTP()
             user.otp = getHash(otp)
             sendEmail(user=user, otp=otp, reset_password=True, register_confirm=False)
-            print(otp)
 
             user.save()
 
@@ -240,11 +233,7 @@ class ResetPassword(APIView):
                 status=status.HTTP_201_CREATED,
             )
         except ValidationError as e:
-            if e.detail.keys().__contains__("password1"):
-                error = e.detail.get("password1")[0].capitalize()
-            elif e.detail.keys().__contains__("password2"):
-                error = e.detail.get("password2")[0].capitalize()
-            elif e.detail.keys().__contains__("email"):
+            if e.detail.keys().__contains__("email"):
                 error = e.detail.get("email")[0].capitalize()
             elif e.detail.keys().__contains__("info"):
                 error = e.detail.get("info")[0].capitalize()
@@ -273,13 +262,25 @@ class SetPassword(GenericAPIView):
     serializer_class = SetPasswordSerializer
     permission_classes = [VerificationPermissions]
 
+    def get(self, _):
+        return Response(
+            {
+                "message": "OK",
+                "payload": {},
+            },
+            status=status.HTTP_202_ACCEPTED,
+        )
+
     def post(self, request):
         try:
             serializer = self.get_serializer(data=request.data)
             serializer.is_valid(raise_exception=True)
 
+            uid = request.query_params.get("uid", "")
+            token = request.query_params.get("token", "")
+
             user = User.objects.get(
-                pk=force_str(urlsafe_base64_decode(request.data.get("uid")))
+                pk=force_str(urlsafe_base64_decode(uid))
             )
 
             user.set_password(request.data.get("password1"))
@@ -287,7 +288,7 @@ class SetPassword(GenericAPIView):
 
             redis_key = settings.TYF_USER_VERIFICATION_KEY.format(
                 token=getHash(
-                    f"""{request.data.get("token")}-{request.META.get("REMOTE_ADDR")}"""
+                    f"""{token}-{request.META.get("REMOTE_ADDR")}-{user.email}"""
                 )
             )
             cache.delete(
@@ -304,8 +305,6 @@ class SetPassword(GenericAPIView):
         except ValidationError as e:
             if e.detail.keys().__contains__("password1"):
                 error = e.detail.get("password1")[0].capitalize()
-            elif e.detail.keys().__contains__("password2"):
-                error = e.detail.get("password2")[0].capitalize()
             elif e.detail.keys().__contains__("password2"):
                 error = e.detail.get("password2")[0].capitalize()
             elif e.detail.keys().__contains__("info"):
@@ -369,26 +368,52 @@ class Verification(APIView):
                     status=status.HTTP_400_BAD_REQUEST,
                 )
 
-            user.is_active = True
+            if not user.is_active:
+                user.is_active = True
             user.otp = None
             user.save()
 
             redis_key = settings.TYF_USER_VERIFICATION_KEY.format(
-                token=getHash(f"""{token}-{request.META.get("REMOTE_ADDR")}""")
+                token=getHash(
+                    f"""{token}-{request.META.get("REMOTE_ADDR")}-{user.email}"""
+                )
             )
-            if cache.get(redis_key)["is_register_confirm"]:
-                cache.delete(redis_key)
-
-            return Response(
-                {
-                    "message": "Ваш аккаунт успешно подтверждён",
-                    "payload": {
-                        "token": request.data.get("token"),
-                        "uid": request.data.get("uid"),
+            if cache.get(redis_key)["is_reset_password_confirm"]:
+                print("reset password")
+                verify_token = generateVerifyToken()
+                redis_key = settings.TYF_USER_VERIFICATION_KEY.format(
+                    token=getHash(
+                        f"""{verify_token}-{request.META.get("REMOTE_ADDR")}-{user.email}"""
+                    )
+                )
+                uid = urlsafe_base64_encode(force_bytes(user.pk))
+                cache.set(
+                    key=redis_key,
+                    value={
+                        "user_token": AccountActivationToken.make_token(user=user),
                     },
-                },
-                status=status.HTTP_200_OK,
-            )
+                    timeout=settings.TYF_USER_VERIFICATION_TIMEOUT,
+                )
+                return Response(
+                    {
+                        "message": "OK",
+                        "payload": {
+                            "token": verify_token,
+                            "uid": uid,
+                        },
+                    },
+                    status=status.HTTP_201_CREATED,
+                )
+            else:
+                cache.delete(redis_key)
+                return Response(
+                    {
+                        "message": "Ваш аккаунт успешно подтверждён",
+                        "payload": {},
+                    },
+                    status=status.HTTP_200_OK,
+                )
+
         else:
             return Response(
                 {"message": "Неверный код.", "payload": {}},

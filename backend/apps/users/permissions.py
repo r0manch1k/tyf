@@ -32,7 +32,7 @@ class VerificationPermissions(BasePermission):
 
         try:
             redis_key = settings.TYF_USER_VERIFICATION_KEY.format(
-                token=getHash(f"{incoming_token}-{remote_addr}")
+                token=getHash(f"{incoming_token}-{remote_addr}-{user.email}")
             )
             if cache.get(redis_key) is None:
                 print("2")

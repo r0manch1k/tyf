@@ -15,13 +15,13 @@
 			/>
 		</symbol>
 	</svg>
-	<div class="container-fluid">
+	<div :class="{ 'container-fluid': true, 'd-none': loading }">
 		<div
 			class="flex row vh-100 align-items-center justify-content-center"
 			style="min-height: 100vh"
 		>
 			<div class="col-12 row col-sm-8 col-md-6 col-lg-5 col-xl-4">
-				<!-- TODO: ADD MESSAGES -->
+				<Messages ref="messagesComponent" />
 				<div
 					class="bg-secondary rounded p-4"
 					style="border-radius: 1rem !important"
@@ -48,9 +48,13 @@
 							</div>
 						</div>
 					</div>
-					<form method="post" role="form">
+					<form
+						method="post"
+						role="form"
+						v-on:submit.prevent="resetPasswordSubmit"
+					>
 						<div class="form-floating mb-3">
-							<EmailField />
+							<EmailField v-model="email" />
 						</div>
 						<button
 							type="submit"
@@ -69,10 +73,66 @@
 			</div>
 		</div>
 	</div>
+	<LoadingCircle v-if="loading" />
 </template>
 
-<script setup>
+<script lang="ts" setup>
+import api from '@/stores/services/api'
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+
 import EmailField from '@/components/Authorization/Fields/EmailField.vue'
+import Messages from '@/components/Authorization/Messages.vue'
+import LoadingCircle from '@/components/LoadingCircle.vue'
+
+interface MessagesComponent {
+	addMessage: (message: { type: string; text: string }) => void
+}
+
+const router = useRouter()
+
+const email = ref('')
+const loading = ref(false)
+const messagesComponent = ref<MessagesComponent | null>(null)
+
+const resetPasswordSubmit = async () => {
+	loading.value = true
+	console.log(email.value)
+
+	await api
+		.post('users/reset_password/', {
+			email: email.value,
+		})
+		.then(response => {
+			loading.value = false
+			if (response.status === 201) {
+				console.log(response.data.payload.uid, response.data.payload.token)
+				router.push(
+					`/verify/${response.data.payload.uid}/${response.data.payload.token}`
+				)
+			} else {
+				const errorMessage =
+					response?.data?.message ||
+					'Что-то пошло не так, повторите попытку позже.'
+				if (messagesComponent.value) {
+					messagesComponent.value.addMessage({
+						type: 'error',
+						text: errorMessage,
+					})
+				}
+			}
+		})
+		.catch(error => {
+			console.log(error)
+			loading.value = false
+			if (messagesComponent.value) {
+				messagesComponent.value.addMessage({
+					type: 'error',
+					text: 'Что-то пошло не так, повторите попытку позже.',
+				})
+			}
+		})
+}
 </script>
 
 <style scoped></style>

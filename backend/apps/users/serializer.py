@@ -30,13 +30,13 @@ class LoginSerializer(serializers.ModelSerializer):
 
         if not User.objects.filter(email=email).exists():
             raise serializers.ValidationError(
-                detail={"info": "Пользователь с этим адресом эл. почты не существует"}
+                detail={"info": "Пользователя с таким адресом эл. почты не существует"}
             )
         else:
             if not User.objects.get(email=email).is_active:
                 raise serializers.ValidationError(
                     detail={
-                        "info": "Этот пользователь не подтвердил адрес электронной почты. Пожалуйста, зарегистрируйтесь еще раз."
+                        "info": "Этот пользователь не подтвердил адрес эл. почты. Пожалуйста, зарегистрируйтесь еще раз."
                     }
                 )
 
@@ -103,6 +103,38 @@ class RegisterSerializer(serializers.ModelSerializer):
             instance.set_password(password)
             instance.save()
             return instance
+        
+
+class ResetPasswordSerializer(serializers.ModelSerializer):
+    email = serializers.CharField()
+
+    class Meta:
+        model = User
+        fields = ["email"]
+    
+    def validate(self, attrs):
+        email = attrs.get("email", "").lower()
+
+        if not User.objects.filter(email=email).exists():
+            raise serializers.ValidationError(
+                detail={"info": "Пользователя с таким адресом эл. почты не существует."}
+            )
+            
+        if UserSocialAuth.objects.filter(user__email=email).exists():
+            raise serializers.ValidationError(
+                detail={
+                    "info": "Пользователь с этим адресом эл. почты был зарегистрирован с помощью Google/Яндекс. Таким пользователям не требуется смена пароля. Пожалуйста, войдите в систему, используя тот же метод."
+                },
+            )
+
+        if not User.objects.get(email=email).is_active:
+            raise serializers.ValidationError(
+                detail={
+                    "info": "Этот пользователь не подтвердил адрес эл. почты. Пожалуйста, зарегистрируйтесь еще раз."
+                },
+            )
+
+        return attrs
 
 
 class SetPasswordSerializer(serializers.ModelSerializer):
