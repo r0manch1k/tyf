@@ -5,8 +5,9 @@
     <!-- Если комментарии есть -->
     <div v-if="comments.length > 0" class="nested-comments">
       <ul id="comment-thread" class="ps-0">
+        <!-- TODO: P.S. removed index from v-for -->
         <li
-          v-for="(comment, index) in comments"
+          v-for="(comment) in comments"
           :key="comment.id"
           class="d-flex flex-column mb-2"
           :style="{ marginLeft: comment.level + 'em' }"
@@ -71,7 +72,8 @@
 </template>
 
 <script setup lang="ts">
-import { defineComponent, ref } from "vue";
+import { ref } from "vue";
+// import { defineComponent } from "vue";
 
 interface Author {
   id: number;

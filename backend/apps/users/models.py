@@ -29,7 +29,7 @@ class User(AbstractUser):
     first_name = None
     last_name = None
     email = models.EmailField(unique=True)
-    otp = models.CharField(max_length=6, blank=True, null=True)
+    otp = models.CharField(max_length=64, blank=True, null=True)
     created_at = models.DateTimeField(auto_now=True)
     updated_at = models.DateTimeField(auto_now_add=True)
 

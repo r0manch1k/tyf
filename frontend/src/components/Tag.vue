@@ -10,7 +10,7 @@
 import { defineProps } from "vue";
 import type TagModel from "@/models/TagModel";
 
-const props = defineProps({
+defineProps({
   tag: {
     type: Object as () => TagModel,
     required: true,

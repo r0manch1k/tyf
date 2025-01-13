@@ -32,11 +32,16 @@
 import { defineProps, inject } from "vue";
 import type ProfileListItem from "@/models/ProfileModel";
 
-const moment = inject("moment") as any;
+const moment = inject("moment");
 
 const props = defineProps<{
   profile: ProfileListItem;
 }>();
+
+
+// @ts-expect-error: Unreachable code error
+const created_at = moment(props.profile.date_joined).fromNow();
+
 </script>
 
 <style scoped>

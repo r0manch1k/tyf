@@ -1,4 +1,5 @@
 /* eslint-disable */
+
 declare module "*.vue" {
   import type { DefineComponent } from "vue";
   const component: DefineComponent<{}, {}, any>;
@@ -19,5 +20,3 @@ declare module "@/assets/styles/bootstrap/js/bootstrap.bundle.js" {
   const value: any;
   export default value;
 }
-
-declare globalProperties;

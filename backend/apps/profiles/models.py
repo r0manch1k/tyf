@@ -1,7 +1,7 @@
 from functools import partial
 
 # Do not remove PIL
-from PIL import Image
+# from PIL import Image
 from django.db import models
 from django.contrib.auth import get_user_model
 from django_resized import ResizedImageField

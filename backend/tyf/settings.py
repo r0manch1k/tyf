@@ -1,6 +1,7 @@
 import os
 import datetime
 from pathlib import Path
+from corsheaders.defaults import default_headers
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -21,12 +22,27 @@ MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "mediafiles")
 
 
-SESSION_COOKIE_SECURE = True
+# SESSION_COOKIE_SECURE = True
 # SECURE_SSL_REDIRECT = True
 # SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
+# CSRF_COOKIE_SECURE = True
 
-CSRF_TRUSTED_ORIGINS = ["http://localhost:8080", "http://localhost:8000"]
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:8080",
+    "http://localhost:8000",
+    "http://127.0.0.1:8080",
+    "http://127.0.0.1:8000",
+]
+CORS_ALLOW_HEADERS = list(default_headers) + [
+    "X-Api-Key",
+]
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:8080",
+    "http://localhost:8000",
+    "http://127.0.0.1:8080",
+    "http://127.0.0.1:8000",
+]
+
 
 AUTH_USER_MODEL = "users.User"
 
@@ -39,7 +55,9 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "corsheaders",
     "rest_framework",
+    "rest_framework_api_key",
     "rest_framework_simplejwt",
+    "rest_framework_simplejwt.token_blacklist",
     "apps.users",
     "social_django",
     "apps.profiles",
@@ -77,6 +95,9 @@ CORS_ALLOWED_ORIGINS = [
 ROOT_URLCONF = "tyf.urls"
 
 
+REST_USE_JWT = True
+
+
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
@@ -109,12 +130,16 @@ DATABASES = {
 }
 
 
+TYF_USER_VERIFICATION_KEY = "user_verification_{token}"
+TYF_USER_VERIFICATION_TIMEOUT = 15 * 60
+
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
         "LOCATION": os.getenv("REDIS_LOCATION"),
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            "TIMEOUT": TYF_USER_VERIFICATION_TIMEOUT,
         },
     },
     "select2": {
@@ -147,7 +172,9 @@ AUTH_PASSWORD_VALIDATORS = [
 
 
 REST_FRAMEWORK = {
-    # "DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.IsAuthenticated"],
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework_api_key.permissions.HasAPIKey",
+    ],
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ],
@@ -157,9 +184,13 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": datetime.timedelta(minutes=1),
-    "REFRESH_TOKEN_LIFETIME": datetime.timedelta(days=1),
+    "ROTATE_REFRESH_TOKENS": True,
+    "BLACKLIST_AFTER_ROTATION": True,
+    "ACCESS_TOKEN_LIFETIME": datetime.timedelta(days=1),
+    "REFRESH_TOKEN_LIFETIME": datetime.timedelta(days=7),
 }
+
+API_KEY_CUSTOM_HEADER = "HTTP_X_API_KEY"
 
 LANGUAGE_CODE = "en-us"
 TIME_ZONE = "Asia/Vladivostok"
@@ -253,3 +284,10 @@ MDEDITOR_CONFIGS = {
 }
 
 SELECT2_CACHE_BACKEND = "select2"
+
+LANGUAGE_CODE = "ru"
+
+LANGUAGES = [
+    ("ru", "Русский"),
+    ("en", "English"),
+]

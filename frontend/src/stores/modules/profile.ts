@@ -3,6 +3,7 @@ import type ProfileModel from "@/models/ProfileModel";
 import ProfileDataService from "@/services/ProfileDataService";
 import type UniversityModel from "@/models/UniversityModel";
 import type MajorModel from "@/models/MajorModel";
+// import ProfileDataService from "@/services/ProfileDataService";
 
 class State {
   profile: ProfileModel | null = {

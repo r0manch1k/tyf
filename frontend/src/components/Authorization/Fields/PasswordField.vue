@@ -8,8 +8,23 @@
     placeholder="Password"
     required
     aria-invalid="true"
+    v-model="localPassword"
+    @input="$emit('update:modelValue', localPassword)"
   />
   <label for="id_password"
-    >Password <label style="color: rgb(188, 28, 28)">*</label></label
+    >Пароль <label style="color: rgb(188, 28, 28)">*</label></label
   >
 </template>
+
+<script setup>
+import { ref, defineProps } from "vue";
+
+const props = defineProps({
+  modelValue: {
+    type: String,
+    default: "",
+  },
+});
+
+const localPassword = ref(props.modelValue);
+</script>

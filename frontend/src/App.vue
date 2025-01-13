@@ -41,8 +41,8 @@ const isError = computed(() => {
 
 const isLogin = computed(() => route.name === "login");
 const isRegister = computed(() => route.name === "register");
-const isResetPassword = computed(() => route.name === "reset_password");
-const isSetPassword = computed(() => route.name === "reset_password_confirm");
+const isResetPassword = computed(() => route.name === "reset-password");
+const isSetPassword = computed(() => route.name === "reset-password-confirm");
 const isVerification = computed(() => route.name === "verification");
 const isHome = computed(
   () =>
@@ -68,7 +68,7 @@ const isHome = computed(
   color: #2c3e50;
   height: 100%;
   width: 100%;
-}
+} */
 
 .main__content {
   background-color: rgba(30, 30, 35, 0.5);
@@ -79,19 +79,12 @@ const isHome = computed(
   z-index: -50;
 }
 
-a.router-link-exact-active {
-  color: var(--light);
-}
-
-.card {
-  border-radius: 0.4em !important;
-  /* border-bottom: 1px solid var(--secondary);
-  border-right: 1px solid var(--secondary); */
-  /* transition: all 0.3s; */
+/* a.router-link-exact-active {
+  color: var(--light) !important;
 }
 
 nav {
-  padding: 30px;
+padding: 30px;
 }
 
 nav a {
@@ -101,5 +94,5 @@ nav a {
 
 nav a.router-link-exact-active {
   color: #42b983;
-}
+} */
 </style>
