@@ -14,7 +14,7 @@
             :src="post.author.avatar"
             alt="avatar"
             class="img-fluid rounded-circle"
-            style="width: 40px; height: 40px"
+            style="width: 35px; height: 35px"
           />
         </router-link>
         <div class="d-flex flex-column">

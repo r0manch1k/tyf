@@ -1,6 +1,7 @@
 import type PostListItemModel from "@/models/PostModel";
 import type UniversityModel from "@/models/UniversityModel";
 import type MajorModel from "@/models/MajorModel";
+import type TagModel from "@/models/TagModel";
 
 export default interface ProfileModel {
   email: string;
@@ -8,8 +9,8 @@ export default interface ProfileModel {
   first_name: string;
   last_name: string;
   middle_name: string;
-  university: UniversityModel;
-  major: MajorModel;
+  university: UniversityModel | null;
+  major: MajorModel | null;
   date_of_birth: string;
   date_joined: string;
   bio: string;
@@ -24,6 +25,7 @@ export default interface ProfileModel {
   followers: ProfileListItemModel[];
   following: ProfileListItemModel[];
   posts: PostListItemModel[];
+  tags: TagModel[] | null;
 }
 
 export type ProfileListItemModel = Pick<

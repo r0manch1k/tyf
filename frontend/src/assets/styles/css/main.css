@@ -60,6 +60,10 @@ body {
   color: var(--secondary-x-light);
 }
 
+.text-secondary-xx-light {
+  color: var(--secondary-xx-light);
+}
+
 .bg-primary {
   background-color: var(--primary);
 }
@@ -99,6 +103,10 @@ body {
 
 .pt-7 {
   padding-top: 4rem !important;
+}
+
+.fs-large {
+  font-size: 5rem;
 }
 
 .fs-7 {
@@ -165,4 +173,25 @@ body {
 
 .btn-secondary-x-light:hover {
   color: var(--secondary-x-light);
+}
+
+.btn-action {
+  color: var(--light);
+  background-color: var(--secondary);
+  border: 0;
+  border-radius: 0.4rem;
+  padding: 0.5rem 1rem;
+  text-align: inherit;
+  box-shadow: none !important;
+  transition: background-color 0.3s;
+}
+
+.text-primary {
+  user-select: text !important;
+  -webkit-user-select: text !important;
+  font-family: "MesloLGS NF", sans-serif !important;
+}
+
+.table-dark-light {
+  background-color: var(--dark-light);
 }

@@ -1,33 +1,31 @@
 <template>
-  <div class="most-active-users card bg-dark-light" v-if="!loading">
-    <div class="most-active-users__header card-header py-2 text-start">
-      <h2
-        class="most-active-users__title card-title fs-6 text-light text-decoration-underline m-0"
+  <div class="most-active-users-bar bg-dark-light p-2" v-if="!loading">
+    <div class="most-active-users-bar__list">
+      <table
+        class="most-active-users-bar__table table table-dark-light table-striped"
       >
-        Топ 5
-      </h2>
-      <!-- <h3
-        class="most-active-users__description fs-7 text-secondary-x-light fw-normal"
-      >
-        Пользователи с наибольшим количеством публикаций
-      </h3> -->
-    </div>
-    <div class="most-active-users__list card-body">
-      <div
-        v-for="user in users"
-        :key="user.username"
-        class="most-active-users__user"
-      >
-        <div class="d-flex align-items-center justify-content-between">
-          <ProfileListItem :profile="user" />
-          <router-link
-            :to="{ name: 'profile', params: { username: user.username } }"
-            class="btn-secondary-x-light fs-7"
-          >
-            Постов: {{ user.posts_count }}
-          </router-link>
-        </div>
-      </div>
+        <thead>
+          <tr>
+            <th scope="col">Пользователь</th>
+            <th scope="col">Посты</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="user in users" :key="user.username">
+            <td class="align-middle text-center">
+              <ProfileListItem :profile="user" />
+            </td>
+            <td class="align-middle">
+              <router-link
+                :to="{ name: 'profile', params: { username: user.username } }"
+                class="btn-light fs-7"
+              >
+                {{ user.posts_count }}
+              </router-link>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
   <LoadingCircle v-else />
@@ -50,4 +48,18 @@ onMounted(async () => {
 });
 </script>
 
-<style scoped></style>
+<style scoped>
+.table {
+  margin: 0;
+}
+
+.table > :not(caption) > * > * {
+  border-top-width: 0;
+  border-bottom-width: 0;
+  padding: 0.2rem 0.4rem;
+}
+
+.most-active-users-bar {
+  border-radius: 0.4rem;
+}
+</style>

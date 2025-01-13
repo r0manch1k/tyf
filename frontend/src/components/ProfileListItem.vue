@@ -1,37 +1,28 @@
 <template>
-  <div class="d-flex align-items-center gap-2 text-start">
+  <div class="profile-list-item d-flex align-items-center gap-2">
     <router-link
       :to="{
         name: 'profile',
         params: { username: profile.username },
       }"
+      class="profile-list-item__avatar-link"
     >
       <img
         :src="profile.avatar"
         alt="avatar"
-        class="img-fluid rounded-circle"
-        style="width: 40px; height: 40px"
+        class="profile-list-item__avatar img-fluid rounded-circle"
+        style="width: 35px; height: 35px"
       />
     </router-link>
-    <div class="d-flex flex-column">
+    <div class="profile-list-item__details d-flex flex-column">
       <router-link
         :to="{
           name: 'profile',
           params: { username: profile.username },
         }"
-        class="link-primary fw-bold fst-italic fs-6"
-        style="height: 20px"
+        class="profile-list-item__username fs-6 fw-bold"
       >
         {{ profile.username }}
-      </router-link>
-      <router-link
-        :to="{
-          name: 'profile',
-          params: { username: profile.username },
-        }"
-        class="btn-secondary-x-light fs-7"
-      >
-        {{ created_at }}
       </router-link>
     </div>
   </div>
@@ -46,6 +37,10 @@ const moment = inject("moment") as any;
 const props = defineProps<{
   profile: ProfileListItem;
 }>();
-
-const created_at = moment(props.profile.date_joined).fromNow();
 </script>
+
+<style scoped>
+.profile-list-item {
+  width: fit-content;
+}
+</style>

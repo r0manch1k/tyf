@@ -8,6 +8,7 @@ import VerificationView from "@/views/Authorization/VerificationView.vue";
 import ProfileView from "@/views/ProfileView.vue";
 import PostDetailView from "@/views/PostDetailView.vue";
 import PostCreateView from "@/views/PostCreateView.vue";
+import ProfileEdit from "@/views/ProfileEdit.vue";
 import store from "@/stores";
 
 // TODO: Change _ to - in router names
@@ -44,6 +45,11 @@ const routes = [
     path: "/verify",
     name: "verification",
     component: VerificationView,
+  },
+  {
+    path: "/edit",
+    name: "profile-edit",
+    component: ProfileEdit,
   },
   {
     path: "/:username",
