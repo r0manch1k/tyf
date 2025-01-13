@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import Profile
 from apps.registry.serializer import MajorListSerializer, UniversityListSerializer
+from apps.tags.serializer import TagSerializer
 from tyf import settings
 
 
@@ -50,6 +51,7 @@ class ProfileDetailSerializer(serializers.ModelSerializer):
     awards = serializers.IntegerField(read_only=True)
     following = serializers.SerializerMethodField()
     followers = serializers.SerializerMethodField()
+    tags = serializers.SerializerMethodField()
 
     class Meta:
         model = Profile
@@ -70,6 +72,7 @@ class ProfileDetailSerializer(serializers.ModelSerializer):
             "followers",
             "telegram",
             "vkontakte",
+            "tags",
         ]
 
     def get_avatar(self, obj):
@@ -86,3 +89,15 @@ class ProfileDetailSerializer(serializers.ModelSerializer):
 
     def get_followers(self, obj):
         return ProfileListSerializer(obj.followers.all(), many=True).data
+
+    def get_tags(self, obj):
+        user_posts = obj.posts.all()
+        tags = {}
+        for post in user_posts:
+            for tag in post.tags.all():
+                if tag in tags:
+                    tags[tag] += 1
+                else:
+                    tags[tag] = 1
+        sorted_tags = sorted(tags.items(), key=lambda item: item[1], reverse=True)
+        return TagSerializer([tag[0] for tag in sorted_tags], many=True).data

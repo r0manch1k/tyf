@@ -38,7 +38,7 @@ startapp-dev:
 clean-dev:
 	$(DOCKER_COMPOSE_DEV) down --rmi all
 
-clean-dev-volumes:
+clean-volumes-dev:
 	$(DOCKER_COMPOSE_DEV) down -v
 
 # production 
@@ -72,7 +72,7 @@ startapp-prod:
 clean-prod:
 	$(DOCKER_COMPOSE_PROD) down --rmi all
 
-clean-prod-volumes:
+clean-volumes-prod:
 	$(DOCKER_COMPOSE_PROD) down -v
 
 .PHONY: build-dev up-dev down-dev migrate-dev superuser-dev makemigrations-dev startapp-dev clean-dev clean-dev-volumes \
