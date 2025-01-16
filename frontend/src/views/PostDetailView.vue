@@ -1,7 +1,7 @@
 <template>
   <div v-if="!loading" class="h-100 p-4">
     <div
-      class="card rounded-0 border-top-0 border-bottom-0 bg-transparent border-light p-4"
+      class="card rounded-0 border-top-0 border-bottom-0 bg-dark-light border-light p-4"
       style="border-left: 0 !important; border-right: 0 !important"
     >
       <div class="row flex-md-row">
@@ -56,7 +56,7 @@
       </div>
       <!--Форма для комментов  -->
       <div class="mt-5 comments-form">
-        <h3 class="fs-5 text-light text-start">Write your comment...</h3>
+        <h3 class="fs-3 text-light text-start">Write your comment...</h3>
         <form>
           <div class="form-group">
             <textarea
@@ -74,7 +74,7 @@
         </form>
       </div>
       <!-- Комментарии -->
-      <!-- TODO: Реализовать компоненту CommentsList -->
+      <h3 class="mb-4 fs-3 text-start text-light">Comments</h3>
       <CommentsList :comments="nestedComments" />
     </div>
   </div>
@@ -117,9 +117,6 @@ onMounted(async () => {
     nestedComments.value = post.value.comments;
     console.log("nestedComments", nestedComments.value);
   }
-
-
-
   loading.value = false;
 });
 

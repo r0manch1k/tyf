@@ -1,29 +1,27 @@
 <template>
-  <div class="comment mt-3 p-3 border rounded">
-    <!-- Информация о комментарии -->
+  <div class="comment p-3">
     <div class="d-flex gap-2 align-items-center">
       <router-link :to="'/profile/' + comment.author.username">
         <img
-          :src="comment.author.avatar"
+          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSCpkMGWpU-ODFuq82EYaQElelh62mKO5VREQ&s"
           alt="avatar"
           class="rounded-circle"
           style="width: 40px; height: 40px"
         />
       </router-link>
-      <div>
+      <div class="d-flex flex-column text-start">
         <router-link
           :to="'/profile/' + comment.author.username"
           class="text-light"
         >
-          {{ comment.author.username }}
+          Username
         </router-link>
         <span class="text-muted fs-9">{{ comment.created_at }}</span>
       </div>
     </div>
-    <p class="text-light mt-2">{{ comment.content }}</p>
+    <p class="text-light mt-2 text-start">{{ comment.content }}</p>
 
-    <!-- Вложенные комментарии (если есть) -->
-    <div v-if="comment.replies.length > 0" class="nested-comments mt-3 ms-4">
+    <div v-if="comment.replies.length > 0" class="nested-comments ms-4">
       <div v-for="reply in comment.replies" :key="reply.identifier">
         <CommentItem :comment="reply" />
       </div>
@@ -41,8 +39,7 @@ const props = defineProps<{
 
 <style scoped>
 .comment {
-  background-color: #1d1d1d;
-  color: #fff;
+  border-left: #ffffff 1px solid;
 }
 
 .nested-comments {
