@@ -2,7 +2,6 @@
   <div class="mt-5">
     <h5 class="mb-4 fs-6">Comments</h5>
     <hr />
-    <!-- Если комментарии есть -->
     <div v-if="comments.length > 0" class="nested-comments">
       <ul id="comment-thread" class="ps-0">
         <!-- TODO: P.S. removed index from v-for -->
@@ -66,7 +65,6 @@
         </li>
       </ul>
     </div>
-    <!-- Если комментариев нет -->
     <p v-else class="text-muted fs-7">No comments yet.</p>
   </div>
 </template>
