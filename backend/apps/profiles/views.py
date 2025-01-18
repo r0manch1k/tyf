@@ -6,6 +6,8 @@ from .serializer import ProfileDetailSerializer, ProfileListSerializer
 from apps.posts.serializer import PostListSerializer
 from .models import Profile
 from django.db.models import Count
+from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
 # from rest_framework_simplejwt.authentication import JWTAuthentication
 # from rest_framework.permissions import IsAuthenticated
@@ -13,8 +15,8 @@ from django.db.models import Count
 
 class ProfileViewSet(viewsets.ViewSet):
     # TODO: example for permissions
-    # permission_classes = [IsAuthenticated]
-    # authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
     # request.user -> is current user (by token)
 
     def list(self, request):
@@ -64,4 +66,12 @@ class ProfileViewSet(viewsets.ViewSet):
         queryset = Profile.objects.all()
         profile = get_object_or_404(queryset, username=pk)
         serializer = ProfileListSerializer(profile.following, many=True)
+        return Response(serializer.data)
+
+    @action(detail=False, methods=["GET"], url_path="me", url_name="me")
+    def me(self, request):
+        email = request.user
+        queryset = Profile.objects.all()
+        profile = get_object_or_404(queryset, email=email)
+        serializer = ProfileDetailSerializer(profile)
         return Response(serializer.data)

@@ -19,7 +19,7 @@ class ProfileListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Profile
-        fields = ["username", "avatar", "date_joined", "posts_count", "points"]
+        fields = ["id", "username", "avatar", "date_joined", "posts_count", "points"]
 
     def get_avatar(self, obj):
         return settings.API_ULR + obj.get_avatar
@@ -56,6 +56,7 @@ class ProfileDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
         fields = [
+            "id",
             "username",
             "avatar",
             "date_joined",

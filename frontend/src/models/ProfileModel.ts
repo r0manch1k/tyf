@@ -4,6 +4,7 @@ import type MajorModel from "@/models/MajorModel";
 import type TagModel from "@/models/TagModel";
 
 export default interface ProfileModel {
+  id: number;
   email: string;
   username: string;
   first_name: string;
@@ -30,7 +31,7 @@ export default interface ProfileModel {
 
 export type ProfileListItemModel = Pick<
   ProfileModel,
-  "username" | "avatar" | "date_joined" | "posts_count" | "points"
+  "id" | "username" | "avatar" | "date_joined" | "posts_count" | "points"
 >;
 
 export type ProfileDetailModel = Omit<ProfileModel, "posts_count">;

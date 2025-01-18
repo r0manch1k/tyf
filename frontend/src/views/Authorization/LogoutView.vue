@@ -1,38 +1,40 @@
 <template>
-	<LoadingCircle v-if="isLoading" />
+  <LoadingCircle v-if="loading" />
 </template>
 
 <script lang="ts" setup>
-import LoadingCircle from '@/components/LoadingCircle.vue'
-import api from '@/stores/services/api'
-import { onMounted, ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { onMounted, ref } from "vue";
+import { useRouter } from "vue-router";
+import { useStore } from "vuex";
+import AuthService from "@/services/AuthService";
+import type MessageModel from "@/models/MessageModel";
 
-const isLoading = ref(false)
-const router = useRouter()
+import LoadingCircle from "@/components/LoadingCircle.vue";
+
+const store = useStore();
+const router = useRouter();
+
+const loading = ref(false);
 
 const logoutSubmit = async () => {
-	isLoading.value = true
-	const refreshToken = localStorage.getItem('refreshToken') ?? ''
-
-	if (refreshToken) {
-		await api
-			.post('users/logout/', {
-				token: { refresh: refreshToken },
-			})
-			.then(response => {
-				console.log(response)
-				if (response.status == 200) {
-					localStorage.removeItem('accessToken')
-					localStorage.removeItem('refreshToken')
-				}
-			})
-			.catch(error => console.error(error))
-	}
-    router.push('login/')
-}
+  loading.value = true;
+  AuthService.logout()
+    .then(() => {
+      router.push("/login");
+    })
+    .catch((error) => {
+      const message: MessageModel = {
+        text: error.data.message,
+        type: "error",
+      };
+      store.commit("auth/setMessage", message);
+    })
+    .finally(() => {
+      loading.value = false;
+    });
+};
 
 onMounted(() => {
-	logoutSubmit()
-})
+  logoutSubmit();
+});
 </script>

@@ -7,6 +7,7 @@ import type MajorModel from "@/models/MajorModel";
 
 class State {
   profile: ProfileModel | null = {
+    id: -1,
     email: "",
     username: "",
     first_name: "",
@@ -41,10 +42,13 @@ const mutations: MutationTree<State> = {
 };
 
 const actions: ActionTree<State, unknown> = {
-  // async fetchProfile({ commit }) {
-  //   const profile = await ProfileDataService.getProfile();
-  //   commit("setProfile", profile);
-  // },
+  fetchProfile: async ({ commit }) => {
+    const profile = await ProfileDataService.getMyProfile().then((response) => {
+      console.log("Profile fetched", response);
+      commit("setProfile", response);
+      return response;
+    });
+  },
 };
 
 export default {

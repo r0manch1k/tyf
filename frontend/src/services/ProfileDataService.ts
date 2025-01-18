@@ -4,6 +4,17 @@ import type ProfileDetailModel from "@/models/ProfileModel";
 import type PostListItemModel from "@/models/PostModel";
 
 class ProfileDataService {
+  async getMyProfile(): Promise<ProfileListItemModel> {
+    let data: { data: ProfileListItemModel } = {
+      data: {} as ProfileListItemModel,
+    };
+    await api
+      .get("/profiles/me/")
+      .then((response: { data: ProfileListItemModel }) => (data = response))
+      .catch((error: unknown) => console.error(error));
+    return data.data;
+  }
+
   async getAllProfiles(): Promise<ProfileListItemModel[]> {
     let data: { data: ProfileListItemModel[] } = {
       data: [] as ProfileListItemModel[],

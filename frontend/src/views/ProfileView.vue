@@ -12,9 +12,7 @@
               class="profile-view__avatar img-fluid rounded-circle"
               style="width: 10rem; height: 10rem"
             />
-            <div
-              class="profile-view__username text-primary text-decoration-underline fs-4"
-            >
+            <div class="profile-view__username text-primary fs-4">
               {{ profile.username }}
             </div>
             <div class="profile-view__bio fs-6 text-light text-center">
@@ -46,20 +44,7 @@
                 >ВКонтакте</a
               >
             </div>
-            <div class="profile-view__stats text-light d-flex gap-4">
-              <div class="profile-view__stat d-flex flex-column gap-1">
-                <span class="profile-view__stat-field">Посты</span>
-                <span>{{ profile.posts.length }}</span>
-              </div>
-              <div class="profile-view__stat d-flex flex-column gap-1">
-                <span class="profile-view__stat-field">Подписчики</span>
-                <span>{{ profile.followers.length }}</span>
-              </div>
-              <div class="profile-view__stat d-flex flex-column gap-1">
-                <span class="profile-view__stat-field">Подписки</span>
-                <span>{{ profile.following.length }}</span>
-              </div>
-            </div>
+
             <div class="profile-view__actions d-flex flex-column gap-2">
               <div class="profile-view__action-buttons d-flex gap-2">
                 <button
@@ -74,7 +59,6 @@
                 </button>
                 <button class="btn btn-action">Сообщение</button>
               </div>
-              <button class="btn btn-action">Пожаловаться</button>
               <router-link
                 v-if="isAuthenticated"
                 :to="{
@@ -84,7 +68,6 @@
               >
                 Редактировать профиль
               </router-link>
-              <button class="btn btn-action">Подарок</button>
             </div>
           </div>
         </div>
@@ -96,7 +79,7 @@
             nav-item-link-class="profile-view__tab-link nav-item-link"
             nav-class="profile-view__tab-panels-wrapper tab-panels-wrapper"
           >
-            <Tab name="Посты">
+            <Tab :name="`Публикации (${profile.posts.length})`">
               <div class="profile-view__posts tab-pane">
                 <p
                   v-if="!profile.posts || !profile.posts.length"
@@ -116,7 +99,7 @@
                 </div>
               </div>
             </Tab>
-            <Tab name="Подписчики">
+            <Tab :name="`Подписчики (${profile.followers.length})`">
               <div class="profile-view__followers tab-pane">
                 <p
                   v-if="!profile.followers || !profile.followers.length"
@@ -148,7 +131,7 @@
                 </div>
               </div>
             </Tab>
-            <Tab name="Подписки">
+            <Tab :name="`Подписки (${profile.following.length})`">
               <div class="profile-view__following tab-pane">
                 <p
                   v-if="!profile.following || !profile.following.length"
@@ -202,7 +185,7 @@ import type ProfileDetailModel from "@/models/ProfileModel";
 // import type PostListItemModel from "@/models/PostModel";
 import { useStore } from "vuex";
 
-const loading = ref(true)
+const loading = ref(true);
 
 const props = defineProps({
   username: {
@@ -211,21 +194,21 @@ const props = defineProps({
   },
 });
 
-const store = useStore()
+const store = useStore();
 
 let profile = ref<ProfileDetailModel>(store.getters["profile/getProfile"]);
 
 // TODO: Implement follow/unfollow functionality
-const isAuthenticated = ref(true)
-const isFollowing = ref(false)
+const isAuthenticated = ref(true);
+const isFollowing = ref(false);
 
 const toggleFollow = () => {
-	isFollowing.value = !isFollowing.value
-}
+  isFollowing.value = !isFollowing.value;
+};
 
 const login = () => {
-	console.log('Redirect to login')
-}
+  console.log("Redirect to login");
+};
 
 onMounted(async () => {
   await Promise.all([
@@ -251,9 +234,8 @@ ul {
   display: block;
   background-color: var(--dark-light);
   color: var(--light);
-  /* border-top-left-radius: 0.4rem !important;
-  border-top-right-radius: 0.4rem !important; */
-  border-radius: 0.4rem !important;
+  border-top-left-radius: 0.4rem !important;
+  border-top-right-radius: 0.4rem !important;
   padding: 0.5rem 1rem;
   font-weight: 700;
 }
@@ -279,9 +261,9 @@ ul {
 } */
 
 .nav-item-link {
-	display: flex;
-	justify-content: center;
-	color: var(--light);
+  display: flex;
+  justify-content: center;
+  color: var(--light);
 }
 
 .tab-panels-wrapper {
@@ -327,61 +309,61 @@ p {
 
 .action-checked:focus,
 .action-unchecked:focus {
-	outline: none !important;
-	box-shadow: none !important;
+  outline: none !important;
+  box-shadow: none !important;
 }
 
 .action-unchecked,
 .action-checked:hover {
-	color: var(--light);
-	background-color: var(--dark);
-	font-size: smaller;
-	outline: none !important;
-	box-shadow: none;
+  color: var(--light);
+  background-color: var(--dark);
+  font-size: smaller;
+  outline: none !important;
+  box-shadow: none;
 }
 
 .action-checked,
 .action-unchecked:hover {
-	color: var(--dark);
-	background-color: var(--primary);
-	border-right: 1px solid var(--light);
-	border-bottom: 1px solid var(--light);
-	font-size: smaller;
-	outline: none !important;
-	box-shadow: none;
+  color: var(--dark);
+  background-color: var(--primary);
+  border-right: 1px solid var(--light);
+  border-bottom: 1px solid var(--light);
+  font-size: smaller;
+  outline: none !important;
+  box-shadow: none;
 }
 
 .avatars-block {
-	display: inline-flex;
+  display: inline-flex;
 }
 
 .avatar {
-	width: 1.6em;
-	height: 1.6em;
-	border-radius: 50%;
-	border: 2px solid var(--dark);
+  width: 1.6em;
+  height: 1.6em;
+  border-radius: 50%;
+  border: 2px solid var(--dark);
 }
 
 .avatar-bigger {
-	width: 4em;
-	height: 4em;
-	border-radius: 50%;
-	border: 2px solid var(--dark);
+  width: 4em;
+  height: 4em;
+  border-radius: 50%;
+  border: 2px solid var(--dark);
 }
 
 .reduce-margin-right {
-	margin-right: -0.5em;
+  margin-right: -0.5em;
 }
 
 .about-field {
-	color: var(--secondary-xx-light);
-	font-weight: 100;
-	/* text-decoration: underline;
+  color: var(--secondary-xx-light);
+  font-weight: 100;
+  /* text-decoration: underline;
     text-decoration-color: var(--primary);
     text-decoration-thickness: 0.01em; */
 }
 
 #posts-nav button.active {
-	border-bottom: 1px solid var(--secondary-x-light);
+  border-bottom: 1px solid var(--secondary-x-light);
 }
 </style>

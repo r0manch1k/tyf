@@ -5,7 +5,7 @@ import RegisterView from "@/views/Authorization/RegisterView.vue";
 import ResetPasswordView from "@/views/Authorization/ResetPasswordView.vue";
 import SetPasswordView from "@/views/Authorization/SetPasswordView.vue";
 import VerificationView from "@/views/Authorization/VerificationView.vue";
-import NotFoundView from '@/views/NotFoundView.vue';
+import NotFoundView from "@/views/NotFoundView.vue";
 import ProfileView from "@/views/ProfileView.vue";
 import PostDetailView from "@/views/PostDetailView.vue";
 import PostCreateView from "@/views/PostCreateView.vue";
@@ -13,8 +13,6 @@ import ProfileEdit from "@/views/ProfileEdit.vue";
 import LogoutView from "@/views/Authorization/LogoutView.vue";
 
 import store from "@/stores";
-
-// TODO: Change _ to - in router names
 
 const routes = [
   {
@@ -78,7 +76,7 @@ const routes = [
     path: "/logout",
     name: "logout",
     component: LogoutView,
-  }
+  },
 ];
 
 const router = createRouter({
@@ -86,15 +84,8 @@ const router = createRouter({
   routes,
 });
 
-// router.beforeEach((to, from, next) => {
-//   store.commit("main/setShowErrorPage", false);
-//   next();
-// });
-
-// TODO: In all tutorials they use beforeEach, but here's the big problem i can explain you
-// So I use afterEach
 router.afterEach(() => {
-  store.commit("main/setShowErrorPage", false);
+  store.commit("error/setShowErrorPage", false);
 });
 
 export default router;
