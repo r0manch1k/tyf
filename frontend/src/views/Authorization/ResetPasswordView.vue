@@ -23,7 +23,11 @@
       <div
         class="reset-password-view__content col-12 row col-sm-8 col-md-6 col-lg-5 col-xl-4"
       >
-        <Message v-if="message.text" :message="message" />
+        <Message
+          :message="message"
+          :show="showMessage"
+          @update:show="showMessage = $event"
+        />
         <div
           class="reset-password-view__form-container bg-secondary rounded p-4"
           style="border-radius: 1rem !important"
@@ -98,6 +102,7 @@ const email = ref("");
 const loading = ref(false);
 
 const message = computed<MessageModel>(() => store.state.auth.message);
+const showMessage = ref(false);
 
 const resetPasswordSubmit = async () => {
   loading.value = true;
@@ -113,6 +118,7 @@ const resetPasswordSubmit = async () => {
         type: "error",
       };
       store.commit("auth/setMessage", message);
+      showMessage.value = true;
     })
     .finally(() => {
       loading.value = false;

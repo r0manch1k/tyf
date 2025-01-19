@@ -7,7 +7,11 @@
       <div
         class="verification__content col-12 row col-sm-8 col-md-6 col-lg-5 col-xl-4"
       >
-        <Message v-if="message.text" :message="message" />
+        <Message
+          :message="message"
+          :show="showMessage"
+          @update:show="showMessage = $event"
+        />
         <div
           class="verification__box bg-secondary rounded p-4"
           style="border-radius: 1rem !important"
@@ -114,6 +118,7 @@ const otpNumbers = ref(["", "", "", "", "", ""]);
 const loading = ref(true);
 
 const message = computed<MessageModel>(() => store.state.auth.message);
+const showMessage = ref(false);
 
 onMounted(async () => {
   loading.value = true;
@@ -150,22 +155,27 @@ const verifySubmit = async () => {
         type: "success",
       };
       store.commit("auth/setMessage", message);
+      showMessage.value = true;
       router.push("/login");
     })
     .catch((error) => {
       if (error.status === 401) {
-        store.commit("auth/setMessage", {
+        const message: MessageModel = {
           text: "Ваша сессия подтверждения аккаунта истекла. Пройдите процесс регистрации заново.",
           type: "info",
-        });
+        };
+        store.commit("auth/setMessage", message);
+        showMessage.value = true;
         router.push("/register");
       } else {
-        store.commit("auth/setMessage", {
+        const message: MessageModel = {
           text:
             error.data?.message ||
             "Что-то пошло не так, повторите попытку позже.",
           type: "error",
-        });
+        };
+        store.commit("auth/setMessage", message);
+        showMessage.value = true;
       }
     })
     .finally(() => {

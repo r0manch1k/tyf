@@ -28,7 +28,7 @@ import ResetPasswordView from "@/views/Authorization/ResetPasswordView.vue";
 import SetPasswordView from "@/views/Authorization/SetPasswordView.vue";
 import VerificationView from "@/views/Authorization/VerificationView.vue";
 import BackgroundGraphs from "@/components/BackgroundGraphs.vue";
-import { computed } from "vue";
+import { computed, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import { useStore } from "vuex";
 
@@ -52,6 +52,10 @@ const isHome = computed(
     !isSetPassword.value &&
     !isVerification.value
 );
+
+onMounted(async () => {
+  store.dispatch("profile/fetchProfile");
+});
 </script>
 
 <style>

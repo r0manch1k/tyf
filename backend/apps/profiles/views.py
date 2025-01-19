@@ -27,7 +27,7 @@ class ProfileViewSet(viewsets.ViewSet):
     def retrieve(self, request, pk=None):
         queryset = Profile.objects.all()
         profile = get_object_or_404(queryset, username=pk)
-        serializer = ProfileDetailSerializer(profile)
+        serializer = ProfileDetailSerializer(profile, context={"request": request})
         return Response(serializer.data)
 
     # TODO: recent_users or recent_profiles?
@@ -48,7 +48,7 @@ class ProfileViewSet(viewsets.ViewSet):
         return Response(serializer.data)
 
     @action(detail=True, methods=["GET"], url_path="posts", url_name="posts")
-    def user_posts(self, request, pk=None):
+    def posts(self, request, pk=None):
         queryset = Profile.objects.all()
         profile = get_object_or_404(queryset, username=pk)
         serializer = PostListSerializer(profile.posts, many=True)
@@ -75,3 +75,19 @@ class ProfileViewSet(viewsets.ViewSet):
         profile = get_object_or_404(queryset, email=email)
         serializer = ProfileDetailSerializer(profile)
         return Response(serializer.data)
+
+    @action(detail=True, methods=["POST"], url_path="follow", url_name="follow")
+    def follow(self, request, pk=None):
+        if request.user.is_anonymous:
+            return Response(
+                {"detail": "You need to login to follow users."}, status=401
+            )
+        user_to_follow = get_object_or_404(Profile, username=pk)
+        if request.user.profile == user_to_follow:
+            return Response({"detail": "You cannot follow yourself."}, status=400)
+        if request.user.profile.following.filter(id=user_to_follow.id).exists():
+            request.user.profile.following.remove(user_to_follow)
+            return Response({"detail": "Unfollowed successfully."})
+        else:
+            request.user.profile.following.add(user_to_follow)
+            return Response({"detail": "Followed successfully."})

@@ -1,33 +1,38 @@
 <template>
-  <div v-if="!loading" class="profile-view px-5">
+  <div v-if="!loading && !loadingProfile" class="profile-view px-5">
     <div class="profile-view__container container-fluid p-0">
       <div class="profile-view__row row">
         <div class="profile-view__sidebar col-3">
           <div
-            class="profile-view__meta d-flex flex-column gap-3 p-4 align-items-center"
+            class="profile-view__meta d-flex flex-column gap-3 p-3 align-items-center"
           >
             <img
               :src="profile.avatar"
               alt="avatar"
               class="profile-view__avatar img-fluid rounded-circle"
-              style="width: 10rem; height: 10rem"
+              style="width: max-content; height: max-content"
             />
-            <div class="profile-view__username text-primary fs-4">
-              {{ profile.username }}
-            </div>
-            <div class="profile-view__bio fs-6 text-light text-center">
-              {{ profile.bio }}
-            </div>
-            <div class="profile-view__tags fs-6 text-light text-center">
+            <div class="profile-view__stats d-flex flex-column gap-1">
               <div
-                class="profile-view__tags-list d-flex flex-wrap gap-2 justify-content-center"
+                class="profile-view__username text-primary w-100 text-start fs-3"
               >
-                <Tag v-for="tag in profile.tags" :key="tag.id" :tag="tag" />
+                {{ profile.username }}
+              </div>
+              <div
+                class="profile-view__bio fs-6 text-secondary-xx-light w-100 text-start"
+              >
+                {{ profile.bio }}
               </div>
             </div>
-            <div
+
+            <!-- <div class="profile-view__tags fs-6 text-light w-100 text-start">
+              <div class="profile-view__tags-list d-flex flex-wrap gap-2">
+                <Tag v-for="tag in profile.tags" :key="tag.id" :tag="tag" />
+              </div>
+            </div> -->
+            <!-- <div
               v-if="profile.telegram || profile.vkontakte"
-              class="profile-view__social-links fs-6 text-light text-center d-flex justify-content-center gap-3"
+              class="profile-view__social-links fs-6 text-light text-center d-flex w-100 gap-3"
             >
               <a
                 v-if="profile.telegram"
@@ -43,28 +48,31 @@
                 class="d-inline-block"
                 >ВКонтакте</a
               >
-            </div>
+            </div> -->
 
-            <div class="profile-view__actions d-flex flex-column gap-2">
-              <div class="profile-view__action-buttons d-flex gap-2">
-                <button
-                  v-if="isAuthenticated"
-                  @click="toggleFollow"
-                  class="btn btn-action"
-                >
-                  {{ isFollowing ? "Отписаться" : "Подписаться" }}
-                </button>
-                <button v-else @click="login" class="btn btn-action">
-                  Подписаться
-                </button>
-                <button class="btn btn-action">Сообщение</button>
-              </div>
+            <div class="profile-view__actions d-flex flex-column w-100 gap-2">
+              <button
+                v-if="isAuth && guestMode"
+                @click="toggleFollow"
+                class="btn btn-action text-decoration-none text-light"
+                :class="{
+                  'action-checked': profile.is_following,
+                  'action-unchecked': !profile.is_following,
+                }"
+                :disabled="loadingToggleFollow"
+              >
+                <span v-if="!loadingToggleFollow">
+                  {{ profile.is_following ? "Отписаться" : "Подписаться" }}
+                </span>
+                <LoadingCircle v-else />
+              </button>
+
               <router-link
-                v-if="isAuthenticated"
+                v-if="isAuth && !guestMode"
                 :to="{
                   name: 'profile-edit',
                 }"
-                class="btn btn-action"
+                class="btn btn-action text-decoration-none text-light"
               >
                 Редактировать профиль
               </router-link>
@@ -78,9 +86,10 @@
             nav-item-active-class="profile-view__tab-item--active nav-item-active"
             nav-item-link-class="profile-view__tab-link nav-item-link"
             nav-class="profile-view__tab-panels-wrapper tab-panels-wrapper"
+            @changed="onTabChanged"
           >
-            <Tab :name="`Публикации (${profile.posts.length})`">
-              <div class="profile-view__posts tab-pane">
+            <Tab :name="`Публикации (${profile.posts_count})`">
+              <div class="profile-view__posts tab-pane" v-if="!loadingPosts">
                 <p
                   v-if="!profile.posts || !profile.posts.length"
                   class="profile-view__no-posts text-secondary fs-7 mt-4 text-center"
@@ -98,9 +107,13 @@
                   />
                 </div>
               </div>
+              <LoadingCircle v-else />
             </Tab>
-            <Tab :name="`Подписчики (${profile.followers.length})`">
-              <div class="profile-view__followers tab-pane">
+            <Tab :name="`Подписчики (${profile.followers_count})`">
+              <div
+                class="profile-view__followers tab-pane"
+                v-if="!loadingFollowers"
+              >
                 <p
                   v-if="!profile.followers || !profile.followers.length"
                   class="profile-view__no-followers text-secondary fs-7 mt-4 text-center"
@@ -130,9 +143,13 @@
                   </div>
                 </div>
               </div>
+              <LoadingCircle v-else />
             </Tab>
-            <Tab :name="`Подписки (${profile.following.length})`">
-              <div class="profile-view__following tab-pane">
+            <Tab :name="`Подписки (${profile.following_count})`">
+              <div
+                class="profile-view__following tab-pane"
+                v-if="!loadingFollowing"
+              >
                 <p
                   v-if="!profile.following || !profile.following.length"
                   class="profile-view__no-following text-secondary fs-7 mt-4 text-center"
@@ -162,6 +179,7 @@
                   </div>
                 </div>
               </div>
+              <LoadingCircle v-else />
             </Tab>
           </Tabs>
         </div>
@@ -171,21 +189,26 @@
   <div v-else>
     <LoadingCircle />
   </div>
+  <h1>{{ store.state.profile.username + props.username }}</h1>
 </template>
 
 <script setup lang="ts">
+import { ref, defineProps, onMounted, computed } from "vue";
+import { useStore } from "vuex";
+import { Tabs, Tab } from "vue3-tabs-component";
 import LoadingCircle from "@/components/LoadingCircle.vue";
 import Post from "@/components/Post.vue";
 import Tag from "@/components/Tag.vue";
-import { Tabs, Tab } from "vue3-tabs-component";
-import { ref, defineProps, onMounted } from "vue";
-// import { computed } from "vue";
 import ProfileDataService from "@/services/ProfileDataService";
 import type ProfileDetailModel from "@/models/ProfileModel";
-// import type PostListItemModel from "@/models/PostModel";
-import { useStore } from "vuex";
+
+const store = useStore();
 
 const loading = ref(true);
+const loadingPosts = ref(true);
+const loadingFollowers = ref(true);
+const loadingFollowing = ref(true);
+const loadingToggleFollow = ref(false);
 
 const props = defineProps({
   username: {
@@ -194,34 +217,92 @@ const props = defineProps({
   },
 });
 
-const store = useStore();
-
-let profile = ref<ProfileDetailModel>(store.getters["profile/getProfile"]);
-
-// TODO: Implement follow/unfollow functionality
-const isAuthenticated = ref(true);
-const isFollowing = ref(false);
-
-const toggleFollow = () => {
-  isFollowing.value = !isFollowing.value;
-};
-
-const login = () => {
-  console.log("Redirect to login");
-};
+const profile = ref<ProfileDetailModel>(store.getters["profile/getProfile"]);
+const isAuth = computed(() => profile.value.id > -1);
+const loadingProfile = computed(() => store.state.profile.loading);
+const guestMode = computed(
+  () => store.state.profile.username != props.username
+);
 
 onMounted(async () => {
-  await Promise.all([
-    (profile.value = await ProfileDataService.getProfileByUsername(
-      props.username
-    )),
-    (profile.value.posts = await ProfileDataService.getProfilePosts(
-      props.username
-    )),
-  ]).then(() => {
-    loading.value = false;
-  });
+  await fetchProfile();
 });
+
+const fetchProfile = async () => {
+  loading.value = true;
+  await ProfileDataService.getProfileByUsername(props.username).then(
+    (response) => {
+      profile.value = response;
+      loading.value = false;
+    }
+  );
+};
+
+const fetchPosts = async () => {
+  if (profile.value.posts) {
+    return;
+  }
+  loadingPosts.value = true;
+  await ProfileDataService.getProfilePosts(props.username).then((response) => {
+    profile.value.posts = response;
+    loadingPosts.value = false;
+  });
+};
+
+const fetchFollowers = async () => {
+  if (profile.value.followers) {
+    return;
+  }
+  loadingFollowers.value = true;
+  await ProfileDataService.getProfileFollowers(props.username).then(
+    (response) => {
+      profile.value.followers = response;
+      loadingFollowers.value = false;
+    }
+  );
+};
+
+const fetchFollowing = async () => {
+  if (profile.value.following) {
+    return;
+  }
+  loadingFollowing.value = true;
+  await ProfileDataService.getProfileFollowing(props.username).then(
+    (response) => {
+      profile.value.following = response;
+      loadingFollowing.value = false;
+    }
+  );
+};
+
+interface TabObject {
+  tab: {
+    name: string;
+    header: string;
+    isDisabled: boolean;
+  };
+}
+
+const onTabChanged = (object: TabObject) => {
+  if (object.tab.name.includes("Публикации")) {
+    fetchPosts();
+  } else if (object.tab.name.includes("Подписчики")) {
+    fetchFollowers();
+  } else if (object.tab.name.includes("Подписки")) {
+    fetchFollowing();
+  }
+};
+
+const toggleFollow = async () => {
+  loadingToggleFollow.value = true;
+  if (isAuth.value && guestMode && profile.value.is_following) {
+    await ProfileDataService.unfollowProfile(props.username);
+  } else {
+    await ProfileDataService.followProfile(props.username);
+  }
+  loadingToggleFollow.value = false;
+  await fetchProfile();
+};
 </script>
 
 <style>
@@ -248,18 +329,6 @@ ul {
   border-bottom: 1px solid var(--primary);
 }
 
-/* .nav-item-active:hover {
-  color: var(--dark-light);
-}
-
-.nav-item-link.is-active {
-  color: var(--dark-light);
-}
-
-.nav-item-link.is-active:hover {
-  color: var(--dark-light);
-} */
-
 .nav-item-link {
   display: flex;
   justify-content: center;
@@ -269,7 +338,6 @@ ul {
 .tab-panels-wrapper {
   display: flex;
   gap: 1rem;
-  /* border-bottom: 1px solid var(--secondary); */
 }
 </style>
 
@@ -277,11 +345,6 @@ ul {
 .profile-view__container {
   border-radius: 0.4rem;
 }
-
-/* .profile-view__meta {
-  border-top-left-radius: 0.4rem;
-  border-bottom-left-radius: 0.4rem;
-} */
 
 a {
   color: var(--primary);
@@ -304,63 +367,6 @@ p {
 .field {
   font-weight: bold;
   color: var(--secondary-xx-light);
-}
-/* BUTTONS */
-
-.action-checked:focus,
-.action-unchecked:focus {
-  outline: none !important;
-  box-shadow: none !important;
-}
-
-.action-unchecked,
-.action-checked:hover {
-  color: var(--light);
-  background-color: var(--dark);
-  font-size: smaller;
-  outline: none !important;
-  box-shadow: none;
-}
-
-.action-checked,
-.action-unchecked:hover {
-  color: var(--dark);
-  background-color: var(--primary);
-  border-right: 1px solid var(--light);
-  border-bottom: 1px solid var(--light);
-  font-size: smaller;
-  outline: none !important;
-  box-shadow: none;
-}
-
-.avatars-block {
-  display: inline-flex;
-}
-
-.avatar {
-  width: 1.6em;
-  height: 1.6em;
-  border-radius: 50%;
-  border: 2px solid var(--dark);
-}
-
-.avatar-bigger {
-  width: 4em;
-  height: 4em;
-  border-radius: 50%;
-  border: 2px solid var(--dark);
-}
-
-.reduce-margin-right {
-  margin-right: -0.5em;
-}
-
-.about-field {
-  color: var(--secondary-xx-light);
-  font-weight: 100;
-  /* text-decoration: underline;
-    text-decoration-color: var(--primary);
-    text-decoration-thickness: 0.01em; */
 }
 
 #posts-nav button.active {

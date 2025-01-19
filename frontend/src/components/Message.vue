@@ -21,17 +21,13 @@
     </symbol>
   </svg>
 
-  <div v-if="showMessage">
+  <div v-if="show">
     <CAlert
       v-if="message.type == 'success'"
       class="alert alert-success d-flex align-items-center"
       style="width: 100% !important; border-radius: 0.4rem !important"
       dismissible
-      @close="
-        () => {
-          showMessage = false;
-        }
-      "
+      @close="close"
     >
       <svg
         class="bi flex-shrink-0 me-2"
@@ -50,11 +46,7 @@
       class="alert alert-info d-flex align-items-center"
       style="width: 100% !important; border-radius: 0.4rem !important"
       dismissible
-      @close="
-        () => {
-          showMessage = false;
-        }
-      "
+      @close="close"
     >
       <svg
         class="bi flex-shrink-0 me-2"
@@ -73,11 +65,7 @@
       class="alert alert-warning d-flex align-items-center"
       style="width: 100% !important; border-radius: 0.4rem !important"
       dismissible
-      @close="
-        () => {
-          showMessage = false;
-        }
-      "
+      @close="close"
     >
       <svg
         class="bi flex-shrink-0 me-2"
@@ -96,11 +84,7 @@
       class="alert alert-danger d-flex align-items-center"
       style="width: 100% !important; border-radius: 0.4rem !important"
       dismissible
-      @close="
-        () => {
-          showMessage = false;
-        }
-      "
+      @close="close"
     >
       <svg
         class="bi flex-shrink-0 me-2"
@@ -117,7 +101,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, ref, watch } from "vue";
+import { defineProps, defineEmits } from "vue";
 import { CAlert } from "@coreui/vue";
 import type MessageModel from "@/models/MessageModel";
 
@@ -126,16 +110,15 @@ const props = defineProps({
     type: Object as () => MessageModel,
     required: true,
   },
+  show: {
+    type: Boolean,
+    default: true,
+  },
 });
 
-const showMessage = ref(true);
+const emit = defineEmits(["update:show"]);
 
-watch(
-  () => props.message,
-  () => {
-    console.log("Message changed:", props.message);
-    showMessage.value = true;
-  }
-  // { immediate: true }
-);
+const close = () => {
+  emit("update:show", false);
+};
 </script>

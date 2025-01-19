@@ -25,7 +25,7 @@
     <router-link
       :to="{ name: 'home' }"
       class="header__create-button btn-light fs-6 ms-4"
-      v-if="isAuth"
+      v-if="isAuth && !loading"
       >Создать</router-link
     >
 
@@ -45,7 +45,7 @@
     <div class="header__dropdown-container navbar-nav align-items-center ms-0">
       <div class="header__profile-container nav-item dropdown ms-4">
         <router-link
-          v-if="isAuth"
+          v-if="isAuth && !loading"
           :to="{ name: 'profile', params: { username: profile.username } }"
           class="header__profile-img-container nav-link dropdown-toggle"
           data-bs-toggle="dropdown"
@@ -55,7 +55,15 @@
             :src="profile.avatar"
           />
         </router-link>
-        <a v-else class="header__profile-img btn-light fs-6">Вход</a>
+
+        <LoadingCircle v-if="loading" class="spinner-border-sm" />
+
+        <router-link
+          v-if="!isAuth && !loading"
+          class="header__profile-img btn-light fs-6"
+          :to="{ name: 'login' }"
+          >Вход</router-link
+        >
 
         <div
           class="header__dropdown dropdown-menu dropdown-menu-dark dropdown-menu-end bg-secondary-light border-0 rounded-0 rounded-bottom fs-6"
@@ -90,8 +98,11 @@
 import { computed } from "vue";
 import { useStore } from "vuex";
 import type ProfileListItemModel from "@/models/ProfileModel";
+import LoadingCircle from "@/components/LoadingCircle.vue";
 
 const store = useStore();
+
+const loading = computed(() => store.state.profile.loading);
 
 const profile = computed<ProfileListItemModel>(
   () => store.state.profile.profile

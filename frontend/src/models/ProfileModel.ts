@@ -27,6 +27,10 @@ export default interface ProfileModel {
   following: ProfileListItemModel[];
   posts: PostListItemModel[];
   tags: TagModel[] | null;
+  is_following: boolean;
+  is_followed: boolean;
+  following_count: number;
+  followers_count: number;
 }
 
 export type ProfileListItemModel = Pick<
@@ -34,4 +38,4 @@ export type ProfileListItemModel = Pick<
   "id" | "username" | "avatar" | "date_joined" | "posts_count" | "points"
 >;
 
-export type ProfileDetailModel = Omit<ProfileModel, "posts_count">;
+export type ProfileDetailModel = ProfileModel;

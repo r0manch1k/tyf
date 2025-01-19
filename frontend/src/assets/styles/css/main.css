@@ -184,7 +184,8 @@ h6 {
   color: var(--secondary-x-light);
 }
 
-.btn-action {
+.btn-action,
+.action-unchecked {
   color: var(--light);
   background-color: var(--secondary);
   border: 0;
@@ -192,7 +193,17 @@ h6 {
   padding: 0.5rem 1rem;
   text-align: inherit;
   box-shadow: none !important;
-  transition: background-color 0.3s;
+  text-decoration: none;
+}
+
+.action-checked {
+  color: var(--dark);
+  background-color: var(--primary);
+  border: 0;
+  border-radius: 0.4rem;
+  padding: 0.5rem 1rem;
+  text-align: inherit;
+  text-decoration: none;
 }
 
 .text-primary {

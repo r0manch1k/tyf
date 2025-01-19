@@ -7,7 +7,11 @@
       <div
         class="login-view__col col-12 row col-sm-8 col-md-6 col-lg-5 col-xl-4"
       >
-        <Message v-if="message.text" :message="message" />
+        <Message
+          :message="message"
+          :show="showMessage"
+          @update:show="showMessage = $event"
+        />
         <div class="login-view__box bg-dark-light p-4">
           <div
             class="login-view__header text-center align-items-center justify-content-between mb-4"
@@ -55,7 +59,7 @@
               <label v-if="!loading" style="color: var(--dark) !important"
                 >Войти</label
               >
-              <LoadingCircle v-else />
+              <LoadingCircle v-else class="spinner-border-sm" />
             </button>
           </form>
           <p class="login-view__register text-center mb-0">
@@ -89,6 +93,7 @@ const password = ref("");
 const loading = ref(false);
 
 const message = computed<MessageModel>(() => store.state.auth.message);
+const showMessage = ref(false);
 
 const loginSubmit = async () => {
   loading.value = true;
@@ -102,6 +107,7 @@ const loginSubmit = async () => {
         type: "error",
       };
       store.commit("auth/setMessage", message);
+      showMessage.value = true;
     })
     .finally(() => {
       loading.value = false;

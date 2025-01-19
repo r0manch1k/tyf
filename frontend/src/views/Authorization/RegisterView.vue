@@ -7,7 +7,11 @@
       <div
         class="register-view__content col-12 row col-sm-8 col-md-6 col-lg-5 col-xl-4"
       >
-        <Message v-if="message.text" :message="message" />
+        <Message
+          :message="message"
+          :show="showMessage"
+          @update:show="showMessage = $event"
+        />
         <div
           class="register-view__form bg-dark-light rounded p-4"
           style="border-radius: 0.4rem !important"
@@ -54,7 +58,7 @@
               <label v-if="!loading" style="color: var(--dark) !important"
                 >Продолжить</label
               >
-              <LoadingCircle v-else />
+              <LoadingCircle v-else class="spinner-border-sm" />
             </button>
           </form>
           <p class="register-view__login-link text-center mb-0">
@@ -68,12 +72,10 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, watch } from "vue";
+import { ref, computed } from "vue";
 import { useStore } from "vuex";
-// import useVuex from "@/stores/composition-api";
 import AuthService from "@/services/AuthService";
 import MessageModel from "@/models/MessageModel";
-
 import Message from "@/components/Message.vue";
 import EmailField from "@/components/Authorization/Fields/EmailField.vue";
 import PasswordField from "@/components/Authorization/Fields/PasswordField.vue";
@@ -89,21 +91,18 @@ const password2 = ref("");
 const loading = ref(false);
 
 const message = computed<MessageModel>(() => store.state.auth.message);
+const showMessage = ref(false);
 
 const registerSubmit = async () => {
   loading.value = true;
   AuthService.register(email.value, password1.value, password2.value)
     .catch((error) => {
-      // console.log("Message changed:", store.state.auth.message);
       const message: MessageModel = {
         text: error.data.detail,
         type: "error",
       };
-      console.log(error);
-      // Clear message cause Message component depends on chnage of message
-      // It still doesn't work
-      store.commit("auth/setMessage", "");
       store.commit("auth/setMessage", message);
+      showMessage.value = true;
     })
     .finally(() => {
       loading.value = false;
