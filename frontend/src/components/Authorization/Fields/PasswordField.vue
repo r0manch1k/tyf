@@ -3,7 +3,7 @@
     type="password"
     name="password"
     class="form-control form-control-sm"
-    style="border-radius: 1rem"
+    style="border-radius: 0.4rem"
     id="id_password"
     placeholder="Password"
     required

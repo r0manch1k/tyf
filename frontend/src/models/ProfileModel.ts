@@ -4,6 +4,7 @@ import type MajorModel from "@/models/MajorModel";
 import type TagModel from "@/models/TagModel";
 
 export default interface ProfileModel {
+  id: number;
   email: string;
   username: string;
   first_name: string;
@@ -26,11 +27,15 @@ export default interface ProfileModel {
   following: ProfileListItemModel[];
   posts: PostListItemModel[];
   tags: TagModel[] | null;
+  is_following: boolean;
+  is_followed: boolean;
+  following_count: number;
+  followers_count: number;
 }
 
 export type ProfileListItemModel = Pick<
   ProfileModel,
-  "username" | "avatar" | "date_joined" | "posts_count" | "points"
+  "id" | "username" | "avatar" | "date_joined" | "posts_count" | "points"
 >;
 
-export type ProfileDetailModel = Omit<ProfileModel, "posts_count">;
+export type ProfileDetailModel = ProfileModel;

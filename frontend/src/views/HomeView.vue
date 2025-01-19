@@ -54,6 +54,7 @@ const posts = shallowRef<PostListItemModel[]>([]);
 
 onMounted(async () => {
   await Promise.all([
+    store.dispatch("profile/fetchProfile"),
     store.dispatch("category/fetchCategories"),
     store.dispatch("collection/fetchCollections"),
     (posts.value = await PostDataService.getAllPosts()),

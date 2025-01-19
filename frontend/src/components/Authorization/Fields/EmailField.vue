@@ -2,7 +2,7 @@
   <input
     type="email"
     class="form-control form-control-sm"
-    style="border-radius: 1rem"
+    style="border-radius: 0.4rem"
     id="email"
     placeholder="name@example.com"
     required

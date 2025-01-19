@@ -28,7 +28,7 @@ import ResetPasswordView from "@/views/Authorization/ResetPasswordView.vue";
 import SetPasswordView from "@/views/Authorization/SetPasswordView.vue";
 import VerificationView from "@/views/Authorization/VerificationView.vue";
 import BackgroundGraphs from "@/components/BackgroundGraphs.vue";
-import { computed } from "vue";
+import { computed, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import { useStore } from "vuex";
 
@@ -36,7 +36,7 @@ const route = useRoute();
 const store = useStore();
 
 const isError = computed(() => {
-  return store.getters["main/getShowErrorPage"];
+  return store.getters["error/getShowErrorPage"];
 });
 
 const isLogin = computed(() => route.name === "login");
@@ -52,6 +52,10 @@ const isHome = computed(
     !isSetPassword.value &&
     !isVerification.value
 );
+
+onMounted(async () => {
+  store.dispatch("profile/fetchProfile");
+});
 </script>
 
 <style>
@@ -65,11 +69,9 @@ const isHome = computed(
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
   height: 100%;
   width: 100%;
-} */
-
+}
 .main__content {
   background-color: rgba(30, 30, 35, 0.5);
   /* background-color: rgba(51, 51, 51, 0.8); */
@@ -95,4 +97,13 @@ nav a {
 nav a.router-link-exact-active {
   color: #42b983;
 } */
+
+.btn {
+  border-radius: 0.4rem !important;
+}
+
+.btn-check:focus + .btn,
+.btn:focus {
+  box-shadow: none;
+}
 </style>
