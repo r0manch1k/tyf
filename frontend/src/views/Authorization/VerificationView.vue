@@ -1,24 +1,32 @@
 <template>
-  <NotFoundView v-if="showErrorPage" />
-  <div v-else :class="{ 'd-none': loading }">
+  <div class="verification">
     <div
-      class="flex row vh-100 vw-100 align-items-center justify-content-center"
+      class="verification__container flex row vh-100 align-items-center justify-content-center"
+      style="min-height: 100vh"
     >
-      <div class="col-12 row col-sm-8 col-md-6 col-lg-5 col-xl-4">
-        <Messages ref="messagesComponent" />
+      <div
+        class="verification__content col-12 row col-sm-8 col-md-6 col-lg-5 col-xl-4"
+      >
+        <Message
+          :message="message"
+          :show="showMessage"
+          @update:show="showMessage = $event"
+        />
         <div
-          class="bg-secondary rounded p-4"
+          class="verification__box bg-secondary rounded p-4"
           style="border-radius: 1rem !important"
         >
           <div
-            class="text-center align-items-center justify-content-between mb-2"
+            class="verification__header text-center align-items-center justify-content-between mb-2"
           >
-            <h3 class="fs-5">Введите код подтверждения</h3>
+            <h3 class="verification__title fs-5">Введите код подтверждения</h3>
           </div>
           <div
-            class="text-center align-items-center justify-content-between mb-4"
+            class="verification__subheader text-center align-items-center justify-content-between mb-4"
           >
-            <h3 class="fs-6" style="color: #aeadad !important">
+            <h3
+              class="verification__subtitle fw-normal text-secondary-xx-light fs-6"
+            >
               Код подтверждения был отправлен на вашу эл. почту
             </h3>
           </div>
@@ -30,12 +38,12 @@
           >
             <div
               id="otp"
-              class="inputs d-flex flex-row justify-content-center mt-2 mb-4"
+              class="verification__inputs inputs d-flex flex-row justify-content-center mt-2 mb-4"
             >
               <input
                 v-for="(num, index) in otpNumbers"
                 :key="index"
-                class="m-2 text-center form-control rounded-3"
+                class="verification__input m-2 text-center form-control rounded-3"
                 style="border-radius: 0.8rem !important"
                 :name="`otp_${index + 1}`"
                 :id="`otp_${index + 1}`"
@@ -46,14 +54,21 @@
             </div>
             <button
               type="submit"
-              class="btn btn-primary py-3 w-100 mb-3"
-              style="border-radius: 1rem !important"
+              class="verification__submit btn btn-primary py-3 w-100 mb-3"
+              :disabled="loading"
             >
-              <label style="color: var(--dark) !important">Подтвердить</label>
+              <label v-if="!loading" style="color: var(--dark) !important"
+                >Подтвердить</label
+              >
+              <LoadingCircle v-else />
             </button>
           </form>
-          <div class="text-center">
-            <span v-if="timerOn" class="d-block text-center" ref="countdown">
+          <div class="verification__footer text-center">
+            <span
+              v-if="timerOn"
+              class="verification__timer d-block text-center"
+              ref="countdown"
+            >
               Отправить новый код через
               {{
                 countdownMinutes < 10
@@ -65,64 +80,59 @@
                   : countdownSeconds
               }}
             </span>
-            <span v-else class="d-block text-center">
+            <span v-else class="verification__resend d-block text-center">
               Не получили код?
               <a
-                class="text-color"
+                class="verification__resend-link text-color"
                 ref="sendOtp"
                 style="cursor: pointer !important"
                 @click="startTimer(60, true)"
-                >Отправить новый код</a
               >
+                Отправить новый код
+              </a>
             </span>
           </div>
         </div>
       </div>
     </div>
   </div>
-  <LoadingCircle v-if="loading" />
 </template>
 
 <script lang="ts" setup>
-import store from "@/stores";
+import MessageModel from "@/models/MessageModel";
+import AuthService from "@/services/AuthService";
 import { computed, onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
+import { useStore } from "vuex";
 
-import Messages from "@/components/Authorization/Messages.vue";
 import LoadingCircle from "@/components/LoadingCircle.vue";
-import api from "@/stores/services/api";
-import NotFoundView from "@/views/NotFoundView.vue";
+import Message from "@/components/Message.vue";
 
-interface MessagesComponent {
-  addMessage: (message: { type: string; text: string }) => void;
-}
-
+const store = useStore();
 const route = useRoute();
 const router = useRouter();
 
-const loading = ref(true);
-const showErrorPage = ref(false);
+const showErrorPage = ref(store.getters["error/getShowErrorPage"]);
+
 const otpNumbers = ref(["", "", "", "", "", ""]);
-const messagesComponent = ref<MessagesComponent | null>(null);
+const loading = ref(true);
+
+const message = computed<MessageModel>(() => store.state.auth.message);
+const showMessage = ref(false);
 
 onMounted(async () => {
-  await api
-    .get("users/verification/", {
-      params: {
-        token: route.params.token ?? "",
-        uid: route.params.uid ?? "",
-      },
+  loading.value = true;
+
+  await AuthService.checkVerificationAccess(
+    route.params.token as string,
+    route.params.uid as string
+  )
+    .catch((error) => {
+      store.commit("error/setShowErrorPage", error.status);
     })
-    .then((response) => {
-      console.log(response);
-      if (response.status >= 400) {
-        showErrorPage.value = true;
-      }
-    })
-    .catch(() => {
-      showErrorPage.value = true;
+    .finally(() => {
+      loading.value = false;
     });
-  loading.value = false;
 
   if (!showErrorPage.value) {
     startTimer(60);
@@ -134,116 +144,75 @@ const verifySubmit = async () => {
   loading.value = true;
   const otp = otpNumbers.value.join("");
 
-  await api
-    .post(
-      "users/verification/",
-      {
-        otp: otp,
-      },
-      {
-        params: {
-          token: route.params.token ?? "",
-          uid: route.params.uid ?? "",
-        },
-      }
-    )
-    .then((response) => {
-      loading.value = false;
-      console.log(response.status, response.status == 201);
-      if (response.status == 200) {
-        store.commit("main/setAuthMessage", {
-          text: response.data.message,
-          type: "success",
-        });
-        router.push("/login");
-      } else if (response.status == 201) {
-        const resetPasswordToken = response.data.payload.token ?? "";
-        const uid = response.data.payload.uid ?? "";
-        console.log(resetPasswordToken, uid, resetPasswordToken && uid);
-        if (resetPasswordToken && uid) {
-          router.push(`/login/set_password/${uid}/${resetPasswordToken}`);
-        } else {
-          store.commit("main/setAuthMessage", {
-            text: "Что-то пошло не так. Пройдите процесс смены пароля заново.",
-            type: "info",
-          });
-          router.push("login/");
-        }
-      } else if (response.status == 401) {
-        store.commit("main/setAuthMessage", {
+  await AuthService.verify(
+    otp,
+    (route.params.token as string) ?? "",
+    (route.params.uid as string) ?? ""
+  )
+    .then(() => {
+      const message: MessageModel = {
+        text: "Аккаунт успешно подтвержден.",
+        type: "success",
+      };
+      store.commit("auth/setMessage", message);
+      showMessage.value = true;
+      router.push("/login");
+    })
+    .catch((error) => {
+      if (error.status === 401) {
+        const message: MessageModel = {
           text: "Ваша сессия подтверждения аккаунта истекла. Пройдите процесс регистрации заново.",
           type: "info",
-        });
+        };
+        store.commit("auth/setMessage", message);
+        showMessage.value = true;
         router.push("/register");
       } else {
-        const errorMessage =
-          response?.data?.message ||
-          "Что-то пошло не так, повторите попытку позже.";
-        if (messagesComponent.value) {
-          messagesComponent.value.addMessage({
-            type: "error",
-            text: errorMessage,
-          });
-        }
+        const message: MessageModel = {
+          text:
+            error.data?.message ||
+            "Что-то пошло не так, повторите попытку позже.",
+          type: "error",
+        };
+        store.commit("auth/setMessage", message);
+        showMessage.value = true;
       }
     })
-    .catch(() => {
+    .finally(() => {
       loading.value = false;
-      if (messagesComponent.value) {
-        messagesComponent.value.addMessage({
-          type: "error",
-          text: "Что-то пошло не так, повторите попытку позже.",
-        });
-      }
     });
 };
 
 const resendOTP = async () => {
   loading.value = true;
 
-  await api
-    .patch("users/verification/", "", {
-      params: {
-        token: route.params.token ?? "",
-        uid: route.params.uid ?? "",
-      },
+  await AuthService.resendOTP(
+    (route.params.token as string) ?? "",
+    (route.params.uid as string) ?? ""
+  )
+    .then(() => {
+      const message: MessageModel = {
+        text: "Новый код подтверждения был отправлен на вашу эл. почту.",
+        type: "success",
+      };
+      store.commit("auth/setMessage", message);
     })
-    .then((response) => {
-      loading.value = false;
-      if (response.status == 200) {
-        const successMessage = response?.data?.message ?? "";
-        if (messagesComponent.value) {
-          messagesComponent.value.addMessage({
-            type: "success",
-            text: successMessage,
-          });
-        }
-      } else if (response.status == 401) {
-        store.commit("main/setAuthMessage", {
+    .catch((error) => {
+      if (error.status === 401) {
+        store.commit("auth/setMessage", {
           text: "Ваша сессия подтверждения аккаунта истекла. Пройдите процесс регистрации заново.",
           type: "info",
         });
         router.push("/register");
       } else {
-        const errorMessage =
-          response?.data?.message ||
-          "Что-то пошло не так, повторите попытку позже.";
-        if (messagesComponent.value) {
-          messagesComponent.value.addMessage({
-            type: "error",
-            text: errorMessage,
-          });
-        }
-      }
-    })
-    .catch(() => {
-      loading.value = false;
-      if (messagesComponent.value) {
-        messagesComponent.value.addMessage({
-          type: "error",
+        store.commit("auth/setMessage", {
           text: "Что-то пошло не так, повторите попытку позже.",
+          type: "error",
         });
       }
+    })
+    .finally(() => {
+      loading.value = false;
     });
 };
 
@@ -325,3 +294,9 @@ async function startTimer(remaining: number, resend = false) {
   }, 1000);
 }
 </script>
+
+<style scoped>
+.row > * {
+  padding: 0;
+}
+</style>

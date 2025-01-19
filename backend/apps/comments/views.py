@@ -8,12 +8,12 @@ from .models import Comment
 
 class CommentViewSet(viewsets.ViewSet):
     def list(self, request):
-        queryset = Comment.objects.all()
+        queryset = Comment.objects.filter(parent=None)
         serializer = CommentSerializer(queryset, many=True)
         return Response(serializer.data)
 
     def retrieve(self, request, pk=None):
         queryset = Comment.objects.all()
-        profile = get_object_or_404(queryset, identifier=pk)
-        serializer = CommentSerializer(profile)
+        comment = get_object_or_404(queryset, identifier=pk)
+        serializer = CommentSerializer(comment)
         return Response(serializer.data)

@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import Profile
 from apps.registry.serializer import MajorListSerializer, UniversityListSerializer
+from apps.tags.serializer import TagSerializer
 from tyf import settings
 
 
@@ -18,7 +19,7 @@ class ProfileListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Profile
-        fields = ["username", "avatar", "date_joined", "posts_count", "points"]
+        fields = ["id", "username", "avatar", "date_joined", "posts_count", "points"]
 
     def get_avatar(self, obj):
         return settings.API_ULR + obj.get_avatar
@@ -48,12 +49,17 @@ class ProfileDetailSerializer(serializers.ModelSerializer):
     university = UniversityListSerializer()
     points = serializers.IntegerField(read_only=True)
     awards = serializers.IntegerField(read_only=True)
-    following = serializers.SerializerMethodField()
-    followers = serializers.SerializerMethodField()
+    tags = serializers.SerializerMethodField()
+    is_following = serializers.SerializerMethodField()
+    is_followed = serializers.SerializerMethodField()
+    following_count = serializers.SerializerMethodField()
+    followers_count = serializers.SerializerMethodField()
+    posts_count = serializers.SerializerMethodField()
 
     class Meta:
         model = Profile
         fields = [
+            "id",
             "username",
             "avatar",
             "date_joined",
@@ -61,15 +67,18 @@ class ProfileDetailSerializer(serializers.ModelSerializer):
             "bio",
             "telegram_alias",
             "vkontakte_alias",
-            "posts",
             "major",
             "university",
             "points",
             "awards",
-            "following",
-            "followers",
             "telegram",
             "vkontakte",
+            "tags",
+            "is_following",
+            "is_followed",
+            "following_count",
+            "followers_count",
+            "posts_count",
         ]
 
     def get_avatar(self, obj):
@@ -81,8 +90,41 @@ class ProfileDetailSerializer(serializers.ModelSerializer):
     def get_vkontakte_alias(self, obj):
         return obj.get_vkontakte
 
-    def get_following(self, obj):
-        return ProfileListSerializer(obj.following.all(), many=True).data
+    def get_is_following(self, obj):
+        request = self.context.get("request", None)
+        if request and request.user.is_authenticated:
+            return obj.followers.filter(id=request.user.profile.id).exists()
+        return False
 
-    def get_followers(self, obj):
-        return ProfileListSerializer(obj.followers.all(), many=True).data
+    def get_is_followed(self, obj):
+        request = self.context.get("request", None)
+        if request and request.user.is_authenticated:
+            return obj.following.filter(id=request.user.profile.id).exists()
+        return False
+
+    # def get_following(self, obj):
+    #     return ProfileListSerializer(obj.following.all(), many=True).data
+
+    # def get_followers(self, obj):
+    #     return ProfileListSerializer(obj.followers.all(), many=True).data
+
+    def get_tags(self, obj):
+        user_posts = obj.posts.all()
+        tags = {}
+        for post in user_posts:
+            for tag in post.tags.all():
+                if tag in tags:
+                    tags[tag] += 1
+                else:
+                    tags[tag] = 1
+        sorted_tags = sorted(tags.items(), key=lambda item: item[1], reverse=True)
+        return TagSerializer([tag[0] for tag in sorted_tags], many=True).data
+
+    def get_following_count(self, obj):
+        return obj.following.count()
+
+    def get_followers_count(self, obj):
+        return obj.followers.count()
+
+    def get_posts_count(self, obj):
+        return obj.posts.count()

@@ -40,14 +40,14 @@ api.interceptors.response.use(async (response) => {
       return Promise.reject(updateError);
     }
   } else if (response.status >= 400) {
-    store.commit("main/setShowErrorPage", response.status);
+    store.commit("error/setShowErrorPage", response.status);
   }
   return response;
 });
 
 const updateTokens = async () => {
   await api
-    .post("/token/refresh", {
+    .post("/token/refresh/", {
       refresh: localStorage.getItem("refreshToken"),
     })
     .then((response) => {

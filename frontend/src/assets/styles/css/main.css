@@ -48,6 +48,15 @@ body {
   height: 100vh;
 }
 
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "MesloLGS NF", sans-serif;
+}
+
 .text-secondary {
   color: var(--secondary);
 }
@@ -58,6 +67,10 @@ body {
 
 .text-secondary-x-light {
   color: var(--secondary-x-light);
+}
+
+.text-secondary-xx-light {
+  color: var(--secondary-xx-light);
 }
 
 .bg-primary {
@@ -99,6 +112,10 @@ body {
 
 .pt-7 {
   padding-top: 4rem !important;
+}
+
+.fs-large {
+  font-size: 5rem;
 }
 
 .fs-7 {
@@ -165,4 +182,36 @@ body {
 
 .btn-secondary-x-light:hover {
   color: var(--secondary-x-light);
+}
+
+.btn-action,
+.action-unchecked {
+  color: var(--light);
+  background-color: var(--secondary);
+  border: 0;
+  border-radius: 0.4rem;
+  padding: 0.5rem 1rem;
+  text-align: inherit;
+  box-shadow: none !important;
+  text-decoration: none;
+}
+
+.action-checked {
+  color: var(--dark);
+  background-color: var(--primary);
+  border: 0;
+  border-radius: 0.4rem;
+  padding: 0.5rem 1rem;
+  text-align: inherit;
+  text-decoration: none;
+}
+
+.text-primary {
+  user-select: text !important;
+  -webkit-user-select: text !important;
+  font-family: "MesloLGS NF", sans-serif !important;
+}
+
+.table-dark-light {
+  background-color: var(--dark-light);
 }

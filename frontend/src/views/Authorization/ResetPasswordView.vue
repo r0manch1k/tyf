@@ -15,20 +15,28 @@
       />
     </symbol>
   </svg>
-  <div :class="{ 'container-fluid': true, 'd-none': loading }">
+  <div class="container-fluid">
     <div
-      class="flex row vh-100 align-items-center justify-content-center"
+      class="reset-password-view__wrapper flex row vh-100 align-items-center justify-content-center"
       style="min-height: 100vh"
     >
-      <div class="col-12 row col-sm-8 col-md-6 col-lg-5 col-xl-4">
-        <Messages ref="messagesComponent" />
+      <div
+        class="reset-password-view__content col-12 row col-sm-8 col-md-6 col-lg-5 col-xl-4"
+      >
+        <Message
+          :message="message"
+          :show="showMessage"
+          @update:show="showMessage = $event"
+        />
         <div
-          class="bg-secondary rounded p-4"
+          class="reset-password-view__form-container bg-secondary rounded p-4"
           style="border-radius: 1rem !important"
         >
-          <div class="py-3 mb-4">
+          <div class="reset-password-view__header py-3 mb-4">
             <div class="position-relative">
-              <div class="position-absolute top-50 start-0 translate-middle-y">
+              <div
+                class="reset-password-view__back-button position-absolute top-50 start-0 translate-middle-y"
+              >
                 <router-link to="/login">
                   <a class="float-start">
                     <svg width="35" height="35" role="img">
@@ -39,7 +47,7 @@
               </div>
               <div
                 id="reset-password-title"
-                class="position-absolute top-50 start-50 translate-middle"
+                class="reset-password-view__title position-absolute top-50 start-50 translate-middle"
                 style="width: 60% !important"
               >
                 <h3 class="text-center fs-5" style="margin: 0 !important">
@@ -58,14 +66,17 @@
             </div>
             <button
               type="submit"
-              class="btn btn-primary py-3 w-100 mb-4"
-              style="border-radius: 1rem !important"
+              class="reset-password-view__submit-button btn btn-primary py-3 w-100 mb-4"
+              :disabled="loading"
             >
-              <label style="color: var(--dark) !important">Продолжить</label>
+              <label v-if="!loading" style="color: var(--dark) !important"
+                >Продолжить</label
+              >
+              <LoadingCircle v-else />
             </button>
           </form>
           <router-link to="/register">
-            <p class="text-center mb-0">
+            <p class="reset-password-view__register-link text-center mb-0">
               <a>Создать новый аккаунт</a>
             </p>
           </router-link>
@@ -73,66 +84,50 @@
       </div>
     </div>
   </div>
-  <LoadingCircle v-if="loading" />
 </template>
 
 <script lang="ts" setup>
-import api from "@/stores/services/api";
-import { ref } from "vue";
-import { useRouter } from "vue-router";
+import MessageModel from "@/models/MessageModel";
+import AuthService from "@/services/AuthService";
+import { computed, ref } from "vue";
+import { useStore } from "vuex";
 
 import EmailField from "@/components/Authorization/Fields/EmailField.vue";
-import Messages from "@/components/Authorization/Messages.vue";
 import LoadingCircle from "@/components/LoadingCircle.vue";
+import Message from "@/components/Message.vue";
 
-interface MessagesComponent {
-  addMessage: (message: { type: string; text: string }) => void;
-}
-
-const router = useRouter();
+const store = useStore();
 
 const email = ref("");
 const loading = ref(false);
-const messagesComponent = ref<MessagesComponent | null>(null);
+
+const message = computed<MessageModel>(() => store.state.auth.message);
+const showMessage = ref(false);
 
 const resetPasswordSubmit = async () => {
   loading.value = true;
   console.log(email.value);
 
-  await api
-    .post("users/reset_password/", {
-      email: email.value,
-    })
-    .then((response) => {
-      loading.value = false;
-      if (response.status === 201) {
-        console.log(response.data.payload.uid, response.data.payload.token);
-        router.push(
-          `/verify/${response.data.payload.uid}/${response.data.payload.token}`
-        );
-      } else {
-        const errorMessage =
-          response?.data?.message ||
-          "Что-то пошло не так, повторите попытку позже.";
-        if (messagesComponent.value) {
-          messagesComponent.value.addMessage({
-            type: "error",
-            text: errorMessage,
-          });
-        }
-      }
+  AuthService.resetPassword(email.value)
+    .then(() => {
+      console.log("Success");
     })
     .catch((error) => {
-      console.log(error);
+      const message: MessageModel = {
+        text: error.data.message,
+        type: "error",
+      };
+      store.commit("auth/setMessage", message);
+      showMessage.value = true;
+    })
+    .finally(() => {
       loading.value = false;
-      if (messagesComponent.value) {
-        messagesComponent.value.addMessage({
-          type: "error",
-          text: "Что-то пошло не так, повторите попытку позже.",
-        });
-      }
     });
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.row > * {
+  padding: 0;
+}
+</style>
