@@ -98,7 +98,7 @@ const registerSubmit = async () => {
   AuthService.register(email.value, password1.value, password2.value)
     .catch((error) => {
       const message: MessageModel = {
-        text: error.data.detail,
+        text: error.data.detail || error.data.message,
         type: "error",
       };
       store.commit("auth/setMessage", message);

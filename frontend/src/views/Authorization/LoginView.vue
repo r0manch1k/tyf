@@ -103,7 +103,7 @@ const loginSubmit = async () => {
     })
     .catch((error) => {
       const message: MessageModel = {
-        text: error.data.message,
+        text: error.data.detail || error.data.message,
         type: "error",
       };
       store.commit("auth/setMessage", message);

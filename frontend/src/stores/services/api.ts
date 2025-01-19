@@ -9,7 +9,7 @@ const api = axios.create({
   headers: {
     "X-Requested-With": "XMLHttpRequest",
     "Content-Type": "application/json",
-    "X-Api-Key": "rSnomvks.RKXKQMobTwTh6fONExz5djqNOGEIxIMY",
+    "X-Api-Key": "0NI73oXp.fjcGKpJDEBGlCetj8jXw9DHzX1Y2gHzs",
   },
   validateStatus: (status) => status < 500,
 });
