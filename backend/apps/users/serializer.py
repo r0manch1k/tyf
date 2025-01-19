@@ -2,11 +2,27 @@ from django.contrib import auth
 from django.core import exceptions
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
-from social_django.models import UserSocialAuth
 from django.contrib.auth.password_validation import validate_password
 
 
 User = get_user_model()
+
+
+class SocialLoginSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+
+    class Meta:
+        model = User
+        fields = ["email"]
+
+    def create(self, validated_data):
+        instance = self.Meta.model(**validated_data)
+
+        instance.is_active = True
+        instance.is_social_user = True
+
+        instance.save()
+        return instance
 
 
 class LoginSerializer(serializers.ModelSerializer):
@@ -21,19 +37,25 @@ class LoginSerializer(serializers.ModelSerializer):
         email = attrs.get("email", "").lower()
         password = attrs.get("password", "")
 
-        if UserSocialAuth.objects.filter(user__email=email).exists():
+        isExists = User.objects.filter(email=email).exists()
+        isSocialUser = (
+            User.objects.get(email=email).is_social_user if isExists else False
+        )
+        isActiveUser = User.objects.get(email=email).is_active if isExists else False
+
+        if isSocialUser:
             raise serializers.ValidationError(
                 detail={
                     "info": "Пользователь с этим адресом эл. почты был зарегистрирован с помощью Google/Яндекс. Пожалуйста, войдите в систему, используя тот же метод."
                 },
             )
 
-        if not User.objects.filter(email=email).exists():
+        if not isExists:
             raise serializers.ValidationError(
                 detail={"info": "Пользователя с таким адресом эл. почты не существует"}
             )
         else:
-            if not User.objects.get(email=email).is_active:
+            if not isActiveUser:
                 raise serializers.ValidationError(
                     detail={
                         "info": "Этот пользователь не подтвердил адрес эл. почты. Пожалуйста, зарегистрируйтесь еще раз."
@@ -68,7 +90,18 @@ class RegisterSerializer(serializers.ModelSerializer):
         password1 = attrs.get("password1", "")
         password2 = attrs.get("password2", "")
 
-        if UserSocialAuth.objects.filter(user__email=email).exists():
+        isExists = User.objects.filter(email=email).exists()
+        isSocialUser = (
+            User.objects.get(email=email).is_social_user if isExists else False
+        )
+        isActiveUser = User.objects.get(email=email).is_active if isExists else False
+
+        if isExists:
+            if not isActiveUser:
+                user = User.objects.get(email=email)
+                user.delete()
+
+        if isSocialUser:
             raise serializers.ValidationError(
                 detail={
                     "info": "Пользователь с этим адресом эл. почты был зарегистрирован с помощью Google/Яндекс. Пожалуйста, войдите в систему, используя тот же метод."
@@ -113,18 +146,25 @@ class ResetPasswordSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         email = attrs.get("email", "").lower()
 
-        if not User.objects.filter(email=email).exists():
+        isExists = User.objects.filter(email=email).exists()
+        isSocialUser = (
+            User.objects.get(email=email).is_social_user if isExists else False
+        )
+        isActiveUser = User.objects.get(email=email).is_active if isExists else False
+
+        if not isExists:
             raise serializers.ValidationError(
                 detail={"info": "Пользователя с таким адресом эл. почты не существует."}
             )
-        if UserSocialAuth.objects.filter(user__email=email).exists():
+
+        if isSocialUser:
             raise serializers.ValidationError(
                 detail={
                     "info": "Пользователь с этим адресом эл. почты был зарегистрирован с помощью Google/Яндекс. Таким пользователям не требуется смена пароля. Пожалуйста, войдите в систему, используя тот же метод."
                 },
             )
 
-        if not User.objects.get(email=email).is_active:
+        if not isActiveUser:
             raise serializers.ValidationError(
                 detail={
                     "info": "Этот пользователь не подтвердил адрес эл. почты. Пожалуйста, зарегистрируйтесь еще раз."

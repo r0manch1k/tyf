@@ -8,8 +8,8 @@ export default interface ProfileModel {
   first_name: string;
   last_name: string;
   middle_name: string;
-  university: UniversityModel;
-  major: MajorModel;
+  university: UniversityModel | null;
+  major: MajorModel | null;
   date_of_birth: string;
   date_joined: string;
   bio: string;

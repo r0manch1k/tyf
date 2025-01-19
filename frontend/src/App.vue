@@ -58,15 +58,15 @@ const isHome = computed(
 @import "@/assets/styles/css/bootstrap.min.css";
 @import "@/assets/styles/css/main.css";
 
-/* #app {
+#app {
   font-family: "Arial";
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
-  height: 100%;
-  width: 100%;
-} */
+  /* color: #2c3e50; */
+  height: 100vh;
+  width: 100vw;
+}
 
 .main__content {
   /* background-color: rgba(30, 30, 35, 0.5); */

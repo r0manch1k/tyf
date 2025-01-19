@@ -29,14 +29,14 @@
 import LoadingCircle from "@/components/LoadingCircle.vue";
 // import CollectionsTablist from "@/components/CollectionsTablist.vue";
 import MostActiveUsersBar from "@/components/MostActiveUsersBar.vue";
-import TyeHighscoresBar from "@/tye_frontend/components/TyeHighscoresBar.vue";
 import Post from "@/components/Post.vue";
-import PostDataService from "@/services/PostDataService";
 import type PostListItemModel from "@/models/PostModel";
+import PostDataService from "@/services/PostDataService";
+import TyeHighscoresBar from "@/tye_frontend/components/TyeHighscoresBar.vue";
 // import type CategoryModel from "@/models/CategoryModel";
 // import type CollectionModel from "@/models/CollectionModel";
 
-import { ref, onMounted, shallowRef } from "vue";
+import { onMounted, ref, shallowRef } from "vue";
 // import { computed } from "vue";
 import { useStore } from "vuex";
 

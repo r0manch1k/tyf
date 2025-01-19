@@ -1,5 +1,5 @@
 from django.db import models
-from apps.utils.media_tools import generate_pastel_color
+from apps.utils.mediaTools import generate_pastel_color
 
 
 class Tag(models.Model):

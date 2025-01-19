@@ -1,5 +1,7 @@
 import { GetterTree, MutationTree, ActionTree } from "vuex";
 import type ProfileModel from "@/models/ProfileModel";
+import type UniversityModel from '@/models/UniversityModel';
+import type MajorModel from "@/models/MajorModel";
 // import ProfileDataService from "@/services/ProfileDataService";
 
 class State {
@@ -9,8 +11,8 @@ class State {
     first_name: "",
     last_name: "",
     middle_name: "",
-    university: "",
-    major: "",
+    university: null as UniversityModel | null,
+    major: null as MajorModel | null,
     date_of_birth: "",
     date_joined: "",
     bio: "",

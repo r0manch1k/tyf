@@ -4,7 +4,7 @@ from mptt.models import MPTTModel, TreeForeignKey
 from apps.profiles.models import Profile
 from apps.posts.models import Post
 from apps.media.models import Media
-from apps.utils.media_tools import generate_uuid
+from apps.utils.mediaTools import generate_uuid
 
 
 class Comment(MPTTModel):

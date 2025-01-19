@@ -125,10 +125,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineProps, onMounted } from "vue";
 import LoadingCircle from "@/components/LoadingCircle.vue";
-import PostDataService from "@/services/PostDataService";
 import type PostModel from "@/models/PostModel";
+import PostDataService from "@/services/PostDataService";
+import { defineProps, onMounted, ref } from "vue";
 
 const props = defineProps({
   identifier: String,
@@ -141,8 +141,6 @@ onMounted(async () => {
   post.value = await PostDataService.getPostByIdentifier(props.identifier);
   loading.value = false;
 });
-
-
 </script>
 
 <style></style>
