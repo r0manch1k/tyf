@@ -1,9 +1,9 @@
-import MediaModel from './MediaModel';
-import PostModel from './PostModel';
-import ProfileModel from './ProfileModel';
+import MediaModel from "./MediaModel";
+import PostModel from "./PostModel";
+import ProfileModel from "./ProfileModel";
 
 export default interface CommentModel {
-  identifier: string; 
+  identifier: string;
   content: string;
   stars: number;
   created_at: string;
@@ -12,4 +12,6 @@ export default interface CommentModel {
   media: MediaModel;
   post: PostModel;
   author: ProfileModel;
+  parent: number;
+  replies: CommentModel[];
 }

@@ -1,7 +1,7 @@
 import { GetterTree, MutationTree, ActionTree } from "vuex";
 import type ProfileModel from "@/models/ProfileModel";
-import ProfileDataService from "@/services/ProfileDataService";
 import type UniversityModel from "@/models/UniversityModel";
+import ProfileDataService from "@/services/ProfileDataService";
 import type MajorModel from "@/models/MajorModel";
 
 class State {

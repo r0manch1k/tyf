@@ -3,6 +3,4 @@ export default interface MediaModel {
   file: string;
   description: string;
   original_filename: string;
-  
 }
-

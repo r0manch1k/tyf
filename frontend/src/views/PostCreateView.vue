@@ -51,9 +51,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
-import PostDataService from "@/services/PostDataService";
 import type PostModel from "@/models/PostModel";
+import PostDataService from "@/services/PostDataService";
+import { ref } from "vue";
 
 const post = ref<PostModel>(PostDataService.getNewPost());
 

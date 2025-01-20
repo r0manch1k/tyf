@@ -70,7 +70,7 @@
               :disabled="loading"
             >
               <label v-if="!loading" style="color: var(--dark) !important"
-                >Продолжить</label
+              >Продолжить</label
               >
               <LoadingCircle v-else />
             </button>
@@ -87,14 +87,14 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed } from "vue";
-import { useStore } from "vuex";
-import AuthService from "@/services/AuthService";
 import MessageModel from "@/models/MessageModel";
+import AuthService from "@/services/AuthService";
+import { computed, ref } from "vue";
+import { useStore } from "vuex";
 
-import Message from "@/components/Message.vue";
 import EmailField from "@/components/Authorization/Fields/EmailField.vue";
 import LoadingCircle from "@/components/LoadingCircle.vue";
+import Message from "@/components/Message.vue";
 
 const store = useStore();
 

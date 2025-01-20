@@ -1,7 +1,7 @@
-import type PostListItemModel from "@/models/PostModel";
-import type UniversityModel from "@/models/UniversityModel";
 import type MajorModel from "@/models/MajorModel";
+import type PostListItemModel from "@/models/PostModel";
 import type TagModel from "@/models/TagModel";
+import type UniversityModel from "@/models/UniversityModel";
 
 export default interface ProfileModel {
   id: number;

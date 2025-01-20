@@ -59,9 +59,9 @@
 <script setup lang="ts">
 import LoadingCircle from "@/components/LoadingCircle.vue";
 import ProfileListItem from "@/components/ProfileListItem.vue";
-import ProfileDataService from "@/services/ProfileDataService";
 import type ProfileListItemModel from "@/models/ProfileModel";
-import { ref, onMounted } from "vue";
+import ProfileDataService from "@/services/ProfileDataService";
+import { onMounted, ref } from "vue";
 
 const loading = ref(true);
 

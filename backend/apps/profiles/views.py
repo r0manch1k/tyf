@@ -16,8 +16,8 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 
 class ProfileViewSet(viewsets.ViewSet):
     # TODO: example for permissions
-    permission_classes = [IsAuthenticated]
-    authentication_classes = [JWTAuthentication]
+    # permission_classes = [IsAuthenticated]
+    # authentication_classes = [JWTAuthentication]
     # request.user -> is current user (by token)
 
     def list(self, request):
@@ -71,7 +71,14 @@ class ProfileViewSet(viewsets.ViewSet):
         serializer = ProfileListSerializer(following, many=True)
         return Response(serializer.data)
 
-    @action(detail=False, methods=["GET"], url_path="me", url_name="me")
+    @action(
+        detail=False,
+        methods=["GET"],
+        url_path="me",
+        url_name="me",
+        permission_classes=[IsAuthenticated],
+        authentication_classes=[JWTAuthentication],
+    )
     def me(self, request):
         email = request.user
         queryset = Profile.objects.all()
@@ -79,7 +86,13 @@ class ProfileViewSet(viewsets.ViewSet):
         serializer = ProfileDetailSerializer(profile)
         return Response(serializer.data)
 
-    @action(detail=True, methods=["POST"], url_path="follow", url_name="follow")
+    @action(
+        detail=True,
+        methods=["POST"],
+        url_path="follow",
+        url_name="follow",
+        authentication_classes=[JWTAuthentication],
+    )
     def follow(self, request, pk=None):
         if not request:
             return Response(

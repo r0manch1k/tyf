@@ -29,8 +29,8 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, inject } from "vue";
 import type ProfileListItem from "@/models/ProfileModel";
+import { defineProps, inject } from "vue";
 
 const moment = inject("moment");
 
@@ -39,7 +39,8 @@ const props = defineProps<{
 }>();
 
 // @ts-expect-error: Unreachable code error
-const created_at = moment(props.profile.date_joined).fromNow();
+moment(props.profile.date_joined).fromNow();
+// const created_at = moment(props.profile.date_joined).fromNow();
 </script>
 
 <style scoped>

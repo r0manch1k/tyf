@@ -25,7 +25,7 @@
                 <span
                   class="login-view__brand text-primary fs-5"
                   style="color: var(--primary) !important"
-                  >tyf</span
+                >tyf</span
                 >
               </router-link>
             </h3>
@@ -44,7 +44,7 @@
             <div class="login-view__password form-floating mb-3">
               <PasswordField v-model="password" />
             </div>
-            <router-link to="/login/reset_password">
+            <router-link to="/login/reset-password">
               <div
                 class="login-view__forgot d-flex align-items-center justify-content-between mb-3"
               >
@@ -57,7 +57,7 @@
               :disabled="loading"
             >
               <label v-if="!loading" style="color: var(--dark) !important"
-                >Войти</label
+              >Войти</label
               >
               <LoadingCircle v-else class="spinner-border-sm" />
             </button>
@@ -73,17 +73,17 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref } from "vue";
-import { useStore } from "vuex";
-import { useRouter } from "vue-router";
-import AuthService from "@/services/AuthService";
 import MessageModel from "@/models/MessageModel";
+import AuthService from "@/services/AuthService";
+import { computed, ref } from "vue";
+import { useRouter } from "vue-router";
+import { useStore } from "vuex";
 
-import Message from "@/components/Message.vue";
 import EmailField from "@/components/Authorization/Fields/EmailField.vue";
 import PasswordField from "@/components/Authorization/Fields/PasswordField.vue";
 import OAuthButtons from "@/components/Authorization/OAuthButtons.vue";
 import LoadingCircle from "@/components/LoadingCircle.vue";
+import Message from "@/components/Message.vue";
 
 const store = useStore();
 const router = useRouter();
@@ -138,7 +138,7 @@ const loginSubmit = async () => {
   left: 50%;
   top: -2px;
   margin-left: -25px;
-  background-color: var(--secondary);
+  background-color: var(--dark-light);
   width: 50px;
   text-align: center;
 }

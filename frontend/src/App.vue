@@ -18,16 +18,16 @@
 </template>
 
 <script setup>
-import NotFoundView from "@/views/NotFoundView.vue";
-import Sidebar from "@/components/Sidebar.vue";
-import Header from "@/components/Header.vue";
+import BackgroundGraphs from "@/components/BackgroundGraphs.vue";
 import Footer from "@/components/Footer.vue";
+import Header from "@/components/Header.vue";
+import Sidebar from "@/components/Sidebar.vue";
 import LoginView from "@/views/Authorization/LoginView.vue";
 import RegisterView from "@/views/Authorization/RegisterView.vue";
 import ResetPasswordView from "@/views/Authorization/ResetPasswordView.vue";
 import SetPasswordView from "@/views/Authorization/SetPasswordView.vue";
 import VerificationView from "@/views/Authorization/VerificationView.vue";
-import BackgroundGraphs from "@/components/BackgroundGraphs.vue";
+import NotFoundView from "@/views/NotFoundView.vue";
 import { computed, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import { useStore } from "vuex";

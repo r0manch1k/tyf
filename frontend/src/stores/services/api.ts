@@ -2,14 +2,14 @@ import store from "@/stores";
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "http://localhost:8000/api",
+  baseURL: process.env.VUE_APP_API_URL,
   timeout: 30000,
   responseType: "json",
   responseEncoding: "utf8",
   headers: {
     "X-Requested-With": "XMLHttpRequest",
     "Content-Type": "application/json",
-    "X-Api-Key": "0NI73oXp.fjcGKpJDEBGlCetj8jXw9DHzX1Y2gHzs",
+    "X-Api-Key": process.env.VUE_APP_API_KEY,
   },
   validateStatus: (status) => status < 500,
 });
@@ -39,6 +39,8 @@ api.interceptors.response.use(async (response) => {
     } catch (updateError) {
       return Promise.reject(updateError);
     }
+  } else if (response.status >= 404) {
+    store.dispatch("error/setShowErrorPage", response.status);
   } else if (response.status >= 400) {
     store.dispatch("error/setShowErrorPage", response.status);
   }

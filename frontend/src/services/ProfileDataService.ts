@@ -1,7 +1,9 @@
-import api from "@/stores/services/api";
-import type ProfileListItemModel from "@/models/ProfileModel";
-import type ProfileDetailModel from "@/models/ProfileModel";
 import type PostListItemModel from "@/models/PostModel";
+import type {
+  default as ProfileDetailModel,
+  default as ProfileListItemModel,
+} from "@/models/ProfileModel";
+import api from "@/stores/services/api";
 
 class ProfileDataService {
   async getMyProfile(): Promise<ProfileListItemModel> {
@@ -11,7 +13,7 @@ class ProfileDataService {
     await api
       .get("/profiles/me/")
       .then((response: { data: ProfileListItemModel }) => (data = response))
-      .catch((error: unknown) => console.error(error));
+      .catch((error) => console.error(error));
     return data.data;
   }
 
@@ -31,7 +33,7 @@ class ProfileDataService {
     await api
       .get(`/profiles/${username}/`)
       .then((response: { data: ProfileDetailModel }) => (data = response))
-      .catch((error: unknown) => console.error(error));
+      .catch((error: unknown) => console.error(error, "Profile"));
     return data.data;
   }
 

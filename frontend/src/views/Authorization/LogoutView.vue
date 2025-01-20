@@ -3,11 +3,11 @@
 </template>
 
 <script lang="ts" setup>
+import type MessageModel from "@/models/MessageModel";
+import AuthService from "@/services/AuthService";
 import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
-import AuthService from "@/services/AuthService";
-import type MessageModel from "@/models/MessageModel";
 
 import LoadingCircle from "@/components/LoadingCircle.vue";
 

@@ -7,8 +7,8 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps } from "vue";
 import type TagModel from "@/models/TagModel";
+import { defineProps } from "vue";
 
 defineProps({
   tag: {

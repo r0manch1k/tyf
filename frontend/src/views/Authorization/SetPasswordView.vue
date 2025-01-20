@@ -38,7 +38,7 @@
               :disabled="loading"
             >
               <label v-if="!loading" style="color: var(--dark) !important"
-                >Продолжить</label
+              >Продолжить</label
               >
               <LoadingCircle v-else />
             </button>
@@ -50,11 +50,11 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref, computed } from "vue";
-import { useStore } from "vuex";
-import { useRoute, useRouter } from "vue-router";
-import AuthService from "@/services/AuthService";
 import MessageModel from "@/models/MessageModel";
+import AuthService from "@/services/AuthService";
+import { computed, onMounted, ref } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import { useStore } from "vuex";
 
 import PasswordField from "@/components/Authorization/Fields/PasswordField.vue";
 import RepeatPasswordField from "@/components/Authorization/Fields/RepeatPasswordField.vue";

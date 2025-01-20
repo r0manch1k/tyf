@@ -57,7 +57,7 @@
               :disabled="loading"
             >
               <label v-if="!loading" style="color: var(--dark) !important"
-                >Подтвердить</label
+              >Подтвердить</label
               >
               <LoadingCircle v-else />
             </button>
@@ -98,14 +98,14 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref, computed } from "vue";
-import { useStore } from "vuex";
-import { useRoute, useRouter } from "vue-router";
-import AuthService from "@/services/AuthService";
 import MessageModel from "@/models/MessageModel";
+import AuthService from "@/services/AuthService";
+import { computed, onMounted, ref } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import { useStore } from "vuex";
 
-import Message from "@/components/Message.vue";
 import LoadingCircle from "@/components/LoadingCircle.vue";
+import Message from "@/components/Message.vue";
 
 const store = useStore();
 const route = useRoute();
@@ -262,10 +262,8 @@ function OTPInput() {
         for (let j = 0; j < text_len; j++) {
           otpNumbers.value[i + j] = data[j].toUpperCase();
           inputs[i + j].value = data[j].toUpperCase();
-          if (i + j !== inputs.length - 1) inputs[i + j].focus();
+          if (i + j !== inputs.length - 1) inputs[i + j + 1].focus();
         }
-
-        console.log(data, text_len);
       }
     });
   }

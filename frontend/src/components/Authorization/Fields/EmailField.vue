@@ -11,12 +11,12 @@
     @input="$emit('update:modelValue', localEmail)"
   />
   <label for="id_email"
-    >Адрес эл. почты <span style="color: rgb(188, 28, 28)">*</span></label
+  >Адрес эл. почты <span style="color: rgb(188, 28, 28)">*</span></label
   >
 </template>
 
 <script setup>
-import { ref, defineProps } from "vue";
+import { defineProps, ref } from "vue";
 
 const props = defineProps({
   modelValue: {

@@ -6,4 +6,5 @@ class ProfilesConfig(AppConfig):
     name = "apps.profiles"
 
     def ready(self):
+        # flake8: noqa
         from . import signals

@@ -2,13 +2,16 @@ from functools import partial
 
 # Do not remove PIL
 # from PIL import Image
+import requests
+from django.core.files.base import ContentFile
 from django.db import models
+from rest_framework import status
 from django.contrib.auth import get_user_model
 from django_resized import ResizedImageField
 from django.core.validators import RegexValidator
 from random_username.generate import generate_username
 from apps.registry.models import Major, University
-from apps.utils.media_tools import generate_media_path
+from apps.utils.mediaTools import generate_media_path
 from tyf import settings
 
 
@@ -143,6 +146,12 @@ class Profile(models.Model):
         if self.vkontakte:
             return self.vkontakte.split("/")[-1]
         return None
+
+    def save_avatar_from_url(self, url):
+        response = requests.get(url)
+        if response.status_code == status.HTTP_200_OK:
+            filename = "avatar"
+            self.avatar.save(filename, ContentFile(response.content), save=False)
 
     def __str__(self):
         return self.username
