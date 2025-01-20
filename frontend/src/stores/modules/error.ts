@@ -5,7 +5,7 @@ class State {
 }
 
 const getters: GetterTree<State, unknown> = {
-  getShowErrorPage: (state) => state.showErrorPage, 
+  getShowErrorPage: (state) => state.showErrorPage,
 };
 
 const mutations: MutationTree<State> = {

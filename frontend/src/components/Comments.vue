@@ -6,7 +6,7 @@
       <ul id="comment-thread" class="ps-0">
         <!-- TODO: P.S. removed index from v-for -->
         <li
-          v-for="(comment) in comments"
+          v-for="comment in comments"
           :key="comment.id"
           class="d-flex flex-column mb-2"
           :style="{ marginLeft: comment.level + 'em' }"

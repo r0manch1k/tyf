@@ -58,7 +58,7 @@
               :disabled="loading"
             >
               <label v-if="!loading" style="color: var(--dark) !important"
-                >Подтвердить</label
+              >Подтвердить</label
               >
               <LoadingCircle v-else />
             </button>

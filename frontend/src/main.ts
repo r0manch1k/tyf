@@ -1,7 +1,7 @@
-import { createApp } from "vue";
 import App from "@/App.vue";
 import router from "@/router";
 import store from "@/stores";
+import { createApp } from "vue";
 
 import * as moment from "moment";
 import "moment/locale/ru";

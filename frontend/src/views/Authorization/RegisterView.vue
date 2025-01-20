@@ -28,7 +28,7 @@
                 <span
                   class="register-view__brand text-primary fs-5"
                   style="color: var(--primary) !important"
-                  >tyf</span
+                >tyf</span
                 >
               </router-link>
             </h3>
@@ -56,7 +56,7 @@
               :disabled="loading"
             >
               <label v-if="!loading" style="color: var(--dark) !important"
-                >Продолжить</label
+              >Продолжить</label
               >
               <LoadingCircle v-else class="spinner-border-sm" />
             </button>
@@ -72,16 +72,16 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed } from "vue";
-import { useStore } from "vuex";
-import AuthService from "@/services/AuthService";
-import MessageModel from "@/models/MessageModel";
-import Message from "@/components/Message.vue";
 import EmailField from "@/components/Authorization/Fields/EmailField.vue";
 import PasswordField from "@/components/Authorization/Fields/PasswordField.vue";
 import RepeatPasswordField from "@/components/Authorization/Fields/RepeatPasswordField.vue";
 import OAuthButtons from "@/components/Authorization/OAuthButtons.vue";
 import LoadingCircle from "@/components/LoadingCircle.vue";
+import Message from "@/components/Message.vue";
+import MessageModel from "@/models/MessageModel";
+import AuthService from "@/services/AuthService";
+import { computed, ref } from "vue";
+import { useStore } from "vuex";
 
 const store = useStore();
 
@@ -126,7 +126,7 @@ const registerSubmit = async () => {
   left: 50%;
   top: -2px;
   margin-left: -25px;
-  background-color: var(--secondary);
+  background-color: var(--dark-light);
   width: 50px;
   text-align: center;
 }

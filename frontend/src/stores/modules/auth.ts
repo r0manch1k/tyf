@@ -1,5 +1,5 @@
-import { ActionTree, GetterTree, MutationTree } from "vuex";
 import type MessageModel from "@/models/MessageModel";
+import { ActionTree, GetterTree, MutationTree } from "vuex";
 
 class State {
   login = false;

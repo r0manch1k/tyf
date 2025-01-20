@@ -1,10 +1,10 @@
+import BookmarkPostModel from "@/models/BookmarkPostModel";
 import CategoryModel from "@/models/CategoryModel";
 import CollectionModel from "@/models/CollectionModel";
-import TagModel from "@/models/TagModel";
-import ProfileModel from "@/models/ProfileModel";
 import CommentModel from "@/models/CommentModel";
 import MediaModel from "@/models/MediaModel";
-import BookmarkPostModel from "@/models/BookmarkPostModel";
+import ProfileModel from "@/models/ProfileModel";
+import TagModel from "@/models/TagModel";
 
 export default interface PostModel {
   id: number;

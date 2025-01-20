@@ -7,7 +7,7 @@ module.exports = {
     "plugin:vue/vue3-essential",
     "eslint:recommended",
     "@vue/typescript/recommended",
-    "plugin:prettier/recommended",
+    // "plugin:prettier/recommended",
   ],
   parserOptions: {
     ecmaVersion: 2020,
@@ -17,8 +17,9 @@ module.exports = {
     "no-debugger": process.env.NODE_ENV === "production" ? "warn" : "off",
     "vue/multi-word-component-names": "off",
     "@typescript-eslint/no-var-requires": "off",
+    "vue/no-reserved-component-names": "off",
     quotes: ["error", "double"],
-    semi: ["error", "always"],
-    indent: ["error", "tab"],
+    "vue/html-indent": ["error", 2],
+    "@typescript-eslint/no-require-imports": "off",
   },
 };

@@ -1,20 +1,22 @@
-import { createRouter, createWebHistory } from "vue-router";
-import HomeView from "@/views/HomeView.vue";
+import GoogleAuthView from "@/views/Authorization/GoogleAuthView.vue";
 import LoginView from "@/views/Authorization/LoginView.vue";
+import LogoutView from "@/views/Authorization/LogoutView.vue";
 import RegisterView from "@/views/Authorization/RegisterView.vue";
 import ResetPasswordView from "@/views/Authorization/ResetPasswordView.vue";
 import SetPasswordView from "@/views/Authorization/SetPasswordView.vue";
 import VerificationView from "@/views/Authorization/VerificationView.vue";
+import YandexAuthView from "@/views/Authorization/YandexAuthView.vue";
+import HomeView from "@/views/HomeView.vue";
 import NotFoundView from "@/views/NotFoundView.vue";
-import ProfileView from "@/views/ProfileView.vue";
-import PostDetailView from "@/views/PostDetailView.vue";
 import PostCreateView from "@/views/PostCreateView.vue";
+import PostDetailView from "@/views/PostDetailView.vue";
 import ProfileEdit from "@/views/ProfileEdit.vue";
-import LogoutView from "@/views/Authorization/LogoutView.vue";
+import ProfileView from "@/views/ProfileView.vue";
 
 import store from "@/stores";
+import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 
-const routes = [
+const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
     name: "home",
@@ -26,17 +28,27 @@ const routes = [
     component: RegisterView,
   },
   {
+    path: "/oauth/callback/google",
+    name: "google-auth-callback",
+    component: GoogleAuthView,
+  },
+  {
+    path: "/oauth/callback/yandex",
+    name: "yandex-auth-callback",
+    component: YandexAuthView,
+  },
+  {
     path: "/login",
     name: "login",
     component: LoginView,
   },
   {
-    path: "/login/reset_password",
+    path: "/login/reset-password",
     name: "reset-password",
     component: ResetPasswordView,
   },
   {
-    path: "/login/set_password/:uid/:token",
+    path: "/login/set-password/:uid/:token",
     name: "reset-password-confirm",
     component: SetPasswordView,
   },

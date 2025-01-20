@@ -7,10 +7,11 @@
 </template>
 
 <script setup lang="ts">
+import { defineProps } from "vue";
 import CommentItem from "@/components/CommentItem.vue";
 import type CommentModel from "@/models/CommentModel";
 
-const props = defineProps<{
+defineProps<{
   comments: CommentModel[];
 }>();
 </script>

@@ -30,9 +30,10 @@
 </template>
 
 <script setup lang="ts">
-import type { CommentModel } from "@/models/CommentModel";
+import { defineProps } from "vue";
+import type CommentModel from "@/models/CommentModel";
 
-const props = defineProps<{
+defineProps<{
   comment: CommentModel;
 }>();
 </script>

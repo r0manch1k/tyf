@@ -32,8 +32,8 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, defineProps } from "vue";
 import type CollectionModel from "@/models/CollectionModel";
+import { defineProps, onMounted } from "vue";
 
 const props = defineProps({
   collections: Array as () => CollectionModel[],

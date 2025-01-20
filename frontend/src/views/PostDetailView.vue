@@ -77,13 +77,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
 import CommentsList from "@/components/CommentsList.vue";
 import LoadingCircle from "@/components/LoadingCircle.vue";
 import type CommentModel from "@/models/CommentModel";
 import type PostModel from "@/models/PostModel";
 import PostDataService from "@/services/PostDataService";
 import { marked } from "marked";
+import { onMounted, ref, defineProps } from "vue";
 
 const props = defineProps({
   identifier: String,

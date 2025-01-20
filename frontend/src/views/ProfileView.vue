@@ -189,7 +189,7 @@
   <div v-else>
     <LoadingCircle />
   </div>
-  <h1>{{ store.state.profile.username + props.username }}</h1>
+  <!-- <h1>{{ store.state.profile.username + props.username }}</h1> -->
 </template>
 
 <script setup lang="ts">

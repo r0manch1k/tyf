@@ -1,6 +1,6 @@
-import { GetterTree, MutationTree, ActionTree } from "vuex";
 import type CollectionModel from "@/models/CollectionModel";
 import CollectionDataService from "@/services/CollectionDataService";
+import { ActionTree, GetterTree, MutationTree } from "vuex";
 
 class State {
   storedCollections: CollectionModel[] = [];

@@ -1,8 +1,37 @@
-import api from "@/stores/services/api";
 import router from "@/router";
 import store from "@/stores";
+import api from "@/stores/services/api";
 
 class AuthService {
+  async handleOAuthRedirect(
+    accessToken: string,
+    provider: string
+  ): Promise<void> {
+    await api
+      .post(`users/login/${provider}/`, {
+        access_token: accessToken,
+      })
+      .then((response) => {
+        if (response.status === 200) {
+          localStorage.setItem(
+            "accessToken",
+            response.data.payload.token.access
+          );
+          localStorage.setItem(
+            "refreshToken",
+            response.data.payload.token.refresh
+          );
+        } else {
+          return Promise.reject(response);
+        }
+      })
+      .catch((error) => {
+        return Promise.reject(error);
+      });
+
+    await store.dispatch("profile/fetchProfile");
+  }
+
   async login(email: string, password: string): Promise<void> {
     await api
       .post("/users/login/", {
@@ -82,13 +111,12 @@ class AuthService {
       .catch((error) => {
         return Promise.reject(error);
       });
-
     await store.dispatch("profile/fetchProfile");
   }
 
   async resetPassword(email: string): Promise<void> {
     await api
-      .post("/users/reset_password/", {
+      .post("/users/reset-password/", {
         email: email,
       })
       .then((response) => {
@@ -112,7 +140,7 @@ class AuthService {
 
   async checkPasswordResetAccess(token: string, uid: string): Promise<void> {
     await api
-      .get("/users/set_password/", {
+      .get("/users/set-password/", {
         params: {
           token: token,
           uid: uid,

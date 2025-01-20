@@ -12,12 +12,12 @@
     @input="$emit('update:modelValue', localRepeatPassword)"
   />
   <label for="id_password2"
-    >Повторите пароль <label style="color: rgb(188, 28, 28)">*</label></label
+  >Повторите пароль <label style="color: rgb(188, 28, 28)">*</label></label
   >
 </template>
 
 <script setup>
-import { ref, defineProps } from "vue";
+import { defineProps, ref } from "vue";
 
 const props = defineProps({
   modelValue: {
