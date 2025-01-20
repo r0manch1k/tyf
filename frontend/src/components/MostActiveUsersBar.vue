@@ -1,24 +1,46 @@
 <template>
-  <div class="most-active-users-bar bg-dark-light p-2" v-if="!loading">
-    <div class="most-active-users-bar__list">
-      <table
-        class="most-active-users-bar__table table table-dark-light table-striped"
+  <div class="most-active-users-bar bg-dark-light p-1">
+    <div class="most-active-users-bar__list" v-if="!loading">
+      <h3
+        class="most-active-users-bar__title fs-6 text-light p-1 m-0 text-start text-decoration-none"
       >
-        <thead>
-          <tr>
-            <th scope="col">Пользователь</th>
-            <th scope="col">Посты</th>
+        <span class="text-decoration-underline">Топ 5</span>
+        <span class="most-active-users-bar__emoji"> 🤓</span>
+      </h3>
+      <h4
+        class="most-active-users-bar__subtitle fs-6 text-secondary-xx-light p-1 m-0 fw-normal text-start"
+      >
+        Пользователи с наибольшим количеством постов за все время
+      </h4>
+      <table
+        class="most-active-users-bar__table table table--dark-light table--striped"
+      >
+        <thead class="most-active-users-bar__thead">
+          <tr class="most-active-users-bar__tr">
+            <th
+              scope="col"
+              class="most-active-users-bar__th text-start fw-normal"
+            >
+              Пользователь
+            </th>
+            <th scope="col" class="most-active-users-bar__th fw-normal">
+              Посты
+            </th>
           </tr>
         </thead>
-        <tbody>
-          <tr v-for="user in users" :key="user.username">
-            <td class="align-middle text-center">
+        <tbody class="most-active-users-bar__tbody">
+          <tr
+            v-for="user in users"
+            :key="user.username"
+            class="most-active-users-bar__tr"
+          >
+            <td class="most-active-users-bar__td align-middle text-center">
               <ProfileListItem :profile="user" />
             </td>
-            <td class="align-middle">
+            <td class="most-active-users-bar__td align-middle">
               <router-link
                 :to="{ name: 'profile', params: { username: user.username } }"
-                class="btn-light fs-7"
+                class="most-active-users-bar__link btn-light fs-7 text-decoration-none"
               >
                 {{ user.posts_count }}
               </router-link>
@@ -27,8 +49,11 @@
         </tbody>
       </table>
     </div>
+    <LoadingCircle
+      v-else
+      class="most-active-users-bar__loading-circle spinner-border-sm"
+    />
   </div>
-  <LoadingCircle v-else />
 </template>
 
 <script setup lang="ts">
@@ -61,5 +86,6 @@ onMounted(async () => {
 
 .most-active-users-bar {
   border-radius: 0.4rem;
+  /* border: 1px solid var(--secondary); */
 }
 </style>

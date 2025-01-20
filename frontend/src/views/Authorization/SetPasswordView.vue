@@ -74,6 +74,7 @@ const showMessage = ref(false);
 
 onMounted(async () => {
   loading.value = true;
+  showMessage.value = false;
   await AuthService.checkPasswordResetAccess(
     Array.isArray(route.params.token)
       ? route.params.token[0]
@@ -81,7 +82,7 @@ onMounted(async () => {
     Array.isArray(route.params.uid) ? route.params.uid[0] : route.params.uid
   )
     .catch((error) => {
-      store.commit("error/setShowErrorPage", error.status);
+      store.dispatch("error/setShowErrorPage", error.status);
     })
     .finally(() => {
       loading.value = false;
@@ -106,7 +107,7 @@ const setPasswordSubmit = async () => {
         text: "Пароль успешно изменен.",
         type: "success",
       };
-      store.commit("auth/setMessage", message);
+      store.dispatch("auth/setMessage", message);
       showMessage.value = true;
       router.push("/login");
     })
@@ -116,7 +117,7 @@ const setPasswordSubmit = async () => {
           text: "Ваша сессия смены пароля истекла. Пройдите процесс смены пароля заново.",
           type: "info",
         };
-        store.commit("auth/setMessage", message);
+        store.dispatch("auth/setMessage", message);
         showMessage.value = true;
         router.push("/login");
       } else {
@@ -126,7 +127,7 @@ const setPasswordSubmit = async () => {
             "Что-то пошло не так, повторите попытку позже.",
           type: "error",
         };
-        store.commit("auth/setMessage", message);
+        store.dispatch("auth/setMessage", message);
         showMessage.value = true;
       }
     })

@@ -1,8 +1,8 @@
-import type MajorModel from "@/models/MajorModel";
+import { GetterTree, MutationTree, ActionTree } from "vuex";
 import type ProfileModel from "@/models/ProfileModel";
 import type UniversityModel from "@/models/UniversityModel";
 import ProfileDataService from "@/services/ProfileDataService";
-import { ActionTree, GetterTree, MutationTree } from "vuex";
+import type MajorModel from "@/models/MajorModel";
 
 class State {
   profile: ProfileModel | null = {
@@ -28,9 +28,9 @@ class State {
     followers: [],
     following: [],
     posts: [],
-    tags: null,
-    is_following: false,
-    is_followed: false,
+    tags: [],
+    is_following_request_user: false,
+    is_followed_by_request_user: false,
     following_count: 0,
     followers_count: 0,
   };
@@ -55,6 +55,11 @@ const actions: ActionTree<State, unknown> = {
       commit("setLoading", false);
       return response;
     });
+  },
+  setDefault: ({ commit }) => {
+    console.log("setDefault");
+    commit("setProfile", new State().profile);
+    commit("setLoading", new State().loading);
   },
 };
 

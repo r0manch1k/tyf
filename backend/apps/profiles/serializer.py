@@ -50,8 +50,8 @@ class ProfileDetailSerializer(serializers.ModelSerializer):
     points = serializers.IntegerField(read_only=True)
     awards = serializers.IntegerField(read_only=True)
     tags = serializers.SerializerMethodField()
-    is_following = serializers.SerializerMethodField()
-    is_followed = serializers.SerializerMethodField()
+    is_following_request_user = serializers.SerializerMethodField()
+    is_followed_by_request_user = serializers.SerializerMethodField()
     following_count = serializers.SerializerMethodField()
     followers_count = serializers.SerializerMethodField()
     posts_count = serializers.SerializerMethodField()
@@ -64,6 +64,9 @@ class ProfileDetailSerializer(serializers.ModelSerializer):
             "avatar",
             "date_joined",
             "date_of_birth",
+            "first_name",
+            "last_name",
+            "middle_name",
             "bio",
             "telegram_alias",
             "vkontakte_alias",
@@ -74,8 +77,8 @@ class ProfileDetailSerializer(serializers.ModelSerializer):
             "telegram",
             "vkontakte",
             "tags",
-            "is_following",
-            "is_followed",
+            "is_following_request_user",
+            "is_followed_by_request_user",
             "following_count",
             "followers_count",
             "posts_count",
@@ -90,16 +93,18 @@ class ProfileDetailSerializer(serializers.ModelSerializer):
     def get_vkontakte_alias(self, obj):
         return obj.get_vkontakte
 
-    def get_is_following(self, obj):
+    def get_is_following_request_user(self, obj):
         request = self.context.get("request", None)
-        if request and request.user.is_authenticated:
-            return obj.followers.filter(id=request.user.profile.id).exists()
+        if request and request.user:
+            email = request.user
+            return obj.following.filter(following__email=email).exists()
         return False
 
-    def get_is_followed(self, obj):
+    def get_is_followed_by_request_user(self, obj):
         request = self.context.get("request", None)
-        if request and request.user.is_authenticated:
-            return obj.following.filter(id=request.user.profile.id).exists()
+        if request and request.user:
+            email = request.user
+            return obj.followers.filter(follower__email=email).exists()
         return False
 
     # def get_following(self, obj):

@@ -1,37 +1,56 @@
 <template>
   <div class="highscores-bar">
-    <div class="highscores-bar__title">
-      <h2 class="highscores-bar__title-text">HIGH SCORES</h2>
-    </div>
-    <div class="highscores-bar__container">
-      <div class="highscores-bar__header-container">
-        <div class="highscores-bar__header">
-          <div class="rank">#</div>
-          <div class="name">NAME</div>
-          <div class="score">SCORE</div>
-        </div>
-        <div class="highscores-bar__list-container">
-          <div class="highscores-bar__list">
-            <div
-              v-for="(score, index) in scores"
-              :key="index"
-              class="highscores-bar__list-item"
-            >
-              <div class="highscores-bar__list-item__content">
-                <span class="rank">{{ index + 1 }}</span>
-                <span class="name">{{ score.username }}</span>
-                <span class="score">{{ score.highScore }}</span>
+    <h3 class="highscores-bar__title-header">
+      <span class="highscores-bar__header-text">Tell Your Enemies</span>
+      <span class="highscores-bar__emoji"> 🚀</span>
+    </h3>
+    <h4 class="highscores-bar__subtitle">
+      Наш новый проект, в котором вы можете соревноваться с друзьями
+    </h4>
+    <a
+      class="highscores-bar__details"
+      href="https://tellyourenemies.ru"
+      target="_blank"
+      >Подробнее...</a
+    >
+    <h1></h1>
+    <div class="highscores-bar__content">
+      <div class="highscores-bar__title">
+        <h2 class="highscores-bar__title-text">HIGH SCORES</h2>
+      </div>
+      <div class="highscores-bar__container">
+        <div class="highscores-bar__header-container">
+          <div class="highscores-bar__header">
+            <div class="highscores-bar__rank">#</div>
+            <div class="highscores-bar__name">NAME</div>
+            <div class="highscores-bar__score">SCORE</div>
+          </div>
+          <div class="highscores-bar__list-container">
+            <div class="highscores-bar__list">
+              <div
+                v-for="(score, index) in scores"
+                :key="index"
+                class="highscores-bar__list-item"
+              >
+                <div class="highscores-bar__list-item-content">
+                  <span class="highscores-bar__rank">{{ index + 1 }}</span>
+                  <span class="highscores-bar__name">{{ score.username }}</span>
+                  <span class="highscores-bar__score">{{
+                    score.highScore
+                  }}</span>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        <div class="highscores-bar__footer">
-          <a
-            href="https://github.com/teenxsky/tye/releases/tag/0.0.1"
-            target="_blank"
-          >
-            PLAY NOW
-          </a>
+          <div class="highscores-bar__footer">
+            <a
+              href="https://github.com/teenxsky/tye/releases/tag/0.0.1"
+              target="_blank"
+              class="highscores-bar__footer-link"
+            >
+              PLAY NOW
+            </a>
+          </div>
         </div>
       </div>
     </div>
@@ -40,11 +59,7 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-// import { onMounted } from "vue";
-// import HighscoreDataService from "@/services/HighscoreDataService";
-// import type HighscoreModel from "@/models/HighscoreModel";
 
-// const scores = ref<HighscoreModel[]>([]);
 const scores = ref([
   { username: "Player1", highScore: 100 },
   { username: "Player2", highScore: 90 },
@@ -61,6 +76,12 @@ const scores = ref([
   src: url("@/tye_frontend/assets/fonts/PressStart2P.ttf") format("truetype");
 }
 
+.highscores-bar__header-text {
+  color: rgb(240, 230, 20);
+  text-decoration: underline;
+  text-decoration-color: rgb(250, 0, 10) !important;
+}
+
 .highscores-bar {
   background-image: url("@/tye_frontend/assets/images/background.jpg");
   background-size: cover;
@@ -71,12 +92,32 @@ const scores = ref([
 }
 
 .highscores-bar__title-text,
-.highscores-bar__list-item__content {
+.highscores-bar__list-item-content {
   color: white;
   text-shadow: rgb(50, 90, 230) 3px 3px 0;
   margin: 0;
   font-size: large;
   font-family: "Press Start 2P", sans-serif;
+}
+
+.highscores-bar__subtitle {
+  font-size: 1rem;
+  color: #f8f9fa;
+  /* text-align: left; */
+  font-weight: normal;
+}
+
+.highscores-bar__details {
+  font-size: 1rem;
+  color: rgb(240, 230, 20);
+  font-weight: normal;
+  margin-bottom: 1.5rem;
+}
+
+.highscores-bar__title-header {
+  font-size: 1rem;
+  color: #f8f9fa;
+  /* text-align: left; */
 }
 
 .highscores-bar__title-text {
@@ -90,7 +131,7 @@ const scores = ref([
 }
 
 .highscores-bar__header,
-.highscores-bar__footer a {
+.highscores-bar__footer-link {
   color: rgb(240, 230, 20);
   text-shadow: rgb(250, 0, 10) 3px 3px 0;
   font-family: "Press Start 2P", sans-serif;
@@ -102,7 +143,7 @@ const scores = ref([
   gap: 0.5rem;
 }
 
-.highscores-bar__list-item__content {
+.highscores-bar__list-item-content {
   display: grid;
   grid-template-columns: 0.5fr 2fr 1fr;
 }
@@ -111,5 +152,25 @@ const scores = ref([
   display: flex;
   justify-content: center;
   margin-top: 1rem;
+}
+
+.highscores-bar__subtitle--p-2 {
+  padding: 0.5rem;
+}
+
+.highscores-bar__subtitle--pt-1 {
+  padding-top: 0.25rem;
+}
+
+.highscores-bar__subtitle--m-0 {
+  margin: 0;
+}
+
+.highscores-bar__subtitle--fw-normal {
+  font-weight: normal;
+}
+
+.highscores-bar__subtitle--text-start {
+  text-align: left;
 }
 </style>

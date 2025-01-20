@@ -84,6 +84,7 @@
         class="card-img-top rounded-1 my-3"
         alt="post-thumbnail"
       />
+      <br v-else />
       <p class="card-text text-light m-0">
         {{ post.description }}
         <span></span>
@@ -125,20 +126,22 @@
       </div>
 
       <div class="d-flex align-items-center gap-2">
-        <router-link
-          v-for="filetype in post.filetypes"
+        <span
+          v-for="(filetype, index) in post.filetypes"
           :key="filetype"
-          :to="{
-            name: 'post-detail',
-            params: { identifier: post.identifier },
-          }"
-          class="text-light"
+          class="text-secondary-x-light fs-7"
         >
-          <i
-            class="fs-5 text-secondary-x-light"
-            :class="'bi bi-filetype-' + filetype"
-          ></i>
-        </router-link>
+          <router-link
+            :to="{
+              name: 'post-detail',
+              params: { identifier: post.identifier },
+            }"
+            class="btn-secondary-x-light"
+          >
+            {{ filetype }}
+          </router-link>
+          <span v-if="index < post.filetypes.length - 1" class="">,</span>
+        </span>
       </div>
     </div>
   </div>

@@ -20,7 +20,7 @@
           name: 'profile',
           params: { username: profile.username },
         }"
-        class="profile-list-item__username fs-6 fw-bold"
+        class="profile-list-item__username fs-6"
       >
         {{ profile.username }}
       </router-link>

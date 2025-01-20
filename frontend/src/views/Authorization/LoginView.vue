@@ -97,16 +97,18 @@ const showMessage = ref(false);
 
 const loginSubmit = async () => {
   loading.value = true;
+  showMessage.value = false;
   AuthService.login(email.value, password.value)
     .then(() => {
+      store.dispatch("profile/fetchProfile");
       router.push("/");
     })
     .catch((error) => {
       const message: MessageModel = {
-        text: error.data.message,
+        text: error.data.detail || error.data.message,
         type: "error",
       };
-      store.commit("auth/setMessage", message);
+      store.dispatch("auth/setMessage", message);
       showMessage.value = true;
     })
     .finally(() => {

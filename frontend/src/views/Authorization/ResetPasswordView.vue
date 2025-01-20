@@ -106,8 +106,7 @@ const showMessage = ref(false);
 
 const resetPasswordSubmit = async () => {
   loading.value = true;
-  console.log(email.value);
-
+  showMessage.value = false;
   AuthService.resetPassword(email.value)
     .then(() => {
       console.log("Success");
@@ -117,7 +116,7 @@ const resetPasswordSubmit = async () => {
         text: error.data.message,
         type: "error",
       };
-      store.commit("auth/setMessage", message);
+      store.dispatch("auth/setMessage", message);
       showMessage.value = true;
     })
     .finally(() => {

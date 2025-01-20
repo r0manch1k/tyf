@@ -17,6 +17,8 @@
           class="home__body__container__right col-3 d-flex flex-column gap-3"
         >
           <MostActiveUsersBar />
+          <MostCommentedPostsBar />
+          <MostBookmarkedPostsBar />
           <TyeHighscoresBar />
         </div>
       </div>
@@ -29,10 +31,12 @@
 import LoadingCircle from "@/components/LoadingCircle.vue";
 // import CollectionsTablist from "@/components/CollectionsTablist.vue";
 import MostActiveUsersBar from "@/components/MostActiveUsersBar.vue";
+import MostCommentedPostsBar from "@/components/MostCommentedPostsBar.vue";
+import MostBookmarkedPostsBar from "@/components/MostBookmarkedPostsBar.vue";
+import TyeHighscoresBar from "@/tye_frontend/components/TyeHighscoresBar.vue";
 import Post from "@/components/Post.vue";
 import type PostListItemModel from "@/models/PostModel";
 import PostDataService from "@/services/PostDataService";
-import TyeHighscoresBar from "@/tye_frontend/components/TyeHighscoresBar.vue";
 // import type CategoryModel from "@/models/CategoryModel";
 // import type CollectionModel from "@/models/CollectionModel";
 
