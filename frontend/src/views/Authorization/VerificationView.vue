@@ -12,14 +12,13 @@
           :show="showMessage"
           @update:show="showMessage = $event"
         />
-        <div
-          class="verification__box bg-secondary rounded p-4"
-          style="border-radius: 1rem !important"
-        >
+        <div class="verification__box bg-secondary rounded p-4">
           <div
             class="verification__header text-center align-items-center justify-content-between mb-2"
           >
-            <h3 class="verification__title fs-5">Введите код подтверждения</h3>
+            <h3 class="verification__title fs-5 fw-normal">
+              Введите код подтверждения
+            </h3>
           </div>
           <div
             class="verification__subheader text-center align-items-center justify-content-between mb-4"
@@ -122,13 +121,13 @@ const showMessage = ref(false);
 
 onMounted(async () => {
   loading.value = true;
-
+  showMessage.value = false;
   await AuthService.checkVerificationAccess(
     route.params.token as string,
     route.params.uid as string
   )
     .catch((error) => {
-      store.commit("error/setShowErrorPage", error.status);
+      store.dispatch("error/setShowErrorPage", error.status);
     })
     .finally(() => {
       loading.value = false;
@@ -154,7 +153,7 @@ const verifySubmit = async () => {
         text: "Аккаунт успешно подтвержден.",
         type: "success",
       };
-      store.commit("auth/setMessage", message);
+      store.dispatch("auth/setMessage", message);
       showMessage.value = true;
       router.push("/login");
     })
@@ -164,7 +163,7 @@ const verifySubmit = async () => {
           text: "Ваша сессия подтверждения аккаунта истекла. Пройдите процесс регистрации заново.",
           type: "info",
         };
-        store.commit("auth/setMessage", message);
+        store.dispatch("auth/setMessage", message);
         showMessage.value = true;
         router.push("/register");
       } else {
@@ -174,7 +173,7 @@ const verifySubmit = async () => {
             "Что-то пошло не так, повторите попытку позже.",
           type: "error",
         };
-        store.commit("auth/setMessage", message);
+        store.dispatch("auth/setMessage", message);
         showMessage.value = true;
       }
     })
@@ -195,17 +194,17 @@ const resendOTP = async () => {
         text: "Новый код подтверждения был отправлен на вашу эл. почту.",
         type: "success",
       };
-      store.commit("auth/setMessage", message);
+      store.dispatch("auth/setMessage", message);
     })
     .catch((error) => {
       if (error.status === 401) {
-        store.commit("auth/setMessage", {
+        store.dispatch("auth/setMessage", {
           text: "Ваша сессия подтверждения аккаунта истекла. Пройдите процесс регистрации заново.",
           type: "info",
         });
         router.push("/register");
       } else {
-        store.commit("auth/setMessage", {
+        store.dispatch("auth/setMessage", {
           text: "Что-то пошло не так, повторите попытку позже.",
           type: "error",
         });
@@ -300,5 +299,9 @@ async function startTimer(remaining: number, resend = false) {
 <style scoped>
 .row > * {
   padding: 0;
+}
+
+.verification__box {
+  border-radius: 0.4rem;
 }
 </style>

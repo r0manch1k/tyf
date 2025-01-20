@@ -20,7 +20,7 @@
           name: 'profile',
           params: { username: profile.username },
         }"
-        class="profile-list-item__username fs-6 fw-bold"
+        class="profile-list-item__username fs-6"
       >
         {{ profile.username }}
       </router-link>
@@ -38,10 +38,8 @@ const props = defineProps<{
   profile: ProfileListItem;
 }>();
 
-
 // @ts-expect-error: Unreachable code error
 const created_at = moment(props.profile.date_joined).fromNow();
-
 </script>
 
 <style scoped>

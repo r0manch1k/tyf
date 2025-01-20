@@ -95,13 +95,14 @@ const showMessage = ref(false);
 
 const registerSubmit = async () => {
   loading.value = true;
+  showMessage.value = false;
   AuthService.register(email.value, password1.value, password2.value)
     .catch((error) => {
       const message: MessageModel = {
         text: error.data.detail || error.data.message,
         type: "error",
       };
-      store.commit("auth/setMessage", message);
+      store.dispatch("auth/setMessage", message);
       showMessage.value = true;
     })
     .finally(() => {

@@ -40,7 +40,7 @@ api.interceptors.response.use(async (response) => {
       return Promise.reject(updateError);
     }
   } else if (response.status >= 400) {
-    store.commit("error/setShowErrorPage", response.status);
+    store.dispatch("error/setShowErrorPage", response.status);
   }
   return response;
 });

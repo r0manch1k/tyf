@@ -27,8 +27,8 @@ export default interface ProfileModel {
   following: ProfileListItemModel[];
   posts: PostListItemModel[];
   tags: TagModel[] | null;
-  is_following: boolean;
-  is_followed: boolean;
+  is_following_request_user: boolean;
+  is_followed_by_request_user: boolean;
   following_count: number;
   followers_count: number;
 }

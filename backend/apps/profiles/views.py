@@ -5,6 +5,7 @@ from django.shortcuts import get_object_or_404
 from .serializer import ProfileDetailSerializer, ProfileListSerializer
 from apps.posts.serializer import PostListSerializer
 from .models import Profile
+from apps.follows.models import Follow
 from django.db.models import Count
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
@@ -58,14 +59,16 @@ class ProfileViewSet(viewsets.ViewSet):
     def followers(self, request, pk=None):
         queryset = Profile.objects.all()
         profile = get_object_or_404(queryset, username=pk)
-        serializer = ProfileListSerializer(profile.followers, many=True)
+        followers = [follow.follower for follow in profile.followers.all()]
+        serializer = ProfileListSerializer(followers, many=True)
         return Response(serializer.data)
 
     @action(detail=True, methods=["GET"], url_path="following", url_name="following")
     def following(self, request, pk=None):
         queryset = Profile.objects.all()
         profile = get_object_or_404(queryset, username=pk)
-        serializer = ProfileListSerializer(profile.following, many=True)
+        following = [follow.following for follow in profile.following.all()]
+        serializer = ProfileListSerializer(following, many=True)
         return Response(serializer.data)
 
     @action(detail=False, methods=["GET"], url_path="me", url_name="me")
@@ -78,16 +81,20 @@ class ProfileViewSet(viewsets.ViewSet):
 
     @action(detail=True, methods=["POST"], url_path="follow", url_name="follow")
     def follow(self, request, pk=None):
-        if request.user.is_anonymous:
+        if not request:
             return Response(
                 {"detail": "You need to login to follow users."}, status=401
             )
         user_to_follow = get_object_or_404(Profile, username=pk)
-        if request.user.profile == user_to_follow:
+        email = request.user
+        request_user = get_object_or_404(Profile, email=email)
+        if request_user == user_to_follow:
             return Response({"detail": "You cannot follow yourself."}, status=400)
-        if request.user.profile.following.filter(id=user_to_follow.id).exists():
-            request.user.profile.following.remove(user_to_follow)
+        if request_user.following.filter(following=user_to_follow).exists():
+            Follow.objects.filter(
+                follower=request_user, following=user_to_follow
+            ).delete()
             return Response({"detail": "Unfollowed successfully."})
         else:
-            request.user.profile.following.add(user_to_follow)
+            Follow.objects.create(follower=request_user, following=user_to_follow)
             return Response({"detail": "Followed successfully."})

@@ -105,21 +105,6 @@ class ProfileDataService {
         return Promise.reject(error);
       });
   }
-
-  async unfollowProfile(username: string): Promise<void> {
-    await api
-      .post(`/profiles/${username}/unfollow/`)
-      .then((response) => {
-        if (response.status === 200) {
-          console.log("ProfileDataService.ts", response.data.payload);
-        } else {
-          return Promise.reject(response);
-        }
-      })
-      .catch((error) => {
-        return Promise.reject(error);
-      });
-  }
 }
 
 export default new ProfileDataService();

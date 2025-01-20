@@ -26,6 +26,26 @@ class PostDataService {
       .catch((error: unknown) => console.error(error));
     return data.data;
   }
+  async getMostCommentedPosts(): Promise<PostListItemModel[]> {
+    let data: { data: PostListItemModel[] } = {
+      data: [] as PostListItemModel[],
+    };
+    await api
+      .get("/posts/most-commented/")
+      .then((response: { data: PostListItemModel[] }) => (data = response))
+      .catch((error: unknown) => console.error(error));
+    return data.data;
+  }
+  async getMostBookmarkedPosts(): Promise<PostListItemModel[]> {
+    let data: { data: PostListItemModel[] } = {
+      data: [] as PostListItemModel[],
+    };
+    await api
+      .get("/posts/most-bookmarked/")
+      .then((response: { data: PostListItemModel[] }) => (data = response))
+      .catch((error: unknown) => console.error(error));
+    return data.data;
+  }
 }
 
 export default new PostDataService();

@@ -27,7 +27,7 @@ const logoutSubmit = async () => {
         text: error.data.message,
         type: "error",
       };
-      store.commit("auth/setMessage", message);
+      store.dispatch("auth/setMessage", message);
     })
     .finally(() => {
       loading.value = false;

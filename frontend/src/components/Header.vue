@@ -23,7 +23,7 @@
     </div>
 
     <router-link
-      :to="{ name: 'home' }"
+      :to="{ name: 'post-create' }"
       class="header__create-button btn-light fs-6 ms-4"
       v-if="isAuth && !loading"
       >Создать</router-link
@@ -66,7 +66,7 @@
         >
 
         <div
-          class="header__dropdown dropdown-menu dropdown-menu-dark dropdown-menu-end bg-secondary-light border-0 rounded-0 rounded-bottom fs-6"
+          class="header__dropdown dropdown-menu dropdown-menu-dark dropdown-menu-end bg-secondary border-0 rounded fs-6"
         >
           <router-link
             v-if="isAuth"
@@ -117,6 +117,21 @@ const isAuth = computed(() => profile.value.id > -1);
 }
 
 /* TODO: Suka u menya gorit chto nelza oveeride bootstrap styles, ya prosto viebal !important */
+
+/* .header {
+  border-bottom: 1px solid var(--secondary) !important;
+} */
+
+.dropdown-menu-dark .dropdown-item.active,
+.dropdown-menu-dark .dropdown-item:active {
+  background-color: var(--secondary) !important;
+  color: var(--light) !important;
+}
+
+.dropdown-menu-dark .dropdown-item:hover,
+.dropdown-menu-dark .dropdown-item:focus {
+  color: var(--light) !important;
+}
 
 .header__search-input {
   border-radius: 0.4em !important;

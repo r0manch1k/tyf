@@ -187,8 +187,8 @@ h6 {
 .btn-action,
 .action-unchecked {
   color: var(--light);
-  background-color: var(--secondary);
-  border: 0;
+  background-color: var(--dark-light);
+  /* border: 1px solid var(--secondary); */
   border-radius: 0.4rem;
   padding: 0.5rem 1rem;
   text-align: inherit;
@@ -196,9 +196,30 @@ h6 {
   text-decoration: none;
 }
 
+.btn-action:hover {
+  color: var(--light);
+  background-color: var(--secondary);
+  /* border: 1px solid var(--secondary); */
+  border-radius: 0.4rem;
+  padding: 0.5rem 1rem;
+  text-align: inherit;
+  text-decoration: none;
+}
+
 .action-checked {
-  color: var(--dark);
+  color: var(--dark) !important;
   background-color: var(--primary);
+  border: 0;
+  border-radius: 0.4rem;
+  padding: 0.5rem 1rem;
+  text-align: inherit;
+  text-decoration: none;
+}
+
+.action-checked:hover {
+  color: var(--dark) !important;
+  background-color: var(--hover-primary);
+  opacity: 1;
   border: 0;
   border-radius: 0.4rem;
   padding: 0.5rem 1rem;

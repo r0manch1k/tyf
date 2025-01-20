@@ -1,7 +1,7 @@
 from rest_framework.response import Response
 from rest_framework import viewsets
-
-# from rest_framework.decorators import action
+from django.db.models import Count
+from rest_framework.decorators import action
 from django.shortcuts import get_object_or_404
 from .serializer import PostDetailSerializer, PostListSerializer
 from .models import Post
@@ -24,3 +24,29 @@ class PostViewSet(viewsets.ViewSet):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data, status=201)
+
+    @action(
+        detail=False,
+        methods=["GET"],
+        url_path="most-commented",
+        url_name="most-commented",
+    )
+    def most_commented(self, request):
+        queryset = Post.objects.annotate(ncomments=Count("comments")).order_by(
+            "-ncomments"
+        )[:5]
+        serializer = PostListSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+    @action(
+        detail=False,
+        methods=["GET"],
+        url_path="most-bookmarked",
+        url_name="most-bookmarked",
+    )
+    def most_bookmarked(self, request):
+        queryset = Post.objects.annotate(nbookmarks=Count("bookmarks")).order_by(
+            "-nbookmarks"
+        )[:5]
+        serializer = PostListSerializer(queryset, many=True)
+        return Response(serializer.data)

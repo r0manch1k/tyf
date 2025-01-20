@@ -9,7 +9,7 @@ import NotFoundView from "@/views/NotFoundView.vue";
 import ProfileView from "@/views/ProfileView.vue";
 import PostDetailView from "@/views/PostDetailView.vue";
 import PostCreateView from "@/views/PostCreateView.vue";
-import ProfileEdit from "@/views/ProfileEdit.vue";
+import ProfileEditView from "@/views/ProfileEditView.vue";
 import LogoutView from "@/views/Authorization/LogoutView.vue";
 
 import store from "@/stores";
@@ -48,7 +48,7 @@ const routes = [
   {
     path: "/edit",
     name: "profile-edit",
-    component: ProfileEdit,
+    component: ProfileEditView,
   },
   {
     path: "/:username",
@@ -60,6 +60,15 @@ const routes = [
     path: "/posts/new",
     name: "post-create",
     component: PostCreateView,
+    // beforeEnter: () => {
+    //   console.log(store.getters["profile/getProfile"].id);
+    //   if (
+    //     store.getters["profile/getProfile"].id < 0 ||
+    //     localStorage.getItem("accessToken") === ""
+    //   ) {
+    //     return { name: "login" };
+    //   }
+    // },
   },
   {
     path: "/posts/:identifier",
@@ -76,6 +85,9 @@ const routes = [
     path: "/logout",
     name: "logout",
     component: LogoutView,
+    beforeEnter: () => {
+      store.dispatch("profile/setDefault");
+    },
   },
 ];
 

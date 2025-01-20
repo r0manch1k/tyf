@@ -25,6 +25,7 @@
     <CAlert
       v-if="message.type == 'success'"
       class="alert alert-success d-flex align-items-center"
+      role="alert"
       style="width: 100% !important; border-radius: 0.4rem !important"
       dismissible
       @close="close"

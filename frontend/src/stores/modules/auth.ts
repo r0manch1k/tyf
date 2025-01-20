@@ -23,9 +23,9 @@ const mutations: MutationTree<State> = {
   setLoading: (state, payload: boolean) => {
     state.loading = payload;
   },
-  setMessage(state, message) {
-    state.message.text = message.text;
-    state.message.type = message.type;
+  setMessage(state, payload: MessageModel) {
+    state.message.text = payload.text;
+    state.message.type = payload.type;
   },
 };
 
