@@ -41,8 +41,6 @@ api.interceptors.response.use(async (response) => {
     }
   } else if (response.status >= 404) {
     store.dispatch("error/setShowErrorPage", response.status);
-  } else if (response.status >= 400) {
-    store.dispatch("error/setShowErrorPage", response.status);
   }
   return response;
 });

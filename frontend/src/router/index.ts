@@ -1,5 +1,6 @@
 import GoogleAuthView from "@/views/Authorization/GoogleAuthView.vue";
 import LoginView from "@/views/Authorization/LoginView.vue";
+import LogoutView from "@/views/Authorization/LogoutView.vue";
 import RegisterView from "@/views/Authorization/RegisterView.vue";
 import ResetPasswordView from "@/views/Authorization/ResetPasswordView.vue";
 import SetPasswordView from "@/views/Authorization/SetPasswordView.vue";
@@ -7,11 +8,12 @@ import VerificationView from "@/views/Authorization/VerificationView.vue";
 import YandexAuthView from "@/views/Authorization/YandexAuthView.vue";
 import HomeView from "@/views/HomeView.vue";
 import NotFoundView from "@/views/NotFoundView.vue";
-import ProfileView from "@/views/ProfileView.vue";
-import PostDetailView from "@/views/PostDetailView.vue";
 import PostCreateView from "@/views/PostCreateView.vue";
 import ProfileEditView from "@/views/ProfileEditView.vue";
 import LogoutView from "@/views/Authorization/LogoutView.vue";
+import PostDetailView from "@/views/PostDetailView.vue";
+import ProfileView from "@/views/ProfileView.vue";
+
 
 import store from "@/stores";
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";

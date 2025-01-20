@@ -269,9 +269,12 @@ import { Tabs, Tab } from "vue3-tabs-component";
 import LoadingCircle from "@/components/LoadingCircle.vue";
 import ProfileListItemLarge from "@/components/ProfileListItemLarge.vue";
 import Post from "@/components/Post.vue";
-import Tag from "@/components/Tag.vue";
-import ProfileDataService from "@/services/ProfileDataService";
+import { computed, defineProps, onMounted, ref } from "vue";
+import { Tab, Tabs } from "vue3-tabs-component";
+import { useStore } from "vuex";
+// import Tag from "@/components/Tag.vue";
 import type ProfileDetailModel from "@/models/ProfileModel";
+import ProfileDataService from "@/services/ProfileDataService";
 
 const store = useStore();
 
