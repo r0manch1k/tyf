@@ -29,13 +29,13 @@
 </template>
 
 <script setup lang="ts">
-import type ProfileListItem from "@/models/ProfileModel";
+import type { ProfileListItemModel } from "@/models/ProfileModel";
 import { defineProps, inject } from "vue";
 
 const moment = inject("moment");
 
 const props = defineProps<{
-  profile: ProfileListItem;
+  profile: ProfileListItemModel;
 }>();
 
 // @ts-expect-error: Unreachable code error

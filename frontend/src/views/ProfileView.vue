@@ -160,7 +160,7 @@
               </div> -->
               <div
                 class="profile-view__tags fs-6 text-secondary-xx-light w-100 text-start"
-                v-if="profile.tags"
+                v-if="profile.tags && profile.tags.length > 0"
               >
                 <p class="fw-bold text-decoration-underline">Избранные теги:</p>
                 <div class="d-flex gap-2 fs-6 mt-1">
@@ -171,7 +171,7 @@
           </div>
         </div>
 
-        <div class="profile-view__content col-9">
+        <div class="profile-view__content col-9 pt-3">
           <Tabs
             nav-item-class="profile-view__tab-item nav-item"
             nav-item-active-class="profile-view__tab-item--active nav-item-active"
@@ -183,7 +183,7 @@
               <div class="profile-view__posts tab-pane" v-if="!loadingPosts">
                 <p
                   v-if="!profile.posts || !profile.posts.length"
-                  class="profile-view__no-posts text-secondary fs-6 mt-4 text-center"
+                  class="profile-view__no-posts text-secondary-light fs-6 mt-4 text-start"
                 >
                   {{ profile.username }} ничего не публиковал.
                 </p>
@@ -207,7 +207,7 @@
               >
                 <p
                   v-if="!profile.followers || !profile.followers.length"
-                  class="profile-view__no-followers text-secondary fs-6 mt-4 text-center"
+                  class="profile-view__no-followers text-secondary-light fs-6 mt-4 text-start"
                 >
                   {{ profile.username }} пока никого не подписался.
                 </p>
@@ -233,7 +233,7 @@
               >
                 <p
                   v-if="!profile.following || !profile.following.length"
-                  class="profile-view__no-following text-secondary fs-6 mt-4 text-center"
+                  class="profile-view__no-following text-secondary-light fs-6 mt-4 text-start"
                 >
                   {{ profile.username }} пока ни на кого не подписался.
                 </p>
@@ -269,11 +269,8 @@ import { Tabs, Tab } from "vue3-tabs-component";
 import LoadingCircle from "@/components/LoadingCircle.vue";
 import ProfileListItemLarge from "@/components/ProfileListItemLarge.vue";
 import Post from "@/components/Post.vue";
-import { computed, defineProps, onMounted, ref } from "vue";
-import { Tab, Tabs } from "vue3-tabs-component";
-import { useStore } from "vuex";
-// import Tag from "@/components/Tag.vue";
-import type ProfileDetailModel from "@/models/ProfileModel";
+import Tag from "@/components/Tag.vue";
+import type { ProfileDetailModel } from "@/models/ProfileModel";
 import ProfileDataService from "@/services/ProfileDataService";
 
 const store = useStore();
@@ -316,7 +313,6 @@ const fetchProfile = async () => {
 
   await ProfileDataService.getProfileByUsername(props.username).then(
     (response) => {
-      console.log(response);
       profile.value = response;
       loading.value = false;
     }

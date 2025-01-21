@@ -59,7 +59,7 @@
 <script setup lang="ts">
 import LoadingCircle from "@/components/LoadingCircle.vue";
 import ProfileListItem from "@/components/ProfileListItem.vue";
-import type ProfileListItemModel from "@/models/ProfileModel";
+import type { ProfileListItemModel } from "@/models/ProfileModel";
 import ProfileDataService from "@/services/ProfileDataService";
 import { onMounted, ref } from "vue";
 

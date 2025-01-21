@@ -1,6 +1,6 @@
 from django.conf import settings
 from django.core.cache import cache
-from apps.utils.verifyTools import (
+from apps.utils.verify_tools import (
     getHash,
     AccountActivationToken,
 )

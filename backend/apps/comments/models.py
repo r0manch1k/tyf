@@ -3,7 +3,7 @@ from django.contrib.contenttypes.fields import GenericRelation
 from apps.profiles.models import Profile
 from apps.posts.models import Post
 from apps.media.models import Media
-from apps.utils.mediaTools import generate_uuid
+from apps.utils.media_tools import generate_uuid
 
 
 class Comment(models.Model):

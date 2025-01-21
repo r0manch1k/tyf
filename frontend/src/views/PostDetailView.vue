@@ -80,7 +80,7 @@
 import CommentsList from "@/components/CommentsList.vue";
 import LoadingCircle from "@/components/LoadingCircle.vue";
 import type CommentModel from "@/models/CommentModel";
-import type PostModel from "@/models/PostModel";
+import type { PostDetailModel } from "@/models/PostModel";
 import PostDataService from "@/services/PostDataService";
 import { marked } from "marked";
 import { onMounted, ref, defineProps } from "vue";
@@ -89,7 +89,7 @@ const props = defineProps({
   identifier: String,
 });
 
-const post = ref<PostModel | null>(null);
+const post = ref<PostDetailModel | null>(null);
 const loading = ref(true);
 const renderedContent = ref<string>("");
 const nestedComments = ref<CommentModel[]>([]);
@@ -110,7 +110,6 @@ onMounted(async () => {
 
   if (post.value?.comments) {
     nestedComments.value = post.value.comments;
-    console.log("nestedComments", nestedComments.value);
   }
   loading.value = false;
 });

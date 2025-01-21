@@ -70,7 +70,7 @@
               :disabled="loading"
             >
               <label v-if="!loading" style="color: var(--dark) !important"
-              >Продолжить</label
+                >Продолжить</label
               >
               <LoadingCircle v-else />
             </button>
@@ -107,7 +107,7 @@ const showMessage = ref(false);
 const resetPasswordSubmit = async () => {
   loading.value = true;
   showMessage.value = false;
-  AuthService.resetPassword(email.value)
+  await AuthService.resetPassword(email.value)
     .then(() => {
       console.log("Success");
     })

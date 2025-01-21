@@ -8,6 +8,7 @@ module.exports = {
     "eslint:recommended",
     "@vue/typescript/recommended",
     // "plugin:prettier/recommended",
+    "prettier",
   ],
   parserOptions: {
     ecmaVersion: 2020,
@@ -19,7 +20,8 @@ module.exports = {
     "@typescript-eslint/no-var-requires": "off",
     "vue/no-reserved-component-names": "off",
     quotes: ["error", "double"],
-    "vue/html-indent": ["error", 2],
+    // https://eslint.vuejs.org/user-guide/#conflict-with-prettier
+    "vue/html-indent": "off",
     "@typescript-eslint/no-require-imports": "off",
   },
 };

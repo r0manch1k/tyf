@@ -15,10 +15,6 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 
 
 class ProfileViewSet(viewsets.ViewSet):
-    # TODO: example for permissions
-    # permission_classes = [IsAuthenticated]
-    # authentication_classes = [JWTAuthentication]
-    # request.user -> is current user (by token)
 
     def list(self, request):
         queryset = Profile.objects.all()
@@ -55,7 +51,14 @@ class ProfileViewSet(viewsets.ViewSet):
         serializer = PostListSerializer(profile.posts, many=True)
         return Response(serializer.data)
 
-    @action(detail=True, methods=["GET"], url_path="followers", url_name="followers")
+    @action(
+        detail=True,
+        methods=["GET"],
+        permission_classes=[IsAuthenticated],
+        authentication_classes=[JWTAuthentication],
+        url_path="followers",
+        url_name="followers",
+    )
     def followers(self, request, pk=None):
         queryset = Profile.objects.all()
         profile = get_object_or_404(queryset, username=pk)
@@ -63,7 +66,14 @@ class ProfileViewSet(viewsets.ViewSet):
         serializer = ProfileListSerializer(followers, many=True)
         return Response(serializer.data)
 
-    @action(detail=True, methods=["GET"], url_path="following", url_name="following")
+    @action(
+        detail=True,
+        methods=["GET"],
+        permission_classes=[IsAuthenticated],
+        authentication_classes=[JWTAuthentication],
+        url_path="following",
+        url_name="following",
+    )
     def following(self, request, pk=None):
         queryset = Profile.objects.all()
         profile = get_object_or_404(queryset, username=pk)
@@ -91,6 +101,7 @@ class ProfileViewSet(viewsets.ViewSet):
         methods=["POST"],
         url_path="follow",
         url_name="follow",
+        permission_classes=[IsAuthenticated],
         authentication_classes=[JWTAuthentication],
     )
     def follow(self, request, pk=None):

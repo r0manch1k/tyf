@@ -3,7 +3,7 @@ from functools import partial
 from django.db import models
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
-from apps.utils.mediaTools import generate_media_path
+from apps.utils.media_tools import generate_media_path
 
 
 class Media(models.Model):

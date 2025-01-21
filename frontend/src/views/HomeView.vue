@@ -35,7 +35,7 @@ import MostCommentedPostsBar from "@/components/MostCommentedPostsBar.vue";
 import MostBookmarkedPostsBar from "@/components/MostBookmarkedPostsBar.vue";
 import TyeHighscoresBar from "@/tye_frontend/components/TyeHighscoresBar.vue";
 import Post from "@/components/Post.vue";
-import type PostListItemModel from "@/models/PostModel";
+import type { PostListItemModel } from "@/models/PostModel";
 import PostDataService from "@/services/PostDataService";
 // import type CategoryModel from "@/models/CategoryModel";
 // import type CollectionModel from "@/models/CollectionModel";

@@ -16,7 +16,6 @@
         <h3 class="profile-list-item-large__username fs-5 m-0">
           {{ profile.username }}
         </h3>
-        <p class="profile-list-item-large__bio">{{ profile.bio }}</p>
       </div>
     </router-link>
   </div>
@@ -24,10 +23,10 @@
 
 <script setup lang="ts">
 import { defineProps } from "vue";
-import type ProfileListItem from "@/models/ProfileModel";
+import type { ProfileListItemModel } from "@/models/ProfileModel";
 
 const props = defineProps<{
-  profile: ProfileListItem;
+  profile: ProfileListItemModel;
 }>();
 </script>
 

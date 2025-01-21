@@ -25,7 +25,7 @@
                 <span
                   class="login-view__brand text-primary fs-5"
                   style="color: var(--primary) !important"
-                >tyf</span
+                  >tyf</span
                 >
               </router-link>
             </h3>
@@ -57,7 +57,7 @@
               :disabled="loading"
             >
               <label v-if="!loading" style="color: var(--dark) !important"
-              >Войти</label
+                >Войти</label
               >
               <LoadingCircle v-else class="spinner-border-sm" />
             </button>
@@ -98,7 +98,7 @@ const showMessage = ref(false);
 const loginSubmit = async () => {
   loading.value = true;
   showMessage.value = false;
-  AuthService.login(email.value, password.value)
+  await AuthService.login(email.value, password.value)
     .then(() => {
       store.dispatch("profile/fetchProfile");
       router.push("/");

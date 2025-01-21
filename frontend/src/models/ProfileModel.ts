@@ -1,5 +1,5 @@
 import type MajorModel from "@/models/MajorModel";
-import type PostListItemModel from "@/models/PostModel";
+import type { PostListItemModel } from "@/models/PostModel";
 import type TagModel from "@/models/TagModel";
 import type UniversityModel from "@/models/UniversityModel";
 

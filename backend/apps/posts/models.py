@@ -5,7 +5,7 @@ from django.db import models
 from django.contrib.contenttypes.fields import GenericRelation
 from mdeditor.fields import MDTextField
 from django_resized import ResizedImageField
-from apps.utils.mediaTools import generate_uuid, generate_media_path
+from apps.utils.media_tools import generate_uuid, generate_media_path
 
 # from apps.comments.models import Comment
 from apps.media.models import Media
