@@ -4,7 +4,7 @@
       <div class="profile-view__row row">
         <div class="profile-view__sidebar col-3">
           <div
-            class="profile-view__meta-container d-flex flex-column gap-3 p-3 align-items-center"
+            class="profile-view__meta-container d-flex flex-column gap-3 p-3"
           >
             <img
               :src="profile.avatar"
