@@ -20,9 +20,14 @@
           name: 'profile',
           params: { username: profile.username },
         }"
-        class="profile-list-item__username fs-6"
+        class="profile-list-item__username fs-6 text-start"
       >
-        {{ profile.username }}
+        <span v-if="profile.username.length > 17">
+          {{ profile.username.substring(0, 17) + "..." }}
+        </span>
+        <span v-else>
+          {{ profile.username }}
+        </span>
       </router-link>
     </div>
   </div>
