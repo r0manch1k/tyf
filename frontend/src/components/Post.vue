@@ -149,7 +149,7 @@
 
 <script setup lang="ts">
 import Tag from "@/components/Tag.vue";
-import type PostListItemModel from "@/models/PostModel";
+import type { PostListItemModel } from "@/models/PostModel";
 import { defineProps, inject } from "vue";
 
 // TODO: Figure out how to import extarnal libraries in Vue 3

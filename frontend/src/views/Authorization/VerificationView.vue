@@ -57,7 +57,7 @@
               :disabled="loading"
             >
               <label v-if="!loading" style="color: var(--dark) !important"
-              >Подтвердить</label
+                >Подтвердить</label
               >
               <LoadingCircle v-else />
             </button>
@@ -154,7 +154,7 @@ const verifySubmit = async () => {
         type: "success",
       };
       store.dispatch("auth/setMessage", message);
-      showMessage.value = true;
+      // showMessage.value = true;
       router.push("/login");
     })
     .catch((error) => {

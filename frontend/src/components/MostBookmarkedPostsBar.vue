@@ -77,7 +77,7 @@
 <script setup lang="ts">
 import LoadingCircle from "@/components/LoadingCircle.vue";
 import PostDataService from "@/services/PostDataService";
-import type PostListItemModel from "@/models/PostModel";
+import type { PostListItemModel } from "@/models/PostModel";
 import { ref, onMounted } from "vue";
 
 const posts = ref<PostListItemModel[]>([]);

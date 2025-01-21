@@ -13,7 +13,7 @@
       target="_blank"
       >Подробнее...</a
     >
-    <h1></h1>
+
     <div class="highscores-bar__content">
       <div class="highscores-bar__title">
         <h2 class="highscores-bar__title-text">HIGH SCORES</h2>
@@ -76,6 +76,10 @@ const scores = ref([
   src: url("@/tye_frontend/assets/fonts/PressStart2P.ttf") format("truetype");
 }
 
+.highscores-bar__content {
+  margin-top: 1rem;
+}
+
 .highscores-bar__header-text {
   color: rgb(240, 230, 20);
   text-decoration: underline;
@@ -111,7 +115,8 @@ const scores = ref([
   font-size: 1rem;
   color: rgb(240, 230, 20);
   font-weight: normal;
-  margin-bottom: 1.5rem;
+  text-decoration: underline;
+  text-decoration-color: rgb(240, 230, 20) !important;
 }
 
 .highscores-bar__title-header {

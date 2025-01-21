@@ -63,7 +63,7 @@
 import { ref, onMounted, computed } from "vue";
 import { useStore } from "vuex";
 import ProfileDataService from "@/services/ProfileDataService";
-import { ProfileDetailModel } from "@/models/ProfileModel";
+import type { ProfileDetailModel } from "@/models/ProfileModel";
 import LoadingCircle from "@/components/LoadingCircle.vue";
 
 const store = useStore();

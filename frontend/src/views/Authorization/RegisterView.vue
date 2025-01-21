@@ -28,7 +28,7 @@
                 <span
                   class="register-view__brand text-primary fs-5"
                   style="color: var(--primary) !important"
-                >tyf</span
+                  >tyf</span
                 >
               </router-link>
             </h3>
@@ -56,7 +56,7 @@
               :disabled="loading"
             >
               <label v-if="!loading" style="color: var(--dark) !important"
-              >Продолжить</label
+                >Продолжить</label
               >
               <LoadingCircle v-else class="spinner-border-sm" />
             </button>
@@ -96,7 +96,7 @@ const showMessage = ref(false);
 const registerSubmit = async () => {
   loading.value = true;
   showMessage.value = false;
-  AuthService.register(email.value, password1.value, password2.value)
+  await AuthService.register(email.value, password1.value, password2.value)
     .catch((error) => {
       const message: MessageModel = {
         text: error.data.detail || error.data.message,

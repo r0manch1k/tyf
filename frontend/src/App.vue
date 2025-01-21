@@ -54,9 +54,7 @@ const isHome = computed(
 );
 
 onMounted(async () => {
-  if (localStorage.getItem("accessToken") != "") {
-    store.dispatch("profile/fetchProfile");
-  }
+  await store.dispatch("profile/fetchProfile");
 });
 </script>
 

@@ -50,11 +50,18 @@ const mutations: MutationTree<State> = {
 const actions: ActionTree<State, unknown> = {
   fetchProfile: async ({ commit }) => {
     commit("setLoading", true);
-    await ProfileDataService.getMyProfile().then((response) => {
-      commit("setProfile", response);
-      commit("setLoading", false);
-      return response;
-    });
+    await ProfileDataService.getMyProfile()
+      .then((response) => {
+        commit("setProfile", response);
+      })
+      .catch((error) => {
+        if (error.status === 401) {
+          commit("setProfile", new State().profile);
+        }
+      })
+      .finally(() => {
+        commit("setLoading", false);
+      });
   },
   setDefault: ({ commit }) => {
     console.log("setDefault");

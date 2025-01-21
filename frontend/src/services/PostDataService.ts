@@ -1,7 +1,4 @@
-import type {
-  default as PostDetailModel,
-  default as PostListItemModel,
-} from "@/models/PostModel";
+import type { PostListItemModel, PostDetailModel } from "@/models/PostModel";
 import api from "@/stores/services/api";
 // import type CategoryModel from "@/models/CategoryModel";
 // import type CollectionModel from "@/models/CollectionModel";

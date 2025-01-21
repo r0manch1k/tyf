@@ -11,7 +11,7 @@ from django.conf import settings
 from django.utils import timezone
 from rest_framework import status
 from django.core.cache import cache
-from apps.utils.verifyTools import (
+from apps.utils.verify_tools import (
     generateOTP,
     sendEmail,
     getHash,

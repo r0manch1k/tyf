@@ -1,19 +1,25 @@
-import type PostListItemModel from "@/models/PostModel";
-import type {
-  default as ProfileDetailModel,
-  default as ProfileListItemModel,
-} from "@/models/ProfileModel";
+import type { ProfileDetailModel } from "@/models/ProfileModel";
+import type { ProfileListItemModel } from "@/models/ProfileModel";
+import type { PostListItemModel } from "@/models/PostModel";
 import api from "@/stores/services/api";
 
 class ProfileDataService {
-  async getMyProfile(): Promise<ProfileListItemModel> {
+  async getMyProfile(): Promise<ProfileListItemModel | void> {
     let data: { data: ProfileListItemModel } = {
       data: {} as ProfileListItemModel,
     };
     await api
       .get("/profiles/me/")
-      .then((response: { data: ProfileListItemModel }) => (data = response))
-      .catch((error) => console.error(error));
+      .then((response) => {
+        if (response.status === 200) {
+          data = response;
+        } else {
+          return Promise.reject(response);
+        }
+      })
+      .catch((error) => {
+        return Promise.reject(error);
+      });
     return data.data;
   }
 

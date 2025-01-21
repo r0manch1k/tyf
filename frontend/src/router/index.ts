@@ -10,10 +10,8 @@ import HomeView from "@/views/HomeView.vue";
 import NotFoundView from "@/views/NotFoundView.vue";
 import PostCreateView from "@/views/PostCreateView.vue";
 import ProfileEditView from "@/views/ProfileEditView.vue";
-import LogoutView from "@/views/Authorization/LogoutView.vue";
 import PostDetailView from "@/views/PostDetailView.vue";
 import ProfileView from "@/views/ProfileView.vue";
-
 
 import store from "@/stores";
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
