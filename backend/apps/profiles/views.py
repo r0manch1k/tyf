@@ -9,12 +9,17 @@ from apps.follows.models import Follow
 from django.db.models import Count
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework.permissions import AllowAny
+
+# from rest_framework.decorators import authentication_classes
 
 # from rest_framework_simplejwt.authentication import JWTAuthentication
 # from rest_framework.permissions import IsAuthenticated
 
 
 class ProfileViewSet(viewsets.ViewSet):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [AllowAny]
 
     def list(self, request):
         queryset = Profile.objects.all()
@@ -27,7 +32,6 @@ class ProfileViewSet(viewsets.ViewSet):
         serializer = ProfileDetailSerializer(profile, context={"request": request})
         return Response(serializer.data)
 
-    # TODO: recent_users or recent_profiles?
     @action(detail=False, methods=["GET"], url_path="recent", url_name="recent")
     def recent_users(self, request):
         queryset = Profile.objects.all().order_by("-date_joined")[:5]
@@ -122,3 +126,11 @@ class ProfileViewSet(viewsets.ViewSet):
         else:
             Follow.objects.create(follower=request_user, following=user_to_follow)
             return Response({"detail": "Followed successfully."})
+
+    def update(self, request, pk=None):
+        queryset = Profile.objects.all()
+        profile = get_object_or_404(queryset, username=pk)
+        serializer = ProfileDetailSerializer(profile, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)

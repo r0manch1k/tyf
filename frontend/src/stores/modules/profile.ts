@@ -40,6 +40,7 @@ class State {
 const getters: GetterTree<State, unknown> = {
   getProfile: (state) => state.profile,
   getLoading: (state) => state.loading,
+  getDefaultProfile: () => new State().profile,
 };
 
 const mutations: MutationTree<State> = {

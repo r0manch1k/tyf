@@ -21,7 +21,9 @@ class PostListSerializer(serializers.ModelSerializer):
     author = ProfileListSerializer()
     category = CategorySerializer()
     collections = CollectionSerializer(many=True)
-    tags = TagSerializer(many=True)
+    tags = TagSerializer(
+        many=True,
+    )
     bookmarks_count = serializers.SerializerMethodField()
     comments_count = serializers.SerializerMethodField()
     filetypes = serializers.SerializerMethodField()
@@ -45,6 +47,21 @@ class PostListSerializer(serializers.ModelSerializer):
         model = Post
         fields = [
             "id",
+            "identifier",
+            "title",
+            "author",
+            "category",
+            "collections",
+            "tags",
+            "comments_count",
+            "description",
+            "bookmarks_count",
+            "created_at",
+            "updated_at",
+            "filetypes",
+            "thumbnail",
+        ]
+        read_only_fields = [
             "identifier",
             "title",
             "author",
@@ -128,6 +145,10 @@ class PostDetailSerializer(serializers.ModelSerializer):
             "updated_at",
             "filetypes",
             "thumbnail",
+        ]
+
+        read_only_fields = [
+            "created_at",
         ]
 
     def get_filetypes(self, obj):

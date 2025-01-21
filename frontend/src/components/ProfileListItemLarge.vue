@@ -13,7 +13,10 @@
         />
       </div>
       <div class="profile-list-item-large__content">
-        <h3 class="profile-list-item-large__username fs-5 m-0">
+        <h3
+          class="profile-list-item-large__username fs-5 m-0 text-break"
+          style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis"
+        >
           {{ profile.username }}
         </h3>
       </div>
@@ -40,4 +43,15 @@ const props = defineProps<{
   box-shadow: 0 0 1rem rgba(50, 50, 50, 0.8);
   border-radius: 50%;
 } */
+
+.profile-list-item-large {
+  width: 14rem;
+}
+
+.profile-list-item-large__username {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
 </style>

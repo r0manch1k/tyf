@@ -46,9 +46,9 @@
                 Редактировать профиль
               </router-link>
             </div>
-            <div class="profile-view__meta d-flex flex-column gap-1">
+            <div class="profile-view__meta d-flex flex-column text-light gap-1">
               <div
-                class="profile-view__name fs-6 text-secondary-xx-light w-100 text-start"
+                class="profile-view__name fs-6 text-light w-100 text-start"
                 v-if="
                   profile.first_name || profile.last_name || profile.middle_name
                 "
@@ -65,14 +65,14 @@
                 </div>
               </div>
               <div
-                class="profile-view__bio fs-6 text-secondary-xx-light w-100 text-start"
+                class="profile-view__bio fs-6 text-light w-100 text-start"
                 v-if="profile.bio"
               >
                 <p class="fw-bold text-decoration-underline">О себе:</p>
                 <p>{{ profile.bio }}</p>
               </div>
               <div
-                class="profile-view__stat fs-6 text-secondary-xx-light w-100 text-start"
+                class="profile-view__stat fs-6 text-light w-100 text-start"
                 v-if="profile.university"
               >
                 <p class="fw-bold text-decoration-underline">Университет:</p>
@@ -88,7 +88,7 @@
                 </p>
               </div>
               <div
-                class="profile-view__stat fs-6 text-secondary-xx-light w-100 text-start"
+                class="profile-view__stat fs-6 text-light w-100 text-start"
                 v-if="profile.major"
               >
                 <p class="fw-bold text-decoration-underline">Направление:</p>
@@ -159,7 +159,7 @@
                 <p>{{ profile.date_of_birth }}</p>
               </div> -->
               <div
-                class="profile-view__tags fs-6 text-secondary-xx-light w-100 text-start"
+                class="profile-view__tags fs-6 text-light w-100 text-start"
                 v-if="profile.tags && profile.tags.length > 0"
               >
                 <p class="fw-bold text-decoration-underline">Избранные теги:</p>
@@ -202,7 +202,7 @@
             </Tab>
             <Tab :name="`Подписчики(${profile.followers_count})`">
               <div
-                class="profile-view__followers tab-pane"
+                class="profile-view__following tab-pane"
                 v-if="!loadingFollowers"
               >
                 <p
@@ -213,7 +213,7 @@
                 </p>
                 <div
                   v-else
-                  class="profile-view__followers-list d-flex flex-column gap-3"
+                  class="profile-view__followers-list d-flex flex-wrap gap-3"
                 >
                   <div
                     v-for="follower in profile.followers"
@@ -239,7 +239,7 @@
                 </p>
                 <div
                   v-else
-                  class="profile-view__following-list d-flex flex-column gap-3"
+                  class="profile-view__following-list d-flex flex-wrap gap-3"
                 >
                   <div
                     v-for="following in profile.following"
@@ -338,6 +338,9 @@ const fetchFollowers = async () => {
   await ProfileDataService.getProfileFollowers(props.username).then(
     (response) => {
       profile.value.followers = response;
+      if (profile.value.followers.length != profile.value.followers_count) {
+        profile.value.followers_count = profile.value.followers.length;
+      }
       loadingFollowers.value = false;
     }
   );
@@ -351,6 +354,9 @@ const fetchFollowing = async () => {
   await ProfileDataService.getProfileFollowing(props.username).then(
     (response) => {
       profile.value.following = response;
+      if (profile.value.following.length != profile.value.following_count) {
+        profile.value.following_count = profile.value.following.length;
+      }
       loadingFollowing.value = false;
     }
   );
@@ -439,16 +445,16 @@ a:hover {
 }
 
 p {
-  color: var(--secondary-xx-light);
+  /* color: var(--secondary-xx-light); */
   margin: 0;
 }
 
-.profile-view__stat {
+/* .profile-view__stat {
   color: var(--secondary-xx-light);
-}
+} */
 
 .field {
   font-weight: bold;
-  color: var(--secondary-xx-light);
+  /* color: var(--secondary-xx-light); */
 }
 </style>
