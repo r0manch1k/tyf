@@ -90,7 +90,7 @@ const password1 = ref("");
 const password2 = ref("");
 const loading = ref(false);
 
-const message = computed<MessageModel>(() => store.state.auth.message);
+const message = computed<MessageModel>(() => store.state.auth.message); 
 const showMessage = ref(false);
 
 const registerSubmit = async () => {

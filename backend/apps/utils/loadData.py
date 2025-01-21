@@ -6,7 +6,7 @@ from apps.categories.models import Category
 from apps.collections_.models import Collection
 
 # make shell-dev
-# exec(open("apps/utils/load_data.py").read())
+# exec(open("apps/utils/loadData.py").read())
 
 with open(os.path.abspath("apps/utils/data/universities_Russia.csv")) as f:
     reader = csv.reader(f)
