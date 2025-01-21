@@ -14,12 +14,20 @@ class ProfileListSerializer(serializers.ModelSerializer):
             "iso-8601",
         ],
     )
-    points = serializers.IntegerField(read_only=True)
-    posts_count = serializers.IntegerField(source="posts.count", read_only=True)
+    points = serializers.IntegerField()
+    posts_count = serializers.IntegerField(source="posts.count")
 
     class Meta:
         model = Profile
         fields = ["id", "username", "avatar", "date_joined", "posts_count", "points"]
+        read_only_fields = [
+            "id",
+            "username",
+            "avatar",
+            "date_joined",
+            "posts_count",
+            "points",
+        ]
 
     def get_avatar(self, obj):
         return settings.API_ULR + obj.get_avatar
@@ -83,6 +91,22 @@ class ProfileDetailSerializer(serializers.ModelSerializer):
             "followers_count",
             "posts_count",
         ]
+
+        read_only_fields = [
+            "date_joined",
+        ]
+
+        # extra_kwargs = {
+        #     "first_name": {"allow_blank": True, "required": False},
+        #     "last_name": {"allow_blank": True, "required": False},
+        #     "middle_name": {"allow_blank": True, "required": False},
+        #     "bio": {"allow_blank": True, "required": False},
+        #     "telegram": {"allow_blank": True, "required": False},
+        #     "vkontakte": {"allow_blank": True, "required": False},
+        #     "date_of_birth": {"allow_blank": True, "required": False},
+        #     "major": {"allow_null": True, "required": False},
+        #     "university": {"allow_null": True, "required": False},
+        # }
 
     def get_avatar(self, obj):
         return settings.API_ULR + obj.get_avatar

@@ -2,6 +2,7 @@ import type { ProfileDetailModel } from "@/models/ProfileModel";
 import type { ProfileListItemModel } from "@/models/ProfileModel";
 import type { PostListItemModel } from "@/models/PostModel";
 import api from "@/stores/services/api";
+import store from "@/stores";
 
 class ProfileDataService {
   async getMyProfile(): Promise<ProfileListItemModel | void> {
@@ -102,6 +103,24 @@ class ProfileDataService {
   async followProfile(username: string): Promise<void> {
     await api
       .post(`/profiles/${username}/follow/`)
+      .then((response) => {
+        if (response.status === 200) {
+          console.log("ProfileDataService.ts", response.data.payload);
+        } else {
+          return Promise.reject(response);
+        }
+      })
+      .catch((error) => {
+        return Promise.reject(error);
+      });
+  }
+  async updateProfile(data: ProfileDetailModel): Promise<void> {
+    const username = store.getters["profile/getProfile"].username;
+    if (username === "") {
+      return;
+    }
+    await api
+      .put(`/profiles/${username}/`, data)
       .then((response) => {
         if (response.status === 200) {
           console.log("ProfileDataService.ts", response.data.payload);
