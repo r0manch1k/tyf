@@ -61,8 +61,8 @@ class PostViewSet(viewsets.ViewSet):
     @action(
         detail=True,
         methods=["POST"],
-        url_path="comment",
-        url_name="comment",
+        url_path="comments",
+        url_name="comments",
         permission_classes=[IsAuthenticated],
         authentication_classes=[JWTAuthentication],
     )

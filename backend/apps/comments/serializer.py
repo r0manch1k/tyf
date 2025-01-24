@@ -93,14 +93,8 @@ class CommentSerializer(serializers.ModelSerializer):
     author = serializers.SerializerMethodField()
     # author = serializers.PrimaryKeyRelatedField(queryset=Profile.objects.all(), write_only=True)
 
-    created_at = serializers.DateTimeField(
-        format="%Y-%m-%d %H:%M:%S",
-        input_formats=["%d.%m.%Y", "iso-8601"],
-    )
-    updated_at = serializers.DateTimeField(
-        format="%Y-%m-%d %H:%M:%S",
-        input_formats=["%d.%m.%Y", "iso-8601"],
-    )
+    created_at = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", read_only=True)
+    updated_at = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", read_only=True)
 
     class Meta:
         model = Comment
