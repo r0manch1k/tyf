@@ -2,7 +2,7 @@
   <div class="most-active-users-bar bg-dark-light p-1">
     <div class="most-active-users-bar__list" v-if="!loading">
       <h3
-        class="most-active-users-bar__title fs-6 text-light p-1 m-0 text-start text-decoration-none"
+        class="most-active-users-bar__title fs-5 text-light p-1 m-0 text-start text-decoration-none"
       >
         <span class="text-decoration-underline">Топ 5</span>
         <span class="most-active-users-bar__emoji"> 🤓</span>
@@ -32,7 +32,7 @@
           <tr
             v-for="user in users"
             :key="user.username"
-            class="most-active-users-bar__tr"
+            class="most-active-users-bar__tr fw-bold"
           >
             <td class="most-active-users-bar__td align-middle text-center">
               <ProfileListItem :profile="user" />

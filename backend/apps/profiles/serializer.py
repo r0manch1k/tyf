@@ -5,8 +5,18 @@ from apps.tags.serializer import TagSerializer
 from tyf import settings
 
 
+class AvatarField(serializers.ImageField):
+    def to_representation(self, value):
+        if value:
+            return settings.API_ULR + value.url
+        return settings.API_ULR + settings.DEFAULT_USER_AVATAR
+
+    def to_internal_value(self, data):
+        return super().to_internal_value(data)
+
+
 class ProfileListSerializer(serializers.ModelSerializer):
-    avatar = serializers.SerializerMethodField()
+    avatar = AvatarField()
     date_joined = serializers.DateTimeField(
         format="%Y-%m-%d %H:%M:%S",
         input_formats=[
@@ -29,14 +39,11 @@ class ProfileListSerializer(serializers.ModelSerializer):
             "points",
         ]
 
-    def get_avatar(self, obj):
-        return settings.API_ULR + obj.get_avatar
-
 
 class ProfileDetailSerializer(serializers.ModelSerializer):
-    avatar = serializers.SerializerMethodField()
-    telegram = serializers.URLField()
-    vkontakte = serializers.URLField()
+    avatar = AvatarField(allow_empty_file=False, required=False, allow_null=True)
+    telegram = serializers.URLField(required=False, allow_blank=True)
+    vkontakte = serializers.URLField(required=False, allow_blank=True)
     telegram_alias = serializers.SerializerMethodField()
     vkontakte_alias = serializers.SerializerMethodField()
     date_joined = serializers.DateTimeField(
@@ -52,9 +59,10 @@ class ProfileDetailSerializer(serializers.ModelSerializer):
             "%d.%m.%Y",
             "iso-8601",
         ],
+        allow_null=True,
     )
-    major = MajorListSerializer()
-    university = UniversityListSerializer()
+    major = MajorListSerializer(required=False, allow_null=True)
+    university = UniversityListSerializer(required=False, allow_null=True)
     points = serializers.IntegerField(read_only=True)
     awards = serializers.IntegerField(read_only=True)
     tags = serializers.SerializerMethodField()
@@ -93,23 +101,9 @@ class ProfileDetailSerializer(serializers.ModelSerializer):
         ]
 
         read_only_fields = [
+            "avatar",
             "date_joined",
         ]
-
-        # extra_kwargs = {
-        #     "first_name": {"allow_blank": True, "required": False},
-        #     "last_name": {"allow_blank": True, "required": False},
-        #     "middle_name": {"allow_blank": True, "required": False},
-        #     "bio": {"allow_blank": True, "required": False},
-        #     "telegram": {"allow_blank": True, "required": False},
-        #     "vkontakte": {"allow_blank": True, "required": False},
-        #     "date_of_birth": {"allow_blank": True, "required": False},
-        #     "major": {"allow_null": True, "required": False},
-        #     "university": {"allow_null": True, "required": False},
-        # }
-
-    def get_avatar(self, obj):
-        return settings.API_ULR + obj.get_avatar
 
     def get_telegram_alias(self, obj):
         return obj.get_telegram

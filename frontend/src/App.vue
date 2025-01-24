@@ -89,4 +89,10 @@ border: 1px solid var(--secondary);
 .btn:focus {
   box-shadow: none;
 }
+
+.btn:disabled,
+.btn.disabled,
+fieldset:disabled .btn {
+  opacity: 1;
+}
 </style>

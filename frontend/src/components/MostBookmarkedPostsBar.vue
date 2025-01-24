@@ -2,9 +2,9 @@
   <div class="most-bookmarked-posts-bar bg-dark-light p-1">
     <div class="most-bookmarked-posts-bar__content" v-if="!loading">
       <h3
-        class="most-bookmarked-posts-bar__title fs-6 text-light p-1 m-0 text-start text-decoration-none"
+        class="most-bookmarked-posts-bar__title fs-5 text-light p-1 m-0 text-start text-decoration-none"
       >
-        <span class="text-decoration-underline">Самые полезные посты</span>
+        <span class="text-decoration-underline">Маст хэв</span>
         <span class="most-bookmarked-posts-bar__emoji"> 📚</span>
       </h3>
 
@@ -47,7 +47,7 @@
                   name: 'post-detail',
                   params: { identifier: post.identifier },
                 }"
-                class="most-bookmarked-posts-bar__link btn-light fs-6 text-decoration-none text-primary"
+                class="most-bookmarked-posts-bar__link btn-light fs-6 text-decoration-none text-primary fw-bold"
               >
                 {{ post.title }}
               </router-link>

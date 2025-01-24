@@ -6,7 +6,7 @@
     </div> -->
     <div class="home__body container-fluid p-0">
       <div class="home__body__container row">
-        <div class="home__body__container__left col-9">
+        <div class="home__body__container__left col-md-9">
           <div
             class="home__body__container__left__text d-flex flex-column gap-3 p-0"
           >
@@ -14,7 +14,7 @@
           </div>
         </div>
         <div
-          class="home__body__container__right col-3 d-flex flex-column gap-3"
+          class="home__body__container__right col-md-3 d-flex flex-column gap-3"
         >
           <MostActiveUsersBar />
           <MostCommentedPostsBar />

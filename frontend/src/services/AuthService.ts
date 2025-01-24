@@ -240,6 +240,8 @@ class AuthService {
           } else {
             return Promise.reject(response);
           }
+        } else if (response.status == 200) {
+          return Promise.resolve(response);
         } else {
           return Promise.reject(response);
         }

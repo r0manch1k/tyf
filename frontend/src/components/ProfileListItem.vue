@@ -35,21 +35,19 @@
 
 <script setup lang="ts">
 import type { ProfileListItemModel } from "@/models/ProfileModel";
-import { defineProps, inject } from "vue";
-
-const moment = inject("moment");
+import { defineProps } from "vue";
 
 const props = defineProps<{
   profile: ProfileListItemModel;
 }>();
-
-// @ts-expect-error: Unreachable code error
-moment(props.profile.date_joined).fromNow();
-// const created_at = moment(props.profile.date_joined).fromNow();
 </script>
 
 <style scoped>
 .profile-list-item {
   width: fit-content;
+}
+
+.profile-list-item__username:hover {
+  color: var(--primary);
 }
 </style>

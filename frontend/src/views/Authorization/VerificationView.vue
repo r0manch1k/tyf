@@ -154,8 +154,7 @@ const verifySubmit = async () => {
         type: "success",
       };
       store.dispatch("auth/setMessage", message);
-      // showMessage.value = true;
-      router.push("/login");
+      router.push({ name: "login" });
     })
     .catch((error) => {
       if (error.status === 401) {
@@ -173,6 +172,7 @@ const verifySubmit = async () => {
             "Что-то пошло не так, повторите попытку позже.",
           type: "error",
         };
+
         store.dispatch("auth/setMessage", message);
         showMessage.value = true;
       }
