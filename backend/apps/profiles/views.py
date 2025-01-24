@@ -127,7 +127,16 @@ class ProfileViewSet(viewsets.ViewSet):
             Follow.objects.create(follower=request_user, following=user_to_follow)
             return Response({"detail": "Followed successfully."})
 
-    def update(self, request, pk=None):
+    @action(detail=True, methods=["PATCH"], url_path="avatar", url_name="avatar")
+    def avatar(self, request, pk=None):
+        queryset = Profile.objects.all()
+        profile = get_object_or_404(queryset, username=pk)
+        profile.avatar = request.data.get("avatar")
+        profile.save()
+        serializer = ProfileDetailSerializer(profile)
+        return Response(serializer.data)
+
+    def partial_update(self, request, pk=None):
         queryset = Profile.objects.all()
         profile = get_object_or_404(queryset, username=pk)
         serializer = ProfileDetailSerializer(profile, data=request.data, partial=True)

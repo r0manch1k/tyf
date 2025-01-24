@@ -73,6 +73,10 @@ h6 {
   color: var(--secondary-xx-light);
 }
 
+.text-alert {
+  color: var(--alert);
+}
+
 .bg-primary {
   background-color: var(--primary);
 }
@@ -187,10 +191,10 @@ h6 {
 .btn-action,
 .action-unchecked {
   color: var(--light);
-  background-color: var(--dark-light);
+  background-color: var(--secondary);
   /* border: 1px solid var(--secondary); */
   border-radius: 0.4rem;
-  padding: 0.5rem 1rem;
+  padding: 0.25rem 0.5rem;
   text-align: inherit;
   opacity: 1;
   box-shadow: none !important;
@@ -199,10 +203,10 @@ h6 {
 
 .btn-action:hover {
   color: var(--light);
-  background-color: var(--secondary);
+  background-color: var(--secondary-light);
   /* border: 1px solid var(--secondary); */
   border-radius: 0.4rem;
-  padding: 0.5rem 1rem;
+  padding: 0.25rem 0.5rem;
   text-align: inherit;
   text-decoration: none;
 }
@@ -212,7 +216,7 @@ h6 {
   background-color: var(--primary);
   border: 0;
   border-radius: 0.4rem;
-  padding: 0.5rem 1rem;
+  padding: 0.25rem 0.5rem;
   text-align: inherit;
   text-decoration: none;
 }
@@ -223,7 +227,7 @@ h6 {
   opacity: 1;
   border: 0;
   border-radius: 0.4rem;
-  padding: 0.5rem 1rem;
+  padding: 0.25rem 0.5rem;
   text-align: inherit;
   text-decoration: none;
 }
@@ -235,7 +239,7 @@ h6 {
   border-radius: 0.4rem;
   max-width: 20rem;
   text-align: center;
-  padding: 0.5rem 1rem;
+  padding: 0.25rem 0.5rem;
   text-decoration: none;
 }
 
@@ -246,8 +250,27 @@ h6 {
   border-radius: 0.4rem;
   max-width: 20rem;
   text-align: center;
-  padding: 0.5rem 1rem;
+  padding: 0.25rem 0.5rem;
   text-decoration: none;
+}
+
+.btn-submit:disabled,
+.btn-submit.disabled {
+  color: var(--secondary-xx-light);
+  background-color: var(--secondary);
+  border: 0;
+  border-radius: 0.4rem;
+  max-width: 20rem;
+  text-align: center;
+  padding: 0.25rem 0.5rem;
+  text-decoration: none;
+}
+
+.btn-primary:disabled,
+.btn-primary.disabled {
+  color: var(--secondary-xx-light);
+  background-color: var(--secondary);
+  border: 0;
 }
 
 .text-primary {

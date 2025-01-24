@@ -9,6 +9,7 @@ const api = axios.create({
   headers: {
     "X-Requested-With": "XMLHttpRequest",
     "Content-Type": "application/json",
+    Accept: "application/json",
     "X-Api-Key": process.env.VUE_APP_API_KEY,
   },
   validateStatus: (status) => status < 500,
@@ -17,7 +18,7 @@ const api = axios.create({
 api.interceptors.request.use(
   (config) => {
     const accessToken = localStorage.getItem("accessToken") ?? "";
-    console.log(`Access token: ${accessToken}`);
+    // console.log(`Access token: ${accessToken}`);
     if (accessToken) {
       config.headers["Authorization"] = `Bearer ${accessToken}`;
     }

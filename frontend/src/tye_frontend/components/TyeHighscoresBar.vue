@@ -83,6 +83,7 @@ const scores = ref([
 .highscores-bar__header-text {
   color: rgb(240, 230, 20);
   text-decoration: underline;
+  font-size: x-large;
   text-decoration-color: rgb(250, 0, 10) !important;
 }
 

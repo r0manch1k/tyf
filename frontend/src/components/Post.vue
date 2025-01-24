@@ -77,6 +77,27 @@
             />
           </div>
         </div>
+        <div
+          class="d-flex align-items-center gap-2 mt-1"
+          v-if="post.filetypes.length > 0"
+        >
+          <span
+            v-for="(filetype, index) in post.filetypes"
+            :key="filetype"
+            class="text-secondary-x-light fs-7"
+          >
+            <router-link
+              :to="{
+                name: 'post-detail',
+                params: { identifier: post.identifier },
+              }"
+              class="btn-secondary-x-light"
+            >
+              {{ filetype }}
+            </router-link>
+            <span v-if="index < post.filetypes.length - 1" class="">,</span>
+          </span>
+        </div>
       </div>
       <img
         v-if="post.thumbnail"
@@ -124,36 +145,16 @@
           <p class="m-0 p-0 fs-7">{{ post.bookmarks_count }}</p>
         </router-link>
       </div>
-
-      <div class="d-flex align-items-center gap-2">
-        <span
-          v-for="(filetype, index) in post.filetypes"
-          :key="filetype"
-          class="text-secondary-x-light fs-7"
-        >
-          <router-link
-            :to="{
-              name: 'post-detail',
-              params: { identifier: post.identifier },
-            }"
-            class="btn-secondary-x-light"
-          >
-            {{ filetype }}
-          </router-link>
-          <span v-if="index < post.filetypes.length - 1" class="">,</span>
-        </span>
-      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import moment from "moment";
+import "moment/locale/ru";
 import Tag from "@/components/Tag.vue";
 import type { PostListItemModel } from "@/models/PostModel";
-import { defineProps, inject } from "vue";
-
-// TODO: Figure out how to import extarnal libraries in Vue 3
-const moment = inject("moment");
+import { defineProps } from "vue";
 
 const props = defineProps({
   post: {
@@ -162,7 +163,6 @@ const props = defineProps({
   },
 });
 
-// @ts-expect-error: Unreachable code error
 const created_at = moment(props.post.created_at).fromNow();
 </script>
 

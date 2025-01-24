@@ -65,7 +65,7 @@
         >
 
         <div
-          class="header__dropdown dropdown-menu dropdown-menu-dark dropdown-menu-end bg-secondary border-0 rounded fs-6"
+          class="header__dropdown dropdown-menu dropdown-menu-dark dropdown-menu-end bg-secondary border-0 rounded fs-6 mt-3"
         >
           <router-link
             v-if="isAuth"

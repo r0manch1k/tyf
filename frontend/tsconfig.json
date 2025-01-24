@@ -15,31 +15,20 @@
     "baseUrl": ".",
     "allowJs": true,
     "outDir": "dist/**/",
-    "types": [
-      "webpack-env"
-    ],
+    "types": ["webpack-env"],
     "paths": {
-      "@/*": [
-        "src/*"
-      ]
+      "@/*": ["src/*"]
     },
-    "lib": [
-      "esnext",
-      "dom",
-      "dom.iterable",
-      "scripthost"
-    ]
+    "lib": ["esnext", "dom", "dom.iterable", "scripthost"]
   },
   "include": [
+    "env.d.ts",
     "src/**/*.ts",
     "src/**/*.tsx",
     "src/**/*.vue",
     "tests/**/*.ts",
-    "tests/**/*.tsx"
-, "src/assets/styles/js/otp.js"  ],
-  "exclude": [
-    "node_modules",
-    "src/**/*.js",
-    "dist/**/*"
-  ]
+    "tests/**/*.tsx",
+    "src/assets/styles/js/otp.js"
+  ],
+  "exclude": ["node_modules", "src/**/*.js", "dist/**/*"]
 }

@@ -2,9 +2,9 @@
   <div class="most-commented-posts-bar bg-dark-light p-1">
     <div class="most-commented-posts-bar__content" v-if="!loading">
       <h3
-        class="most-commented-posts-bar__title fs-6 text-light p-1 m-0 text-start text-decoration-none"
+        class="most-commented-posts-bar__title fs-5 text-light p-1 m-0 text-start text-decoration-none"
       >
-        <span class="text-decoration-underline">Самые обсуждаемые посты</span>
+        <span class="text-decoration-underline">Горячее</span>
         <span class="most-commented-posts-bar__emoji"> 💬</span>
       </h3>
       <h4
@@ -46,7 +46,7 @@
                   name: 'post-detail',
                   params: { identifier: post.identifier },
                 }"
-                class="most-commented-posts-bar__link btn-light fs-6 text-decoration-none text-primary"
+                class="most-commented-posts-bar__link btn-light fs-6 text-decoration-none text-primary fw-bold"
               >
                 {{ post.title }}
               </router-link>

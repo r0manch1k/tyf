@@ -2,7 +2,7 @@
   <div v-if="!loading" class="profile-view px-5">
     <div class="profile-view__container container-fluid p-0">
       <div class="profile-view__row row">
-        <div class="profile-view__sidebar col-3">
+        <div class="profile-view__sidebar col-md-3">
           <div
             class="profile-view__meta-container d-flex flex-column gap-3 p-3"
           >
@@ -17,16 +17,16 @@
             </div>
             <div class="profile-view__actions d-flex flex-column w-100 gap-2">
               <button
-                v-if="isAuth && guestMode"
+                v-if="guestMode"
                 @click="toggleFollow"
                 class="btn btn-action text-decoration-none text-light"
                 :class="{
                   'action-checked': profile.is_followed_by_request_user,
                   'action-unchecked': !profile.is_followed_by_request_user,
                 }"
-                :disabled="loadingToggleFollow"
+                :disabled="loadingToggleFollow || loadingProfile"
               >
-                <span v-if="!loadingToggleFollow">
+                <span v-if="!loadingToggleFollow && !loadingProfile">
                   {{
                     profile.is_followed_by_request_user
                       ? "Отписаться"
@@ -46,14 +46,16 @@
                 Редактировать профиль
               </router-link>
             </div>
-            <div class="profile-view__meta d-flex flex-column text-light gap-1">
+            <div
+              class="profile-view__meta d-flex flex-column text-light gap-1 text-start"
+            >
               <div
                 class="profile-view__name fs-6 text-light w-100 text-start"
                 v-if="
                   profile.first_name || profile.last_name || profile.middle_name
                 "
               >
-                <p class="fw-bold text-decoration-underline">Имя:</p>
+                <p class="profile-view__stat-label">Имя:</p>
                 <div class="d-flex gap-2">
                   <span v-if="profile.first_name">{{
                     profile.first_name
@@ -68,14 +70,14 @@
                 class="profile-view__bio fs-6 text-light w-100 text-start"
                 v-if="profile.bio"
               >
-                <p class="fw-bold text-decoration-underline">О себе:</p>
+                <p class="profile-view__stat-label">О себе:</p>
                 <p>{{ profile.bio }}</p>
               </div>
               <div
                 class="profile-view__stat fs-6 text-light w-100 text-start"
                 v-if="profile.university"
               >
-                <p class="fw-bold text-decoration-underline">Университет:</p>
+                <p class="profile-view__stat-label">Университет:</p>
                 <p>
                   {{
                     profile.university.name +
@@ -91,7 +93,7 @@
                 class="profile-view__stat fs-6 text-light w-100 text-start"
                 v-if="profile.major"
               >
-                <p class="fw-bold text-decoration-underline">Направление:</p>
+                <p class="profile-view__stat-label">Направление:</p>
                 <p>
                   {{ profile.major.name + " (" + profile.major.code + ")" }}
                 </p>
@@ -103,7 +105,7 @@
                     class="profile-view__link-item d-flex gap-2"
                     v-if="profile.email"
                   >
-                    <p class="fw-bold text-decoration-underline">Email:</p>
+                    <p class="profile-view__stat-label">Email:</p>
                     <span>
                       <a
                         v-if="profile.email"
@@ -117,11 +119,12 @@
                     class="profile-view__link-item d-flex gap-2"
                     v-if="profile.telegram"
                   >
-                    <p class="fw-bold text-decoration-underline">Телеграм:</p>
+                    <p class="profile-view__stat-label">Телеграм:</p>
                     <span>
                       <a
                         v-if="profile.telegram"
                         :href="profile.telegram"
+                        target="_blank"
                         class="d-inline-block text-decoration-none"
                         >{{ profile.telegram_alias }}</a
                       >
@@ -132,11 +135,12 @@
                     class="profile-view__link-item d-flex gap-2"
                     v-if="profile.vkontakte"
                   >
-                    <p class="fw-bold text-decoration-underline">ВКонтакте:</p>
+                    <p class="profile-view__stat-label">ВКонтакте:</p>
                     <span>
                       <a
                         v-if="profile.vkontakte"
                         :href="profile.vkontakte"
+                        target="_blank"
                         class="d-inline-block text-decoration-none"
                         >{{ profile.vkontakte_alias }}</a
                       >
@@ -144,14 +148,12 @@
                   </div>
                 </div>
               </div>
-              <!-- <div
-                class="profile-view__date-joined fs-6 text-secondary-xx-light w-100 text-start d-flex gap-2 flex-wrap"
+              <div
+                class="profile-view__date-joined s-6 text-light w-100 text-start"
               >
-                <p class="fw-bold text-decoration-underline">
-                  Дата регистрации:
-                </p>
+                <p class="profile-view__stat-label">Дата регистрации:</p>
                 <p>{{ profile.date_joined }}</p>
-              </div> -->
+              </div>
               <!-- <div
                 class="profile-view__date-of-birth fs-6 text-secondary-xx-light w-100 text-start d-flex gap-2"
               >
@@ -162,7 +164,7 @@
                 class="profile-view__tags fs-6 text-light w-100 text-start"
                 v-if="profile.tags && profile.tags.length > 0"
               >
-                <p class="fw-bold text-decoration-underline">Избранные теги:</p>
+                <p class="profile-view__stat-label">Избранные теги:</p>
                 <div class="d-flex gap-2 fs-6 mt-1">
                   <Tag v-for="tag in profile.tags" :key="tag.id" :tag="tag" />
                 </div>
@@ -171,7 +173,7 @@
           </div>
         </div>
 
-        <div class="profile-view__content col-9 pt-3">
+        <div class="profile-view__content col-md-9 pt-3">
           <Tabs
             nav-item-class="profile-view__tab-item nav-item"
             nav-item-active-class="profile-view__tab-item--active nav-item-active"
@@ -272,6 +274,7 @@ import Post from "@/components/Post.vue";
 import Tag from "@/components/Tag.vue";
 import type { ProfileDetailModel } from "@/models/ProfileModel";
 import ProfileDataService from "@/services/ProfileDataService";
+import router from "@/router";
 
 const store = useStore();
 
@@ -280,6 +283,7 @@ const loadingPosts = ref(true);
 const loadingFollowers = ref(true);
 const loadingFollowing = ref(true);
 const loadingToggleFollow = ref(false);
+const loadingProfile = computed(() => store.getters["profile/getLoading"]);
 
 const props = defineProps({
   username: {
@@ -296,7 +300,7 @@ watch(
 );
 
 const profile = ref<ProfileDetailModel>(store.getters["profile/getProfile"]);
-const isAuth = computed(() => profile.value.id > -1);
+const isAuth = computed(() => store.getters["profile/getProfile"].id > -1);
 const guestMode = computed(
   () => store.getters["profile/getProfile"].username != props.username
 );
@@ -382,8 +386,10 @@ const onTabChanged = (object: TabObject) => {
 
 const toggleFollow = async () => {
   loadingToggleFollow.value = true;
-  if (isAuth.value && guestMode) {
+  if (isAuth.value) {
     await ProfileDataService.followProfile(props.username);
+  } else {
+    router.push({ name: "login" });
   }
   loadingToggleFollow.value = false;
   await fetchProfile();
@@ -453,8 +459,10 @@ p {
   color: var(--secondary-xx-light);
 } */
 
-.field {
+.profile-view__stat-label {
+  color: var(--light);
   font-weight: bold;
-  /* color: var(--secondary-xx-light); */
+  text-decoration: underline;
+  text-decoration-color: var(--primary);
 }
 </style>

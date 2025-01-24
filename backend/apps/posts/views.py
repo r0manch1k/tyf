@@ -3,16 +3,15 @@ from rest_framework import viewsets
 from django.db.models import Count
 from rest_framework.decorators import action
 from django.shortcuts import get_object_or_404
-
-# from rest_framework.permissions import IsAuthenticated
-# from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework.permissions import AllowAny
 from .serializer import PostDetailSerializer, PostListSerializer
 from .models import Post
 
 
 class PostViewSet(viewsets.ViewSet):
-    # permission_classes = [IsAuthenticated]
-    # authentication_classes = [JWTAuthentication]
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [AllowAny]
 
     def list(self, request):
         queryset = Post.objects.all()

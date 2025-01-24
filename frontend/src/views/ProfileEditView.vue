@@ -4,7 +4,7 @@
       <div class="profile-edit__content row">
         <div class="profile-edit__content__left col-md-3">
           <div
-            class="profile-edit__avatar-container d-flex flex-column gap-3 p-3"
+            class="profile-edit__avatar-container d-flex flex-column gap-3 p-3 align-items-center"
           >
             <img
               :src="profileEdit.avatar"
@@ -59,7 +59,7 @@
                     >Имя</label
                   >
                   <p class="profile-edit__field-sublabel">
-                    Ваше настоящее имя (Необязательное поле)
+                    Ваше имя (Необязательное поле)
                   </p>
                   <input
                     type="text"
@@ -75,7 +75,7 @@
                     >Фамилия</label
                   >
                   <p class="profile-edit__field-sublabel">
-                    Ваша настоящая фамилия (Необязательное поле)
+                    Ваша фамилия (Необязательное поле)
                   </p>
                   <input
                     type="text"
@@ -91,7 +91,7 @@
                     >Отчество</label
                   >
                   <p class="profile-edit__field-sublabel">
-                    Ваше настоящее отчество (Необязательное поле)
+                    Ваше отчество (Необязательное поле)
                   </p>
                   <input
                     type="text"
@@ -116,7 +116,21 @@
                     :placeholder="profile.bio"
                   ></textarea>
                 </div>
-                <button type="submit" class="btn btn-submit">Сохранить</button>
+                <div class="d-flex align-items-center gap-2">
+                  <button
+                    type="submit"
+                    class="btn btn-submit text-decoration-none"
+                    :class="{
+                      'action-checked': canSave,
+                      'action-unchecked': !canSave,
+                    }"
+                    :disabled="!canSave || loadingUpdate"
+                  >
+                    <span v-if="!loadingUpdate"> Сохранить </span>
+                    <LoadingCircle v-else class="spinner-border-sm" />
+                  </button>
+                  <p class="text-alert fs-7 m-0">{{ errorMessage }}</p>
+                </div>
               </div>
               <div class="col-md-5">
                 <div class="form-group mb-3">
@@ -223,6 +237,7 @@
 </template>
 
 <script lang="ts" setup>
+import _ from "lodash";
 import { ref, onMounted, computed } from "vue";
 import { useStore } from "vuex";
 import ProfileDataService from "@/services/ProfileDataService";
@@ -230,19 +245,35 @@ import UniversityModel from "@/models/UniversityModel";
 import MajorModel from "@/models/MajorModel";
 import type { ProfileDetailModel } from "@/models/ProfileModel";
 import LoadingCircle from "@/components/LoadingCircle.vue";
+import router from "@/router";
 
 const store = useStore();
 const loading = ref(true);
+const loadingUpdate = ref(false);
+const errorMessage = ref("");
 const profile = ref<ProfileDetailModel>({
   ...store.getters["profile/getDefaultProfile"],
 });
 const profileEdit = ref<ProfileDetailModel>({ ...profile.value });
+const avatar = ref<File | null>(null);
 const universities = computed<UniversityModel[]>(
   () => store.getters["registry/getUniversities"]
 );
 const majors = computed<MajorModel[]>(
   () => store.getters["registry/getMajors"]
 );
+
+const canSave = computed(() => {
+  return !_.isEqual(profile.value, profileEdit.value);
+});
+
+function isError() {
+  return errorMessage.value !== "";
+}
+
+function clearError() {
+  errorMessage.value = "";
+}
 
 onMounted(async () => {
   loading.value = true;
@@ -255,7 +286,6 @@ onMounted(async () => {
       })
       .finally(() => {
         loading.value = false;
-        console.log(profileEdit.value);
       }),
     store.getters["registry/getUniversities"]
       ? store.dispatch("registry/fetchUniversities")
@@ -269,22 +299,50 @@ onMounted(async () => {
 });
 
 const updateProfile = async () => {
-  loading.value = true;
-  console.log(profileEdit.value);
-  for (const key in profileEdit.value) {
-    const typedKey = key as keyof typeof profileEdit.value;
-    if (profileEdit.value[typedKey] === null) {
-      profileEdit.value[typedKey] = profile.value[typedKey];
+  loadingUpdate.value = true;
+
+  clearError();
+
+  const profileEditData = { ...profileEdit.value };
+  delete profileEditData.avatar;
+
+  await Promise.all([
+    avatar.value
+      ? ProfileDataService.updateAvatar(avatar.value)
+      : Promise.resolve(),
+    ProfileDataService.updateProfile(profileEditData),
+  ]).catch((error) => {
+    if (error.data && typeof error.data === "object") {
+      for (const key in error.data) {
+        if (Object.prototype.hasOwnProperty.call(error.data, key)) {
+          errorMessage.value = `${error.data[key].join(", ")}`;
+          break;
+        }
+      }
+    } else {
+      errorMessage.value = error.data;
     }
-  }
-  Promise.all([
-    ProfileDataService.updateProfile(profileEdit.value),
-    store.dispatch("profile/fetchProfile"),
-  ]).finally(() => {
-    loading.value = false;
   });
 
-  loading.value = false;
+  if (isError()) {
+    loadingUpdate.value = false;
+    return;
+  }
+
+  await store
+    .dispatch("profile/fetchProfile")
+    .then(() => {
+      router.push({
+        name: "profile",
+        params: { username: store.getters["profile/getProfile"].username },
+      });
+    })
+    .catch((error) => {
+      errorMessage.value = error.data.detail || error.data.message;
+    })
+    .finally(() => {
+      loadingUpdate.value = false;
+    });
 };
 
 const onImageClick = () => {
@@ -305,6 +363,7 @@ const onImageInput = (event: Event) => {
       profileEdit.value.avatar = e.target?.result as string;
     };
     reader.readAsDataURL(file);
+    avatar.value = file;
   }
 };
 </script>
@@ -313,6 +372,8 @@ const onImageInput = (event: Event) => {
 .profile-edit__field-label {
   text-align: left;
   font-size: 1rem;
+  text-decoration: underline;
+  text-decoration-color: var(--primary);
 }
 
 .profile-edit__field-sublabel {
@@ -328,7 +389,7 @@ input[type="file"] {
 }
 
 .form-control {
-  background-color: var(--dark-light);
+  background-color: var(--secondary);
   color: var(--light);
   padding: 0.2rem 0.25rem;
   border: 0;
@@ -337,14 +398,14 @@ input[type="file"] {
 
 .form-control:focus,
 .form-control:active {
-  background-color: var(--dark-light);
+  background-color: var(--secondary);
   color: var(--light);
-  box-shadow: none;
+  box-shadow: 0 0 0 0.25rem var(--primary);
 }
 
 .form-control:disabled,
 .form-control:read-only {
-  background-color: var(--dark-light);
+  background-color: var(--secondary);
 }
 
 input[type="date" i]::-webkit-inner-spin-button,
@@ -363,8 +424,14 @@ input[type="date" i]::-webkit-calendar-picker-indicator {
 }
 
 .profile-edit__avatar {
-  max-width: 100%;
-  max-height: 100%;
   object-fit: cover;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1 / 1;
+}
+
+.btn-submit {
+  width: 8rem;
+  text-align: center;
 }
 </style>

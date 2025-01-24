@@ -116,15 +116,30 @@ class ProfileDataService {
   }
   async updateProfile(data: ProfileDetailModel): Promise<void> {
     const username = store.getters["profile/getProfile"].username;
-    if (username === "") {
-      return;
-    }
     await api
-      .put(`/profiles/${username}/`, data)
+      .patch(`/profiles/${username}/`, data)
       .then((response) => {
-        if (response.status === 200) {
-          console.log("ProfileDataService.ts", response.data.payload);
-        } else {
+        if (response.status != 200) {
+          return Promise.reject(response);
+        }
+      })
+      .catch((error) => {
+        return Promise.reject(error);
+      });
+  }
+
+  async updateAvatar(file: File): Promise<void> {
+    const username = store.getters["profile/getProfile"].username;
+    const data = new FormData();
+    data.append("avatar", file);
+    await api
+      .patch(`/profiles/${username}/avatar/`, data, {
+        headers: {
+          "content-type": "multipart/form-data",
+        },
+      })
+      .then((response) => {
+        if (response.status != 200) {
           return Promise.reject(response);
         }
       })
