@@ -3,7 +3,7 @@
     <div class="d-flex gap-2 align-items-center">
       <router-link :to="'/' + comment.author.username">
         <img
-          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSCpkMGWpU-ODFuq82EYaQElelh62mKO5VREQ&s"
+          :src="comment.author.avatar"
           alt="avatar"
           class="rounded-circle"
           style="width: 40px; height: 40px"

@@ -71,6 +71,7 @@ import ProfileDataService from "@/services/ProfileDataService";
 import { useStore } from "vuex";
 import { marked } from "marked";
 import { onMounted, ref, defineProps } from "vue";
+import CommentsDataService from "@/services/CommentsDataService";
 
 const props = defineProps({
   identifier: String,
@@ -84,27 +85,6 @@ const nestedComments = ref<CommentModel[]>([]);
 const profile = ref<ProfileDetailModel>({
   ...store.getters["profile/getDefaultProfile"],
 });
-
-// rewrite this
-// onMounted(async () => {
-//   if (props.identifier) {
-//     post.value = await PostDataService.getPostByIdentifier(props.identifier);
-//   } else {
-//     console.error("Identifier is undefined");
-//   }
-//
-//   if (post.value?.content) {
-//     const markdown = await marked(post.value.content);
-//     renderedContent.value = markdown;
-//   } else {
-//     renderedContent.value = "";
-//   }
-//
-//   if (post.value?.comments) {
-//     nestedComments.value = post.value.comments;
-//   }
-//   loading.value = false;
-// });
 
 onMounted(async () => {
   loading.value = true;
@@ -142,17 +122,11 @@ onMounted(async () => {
   });
 });
 
-const addComment = async () => {
-  if (props.identifier) {
-    post.value = await PostDataService.getPostByIdentifier(props.identifier);
-  } else {
-    console.error("Identifier is undefined");
-  }
-
-  if (post.value?.comments) {
-    nestedComments.value = post.value.comments;
-  }
+const addComment = (newComment: CommentModel) => {
+  newComment.author = profile.value;
+  nestedComments.value.push(newComment);
 };
+
 
 </script>
 

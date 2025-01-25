@@ -53,10 +53,12 @@ const addComment = async () => {
   };
 
   try {
-    await CommentsDataService.createComment(commentData);
-    emit("addComment");
+    const newComment = await CommentsDataService.createComment(commentData);
+    console.log("New comment created:", newComment);
+    emit("addComment", newComment);
     content.value = "";
   } catch (error) {
+    console.error("Error adding comment:", error);
   }
 };
 
