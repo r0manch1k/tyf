@@ -1,17 +1,20 @@
-import CommentModel from "@/models/CommentModel";
+import CreateCommentPayload from "@/models/CreateCommentPayload";
 import api from "@/stores/services/api";
 
 
 class CommentsDataService {
-  async createComment(postId: string, comment: { content: string; author: number }): Promise<CommentModel> {
-    console.log("Creating comment:", comment);
-    try {
-      const response = await api.post(`/posts/${postId}/comments/`, comment);
-      return response.data;
-    } catch (error) {
-      console.error("Error creating comment:", error);
-      throw error;
-    }
+  async createComment(payload: CreateCommentPayload): Promise<void> {
+    const { post } = payload;
+    await api
+      .post(`/posts/${post}/comments/`, payload)
+      .then((response) => {
+        if (response.status !== 201) {
+          return Promise.reject(response);
+        }
+      })
+      .catch((error) => {
+        return Promise.reject(error);
+      });
   }
 }
 

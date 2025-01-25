@@ -28,23 +28,39 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import CommentsDataService from "@/services/CommentsDataService";
+import { ProfileDetailModel } from "@/models/ProfileModel";
+import { onMounted, defineProps } from "vue";
+
+const props = defineProps({
+  postId: {
+    type: String,
+    default: "",
+  },
+  profile: {
+    type: Object as () => ProfileDetailModel,
+    default: () => ({}),
+  },
+})
 
 const content = ref("");
 
 const addComment = async () => {
-  const postId = "4aa7b11b";
+  console.log("Preparing to submit comment:", content.value);
   const commentData = {
+    post: props.postId, 
     content: content.value,
-    author: 1,
+    author: props.profile.id,
   };
 
   try {
-    await CommentsDataService.createComment(postId, commentData);
+    await CommentsDataService.createComment(commentData);
     console.log("Comment submitted successfully");
     content.value = "";
   } catch (error) {
     console.error("Error submitting comment:", error);
   }
 };
+
+
 
 </script>

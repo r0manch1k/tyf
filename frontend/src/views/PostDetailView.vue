@@ -29,7 +29,8 @@
           </div>
           <hr />
         </div>
-
+        <!--TODO: why we use props here instead post.ide...-->
+        <AddCommentFormVue :postId="props!.identifier" :profile="profile" />
         <div class="post-info d-flex gap-3 text-muted">
           <span class="fs-9">
             <a href="#" class="text-muted fs-9">
@@ -51,24 +52,6 @@
           ></div>
         </div>
       </div>
-      <div class="mt-5 comments-form">
-        <h3 class="fs-3 text-light text-start">Write your comment...</h3>
-        <form>
-          <div class="form-group">
-            <textarea
-              class="form-control"
-              placeholder="..."
-              required
-            ></textarea>
-          </div>
-          <button
-            class="mb-2 btn border-start-0 border-top-0 btn-outline-primary mt-2 fs-8 action-unchecked d-block"
-            type="submit"
-          >
-            Submit
-          </button>
-        </form>
-      </div>
       <h3 class="mb-4 fs-3 text-start text-light">Comments</h3>
       <CommentsList :comments="nestedComments" />
     </div>
@@ -79,9 +62,12 @@
 <script setup lang="ts">
 import CommentsList from "@/components/CommentsList.vue";
 import LoadingCircle from "@/components/LoadingCircle.vue";
+import AddCommentFormVue from "@/components/AddCommentForm.vue";
 import type CommentModel from "@/models/CommentModel";
 import type { PostDetailModel } from "@/models/PostModel";
 import PostDataService from "@/services/PostDataService";
+import { ProfileDetailModel } from "@/models/ProfileModel";
+import { useStore } from "vuex";
 import { marked } from "marked";
 import { onMounted, ref, defineProps } from "vue";
 
@@ -89,12 +75,39 @@ const props = defineProps({
   identifier: String,
 });
 
+const store = useStore();
 const post = ref<PostDetailModel | null>(null);
 const loading = ref(true);
 const renderedContent = ref<string>("");
 const nestedComments = ref<CommentModel[]>([]);
+const profile = ref<ProfileDetailModel>({
+  ...store.getters["profile/getDefaultProfile"],
+});
+
+// rewrite this
+// onMounted(async () => {
+//   if (props.identifier) {
+//     post.value = await PostDataService.getPostByIdentifier(props.identifier);
+//   } else {
+//     console.error("Identifier is undefined");
+//   }
+//
+//   if (post.value?.content) {
+//     const markdown = await marked(post.value.content);
+//     renderedContent.value = markdown;
+//   } else {
+//     renderedContent.value = "";
+//   }
+//
+//   if (post.value?.comments) {
+//     nestedComments.value = post.value.comments;
+//   }
+//   loading.value = false;
+// });
 
 onMounted(async () => {
+  loading.value = true;
+
   if (props.identifier) {
     post.value = await PostDataService.getPostByIdentifier(props.identifier);
   } else {
@@ -111,7 +124,14 @@ onMounted(async () => {
   if (post.value?.comments) {
     nestedComments.value = post.value.comments;
   }
-  loading.value = false;
+
+  await Promise.all([
+    store.dispatch("profile/fetchProfile").then(() => {
+      profile.value = store.getters["profile/getProfile"];
+    }),
+  ]).finally(() => {
+    loading.value = false;
+  })
 });
 </script>
 
