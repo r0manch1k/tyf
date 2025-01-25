@@ -12,13 +12,26 @@ import { ref } from "vue";
 // import PostDetailView from "@/views/PostDetailView.vue";
 
 interface PostListResponse {
-  results: PostListItemModel[];
+  count: number;
   next?: number;
+  results: PostListItemModel[];
+}
+
+interface PostListParams {
+  page: number;
+  query?: string;
+  search_method?: string;
+}
+
+interface PostListResult {
+  count: number;
+  posts: PostListItemModel[];
 }
 
 class PostDataService {
-  async getPosts(): Promise<PostListItemModel[]> {
+  async getPosts(query = "", searchMethod = ""): Promise<PostListResult> {
     let data: PostListResponse = {
+      count: 0,
       results: [] as PostListItemModel[],
     };
 
@@ -32,13 +45,20 @@ class PostDataService {
         store.getters["pagination/getCurrentPostsPage"]
       );
 
+      let parameters: PostListParams = { page: currentPageId.value };
+      if (query && searchMethod) {
+        parameters = {
+          ...parameters,
+          query: query,
+          search_method: searchMethod,
+        };
+      }
+
       await api
         .get("/posts/", {
-          params: {
-            page: currentPageId.value,
-          },
+          params: parameters,
         })
-        .then((response: { data: { results: PostListItemModel[] } }) => {
+        .then((response: { data: PostListResponse }) => {
           data = response.data;
 
           if (!data.next) {
@@ -47,7 +67,7 @@ class PostDataService {
         })
         .catch((error: unknown) => console.error(error));
     }
-    return data.results;
+    return { posts: data.results, count: data.count };
   }
 
   async getPostByIdentifier(identifier: string): Promise<PostDetailModel> {

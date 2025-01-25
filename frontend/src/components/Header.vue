@@ -15,7 +15,7 @@
     </a>
 
     <div class="header__search ms-4 w-100">
-      <SearchBar />
+      <SearchBar v-if="isHome"/>
     </div>
 
     <router-link
@@ -96,16 +96,18 @@ import SearchBar from "@/components/SearchBar.vue";
 import type ProfileListItemModel from "@/models/ProfileModel";
 import { computed } from "vue";
 import { useStore } from "vuex";
+import { useRoute } from "vue-router";
 
 const store = useStore();
+const route = useRoute();
 
 const loading = computed(() => store.state.profile.loading);
-
 const profile = computed<ProfileListItemModel>(
   () => store.state.profile.profile
 );
 
 const isAuth = computed(() => profile.value.id > -1);
+const isHome = computed(() => route.path === '/'); 
 </script>
 
 <style>

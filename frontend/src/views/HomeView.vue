@@ -10,6 +10,11 @@
           <div
             class="home__body__container__left__text d-flex flex-column gap-3 p-0"
           >
+            <SearchInfo
+              v-if="showSearchInfo"
+              :search-info="searchInput"
+              :results-count="resultsCount"
+            />
             <Post v-for="post in posts" :key="post.identifier" :post="post" />
             <LoadingCircle v-if="isFetching" />
           </div>
@@ -30,23 +35,29 @@
 import LoadingCircle from "@/components/LoadingCircle.vue";
 import MostActiveUsersBar from "@/components/MostActiveUsersBar.vue";
 import Post from "@/components/Post.vue";
+import SearchInfo from "@/components/SearchInfo.vue";
 import type PostListItemModel from "@/models/PostModel";
+import type SearchModel from "@/models/SearchModel";
 import PostDataService from "@/services/PostDataService";
 import TyeHighscoresBar from "@/tye_frontend/components/TyeHighscoresBar.vue";
 // import CollectionsTablist from "@/components/CollectionsTablist.vue";
 // import type CategoryModel from "@/models/CategoryModel";
 // import type CollectionModel from "@/models/CollectionModel";
-
-import { onMounted, onUnmounted, ref } from "vue";
+import { computed, onMounted, onUnmounted, ref, watch } from "vue";
 import { useStore } from "vuex";
-// import { computed } from "vue";
 
-const scrollComponent = ref<HTMLElement | null>(null);
-const posts = ref<PostListItemModel[]>([]);
-const isFetching = ref(false);
-const loading = ref(true);
 const store = useStore();
 
+const loading = ref(true);
+const resultsCount = ref(0);
+const isFetching = ref(false);
+const showSearchInfo = ref(false);
+const posts = ref<PostListItemModel[]>([]);
+const scrollComponent = ref<HTMLElement | null>(null);
+
+const searchInput = computed<SearchModel>(
+  () => store.state.pagination.searchInput
+);
 // const categories = computed<CategoryModel[]>(
 //   () => store.getters["category/getCategories"]
 // );
@@ -54,13 +65,40 @@ const store = useStore();
 //   () => store.getters["collection/getCollections"]
 // );
 
+let searchTimeout: ReturnType<typeof setTimeout> | null = null;
+
+const onSearchInputChange = () => {
+  posts.value = [];
+  showSearchInfo.value = false;
+  if (searchTimeout) {
+    clearTimeout(searchTimeout);
+  }
+
+  searchTimeout = setTimeout(() => {
+    store.commit("pagination/enablePostsFetching");
+    fetchNewPosts();
+  }, 800);
+};
+
 const fetchNewPosts = async () => {
   if (isFetching.value) return;
   isFetching.value = true;
 
   try {
-    const newPosts = await PostDataService.getPosts();
-    posts.value.push(...newPosts);
+    let response;
+    if (searchInput.value.query) {
+      response = await PostDataService.getPosts(
+        searchInput.value.query,
+        searchInput.value.method
+      );
+      resultsCount.value = response.count;
+      showSearchInfo.value = true;
+    } else {
+      response = await PostDataService.getPosts();
+      showSearchInfo.value = false;
+    }
+
+    posts.value.push(...response.posts);
   } catch (error) {
     console.error(error);
   } finally {
@@ -84,7 +122,7 @@ onMounted(async () => {
     store.dispatch("profile/fetchProfile"),
     store.dispatch("category/fetchCategories"),
     store.dispatch("collection/fetchCollections"),
-    (posts.value = await PostDataService.getPosts()),
+    (posts.value = (await PostDataService.getPosts()).posts),
   ]).then(() => {
     loading.value = false;
   });
@@ -93,6 +131,10 @@ onMounted(async () => {
 
 onUnmounted(() => {
   document.getElementById("app")?.removeEventListener("scroll", handleScroll);
+});
+
+watch(searchInput.value, () => {
+  onSearchInputChange();
 });
 </script>
 

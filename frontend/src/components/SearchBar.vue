@@ -78,13 +78,16 @@
 
 <script lang="ts" setup>
 import { onBeforeUnmount, onMounted, ref, watch } from "vue";
+import { useStore } from "vuex";
 
 const BASE_COLOR = "#F2F2F2 !important";
 const KEYWORD_COLOR = "#ADF0FF !important";
 
+const store = useStore();
+
 const inputText = ref("");
-const inputTextStyle = ref({ color: BASE_COLOR });
 const isExpanded = ref(false);
+const inputTextStyle = ref({ color: BASE_COLOR });
 const inputComponent = ref<HTMLElement>();
 const container = ref<HTMLElement>();
 
@@ -108,17 +111,52 @@ const applyFilterSearch = (event: MouseEvent) => {
 const highlightKeywords = () => {
   if (inputText.value.includes(" ")) {
     inputTextStyle.value.color = BASE_COLOR;
+    store.dispatch("pagination/updateSearchInput", {
+      query: inputText.value,
+      method: "full",
+    });
   } else {
-    if (
-      inputText.value.toLowerCase().startsWith("тег:") ||
-      inputText.value.toLowerCase().startsWith("категория:") ||
-      inputText.value.toLowerCase().startsWith("коллекция:") ||
-      inputText.value.toLowerCase().startsWith("автор:") ||
-      inputText.value.toLowerCase().startsWith("заголовок:")
-    ) {
+    if (inputText.value.toLowerCase().startsWith("тег:")) {
       inputTextStyle.value.color = KEYWORD_COLOR;
+      store.dispatch("pagination/updateSearchInput", {
+        query: inputText.value.substring("тег:".length).trim(),
+        method: "tag",
+      });
+
+    } else if (inputText.value.toLowerCase().startsWith("категория:")) {
+      inputTextStyle.value.color = KEYWORD_COLOR;
+      store.dispatch("pagination/updateSearchInput", {
+        query: inputText.value.substring("категория:".length).trim(),
+        method: "category",
+      });
+
+    } else if (inputText.value.toLowerCase().startsWith("коллекция:")) {
+      inputTextStyle.value.color = KEYWORD_COLOR;
+      store.dispatch("pagination/updateSearchInput", {
+        query: inputText.value.substring("коллекция:".length).trim(),
+        method: "collection",
+      });
+
+    } else if (inputText.value.toLowerCase().startsWith("автор:")) {
+      inputTextStyle.value.color = KEYWORD_COLOR;
+      store.dispatch("pagination/updateSearchInput", {
+        query: inputText.value.substring("автор:".length).trim(),
+        method: "author",
+      });
+
+    } else if (inputText.value.toLowerCase().startsWith("заголовок:")) {
+      inputTextStyle.value.color = KEYWORD_COLOR;
+      store.dispatch("pagination/updateSearchInput", {
+        query: inputText.value.substring("заголовок:".length).trim(),
+        method: "title",
+      });
+
     } else {
       inputTextStyle.value.color = BASE_COLOR;
+      store.dispatch("pagination/updateSearchInput", {
+        query: inputText.value,
+        method: "full",
+      });
     }
   }
 };
@@ -161,7 +199,7 @@ onBeforeUnmount(() => {
 .header__search-input:focus {
   color: var(--light) !important;
   background-color: var(--dark-light) !important;
-  outline: var(--primary) solid 0.1em !important;
+  outline: var(--primary) solid 1px !important;
 }
 
 input[type="search"]::-webkit-search-cancel-button {
