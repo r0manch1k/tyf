@@ -1,10 +1,11 @@
 <template>
   <div class="mt-5">
-    <form>
+    <form @submit.prevent="addComment">
       <fieldset>
         <div class="mb-3">
           <label for="create-comment" class="form-label">Your Comment</label>
           <textarea
+            v-model="content"
             id="create-comment"
             class="form-control"
             rows="3"
@@ -24,4 +25,40 @@
 
 <style></style>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { ref } from "vue";
+import CommentsDataService from "@/services/CommentsDataService";
+import { ProfileDetailModel } from "@/models/ProfileModel";
+import { onMounted, defineProps } from "vue";
+
+const props = defineProps({
+  postId: {
+    type: String,
+    default: "",
+  },
+  profile: {
+    type: Object as () => ProfileDetailModel,
+    default: () => ({}),
+  },
+})
+
+const content = ref("");
+const emit = defineEmits(["addComment"]);
+
+const addComment = async () => {
+  console.log("Preparing to submit comment:", content.value);
+  const commentData = {
+    post: props.postId, 
+    content: content.value,
+  };
+
+  try {
+    const newComment = await CommentsDataService.createComment(commentData);
+    console.log("New comment created:", newComment);
+    emit("addComment", newComment);
+    content.value = "";
+  } catch (error) {
+    console.error("Error adding comment:", error);
+  }
+};
+</script>

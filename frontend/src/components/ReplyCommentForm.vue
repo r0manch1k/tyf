@@ -1,9 +1,10 @@
 <template>
-  <form id="reply-form" class="d-none mt-4">
+  <form id="reply-form" class="mt-4" @submit.prevent="submitReply">
     <fieldset>
       <div class="mb-3">
         <label for="reply-comment" class="form-label">Your Reply</label>
         <textarea
+          v-model="replyContent"
           id="reply-comment"
           class="form-control"
           rows="3"
@@ -22,4 +23,40 @@
 
 <style></style>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import CommentsDataService from "@/services/CommentsDataService";
+import { defineProps } from "vue";
+import { ref } from "vue";
+
+const replyContent = ref("");
+
+
+
+// add ComentModel
+const props = defineProps({
+  comment: {
+    type: Object,
+    default: () => ({}),
+  },
+});
+
+const emit = defineEmits();
+
+
+async function submitReply() {
+  console.log("Preparing to submit reply...");
+  const replyData = {
+    post: props.comment.post,
+    content: replyContent.value, 
+    parent: props.comment.identifier,
+  };
+
+  try {
+    const newReply = await CommentsDataService.createReply(replyData);
+    console.log("Reply submitted:", newReply);
+    emit("submitReply", newReply);
+  } catch (error) {
+    console.error("Error submitting reply:", error);
+  }
+}
+</script>
