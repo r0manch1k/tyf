@@ -67,6 +67,7 @@ import type CommentModel from "@/models/CommentModel";
 import type { PostDetailModel } from "@/models/PostModel";
 import PostDataService from "@/services/PostDataService";
 import { ProfileDetailModel } from "@/models/ProfileModel";
+import ProfileDataService from "@/services/ProfileDataService";
 import { useStore } from "vuex";
 import { marked } from "marked";
 import { onMounted, ref, defineProps } from "vue";
@@ -122,7 +123,14 @@ onMounted(async () => {
   }
 
   if (post.value?.comments) {
-    nestedComments.value = post.value.comments;
+    nestedComments.value = await Promise.all(
+      post.value.comments.map(async (comment: any) => {
+        const author = await ProfileDataService.getProfileByUsername(
+          comment.author
+        );
+        return { ...comment, author };
+      })
+    );
   }
 
   await Promise.all([
@@ -131,7 +139,7 @@ onMounted(async () => {
     }),
   ]).finally(() => {
     loading.value = false;
-  })
+  });
 });
 </script>
 

@@ -91,6 +91,7 @@ class CommentSerializer(serializers.ModelSerializer):
     replies = RecursiveSerializer(many=True, read_only=True)
     post = serializers.SerializerMethodField()
     author = serializers.SerializerMethodField()
+    author = serializers.SlugRelatedField(slug_field="username", read_only=True)
     # author = serializers.PrimaryKeyRelatedField(queryset=Profile.objects.all(), write_only=True)
 
     created_at = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", read_only=True)
@@ -117,11 +118,11 @@ class CommentSerializer(serializers.ModelSerializer):
         return obj.post.identifier
 
     def get_author(self, obj):
-        return obj.author.id
+        return obj.author.username
 
     def to_representation(self, instance):
         response = super().to_representation(instance)
-        response["author"] = instance.author.id
+        response["author"] = instance.author.username
         return response
 
     def create(self, validated_data):

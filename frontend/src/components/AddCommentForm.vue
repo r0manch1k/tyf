@@ -49,7 +49,6 @@ const addComment = async () => {
   const commentData = {
     post: props.postId, 
     content: content.value,
-    author: props.profile.id,
   };
 
   try {

@@ -1,7 +1,7 @@
 <template>
   <div class="comment p-3">
     <div class="d-flex gap-2 align-items-center">
-      <router-link :to="'/profile/' + comment.author.username">
+      <router-link :to="'/' + comment.author.username">
         <img
           src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSCpkMGWpU-ODFuq82EYaQElelh62mKO5VREQ&s"
           alt="avatar"
@@ -11,10 +11,10 @@
       </router-link>
       <div class="d-flex flex-column text-start">
         <router-link
-          :to="'/profile/' + comment.author.username"
+          :to="'/' + comment.author.username"
           class="text-light"
         >
-          Username
+          {{ comment.author.username }}
         </router-link>
         <span class="text-muted fs-9">{{ comment.created_at }}</span>
       </div>

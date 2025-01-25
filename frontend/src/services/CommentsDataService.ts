@@ -4,9 +4,10 @@ import api from "@/stores/services/api";
 
 class CommentsDataService {
   async createComment(payload: CreateCommentPayload): Promise<void> {
-    const { post } = payload;
+    const { post, ...rest } = payload;
+    console.log("CommentsDataService.createComment", post, rest);
     await api
-      .post(`/posts/${post}/comments/`, payload)
+      .post(`/posts/${post}/comments/`, rest)
       .then((response) => {
         if (response.status !== 201) {
           return Promise.reject(response);
