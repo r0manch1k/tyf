@@ -15,18 +15,14 @@
     </a>
 
     <div class="header__search ms-4 w-100">
-      <input
-        class="header__search-input form-control fs-6 bg-dark-light border-0"
-        type="search"
-        placeholder="Поиск"
-      />
+      <SearchBar />
     </div>
 
     <router-link
       :to="{ name: 'home' }"
       class="header__create-button btn-light fs-6 ms-4"
       v-if="isAuth && !loading"
-    >Создать</router-link
+      >Создать</router-link
     >
 
     <!-- <router-link
@@ -62,7 +58,7 @@
           v-if="!isAuth && !loading"
           class="header__profile-img btn-light fs-6"
           :to="{ name: 'login' }"
-        >Вход</router-link
+          >Вход</router-link
         >
 
         <div
@@ -72,21 +68,21 @@
             v-if="isAuth"
             :to="{ name: 'profile', params: { username: profile.username } }"
             class="header__profile-button dropdown-item"
-          >Профиль</router-link
+            >Профиль</router-link
           >
 
           <router-link
             v-if="!isAuth"
             :to="{ name: 'login' }"
             class="header__login-button dropdown-item"
-          >Вход</router-link
+            >Вход</router-link
           >
 
           <router-link
             v-if="isAuth"
             :to="{ name: 'logout' }"
             class="header__login-button dropdown-item"
-          >Выйти</router-link
+            >Выйти</router-link
           >
         </div>
       </div>
@@ -96,6 +92,7 @@
 
 <script setup lang="ts">
 import LoadingCircle from "@/components/LoadingCircle.vue";
+import SearchBar from "@/components/SearchBar.vue";
 import type ProfileListItemModel from "@/models/ProfileModel";
 import { computed } from "vue";
 import { useStore } from "vuex";

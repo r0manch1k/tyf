@@ -10,7 +10,7 @@ urlpatterns = [
     path("api/v1/", include("apps.users.urls")),
     path("api/v1/", include("apps.profiles.urls")),
     path("api/v1/", include("apps.categories.urls")),
-    path("api/v1/", include("apps.collections_.urls")),
+    path("api/v1/", include("apps.collections.urls")),
     path("api/v1/", include("apps.posts.urls")),
     path("api/v1/", include("apps.comments.urls")),
     path("api/v1/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),

@@ -4,7 +4,7 @@ from apps.categories.serializer import CategorySerializer
 from apps.media.serializer import MediaSerializer
 from apps.comments.serializer import CommentSerializer
 from apps.tags.serializer import TagSerializer
-from apps.collections_.serializer import CollectionSerializer
+from apps.collections.serializer import CollectionSerializer
 from apps.profiles.serializer import ProfileListSerializer
 from tyf import settings
 

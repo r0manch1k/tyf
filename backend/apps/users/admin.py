@@ -11,7 +11,6 @@ class UserAdmin(BaseUserAdmin):
 
     list_display = [
         "email",
-        "otp",
         "is_staff",
         "is_active",
     ]

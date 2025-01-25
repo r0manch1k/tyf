@@ -3,10 +3,9 @@ import os.path
 
 from apps.registry.models import University, Major
 from apps.categories.models import Category
-from apps.collections_.models import Collection
+from apps.collections.models import Collection
 
-# make shell-dev
-# exec(open("apps/utils/loadData.py").read())
+# docker-compose -f ./.docker/docker-compose.dev.yml exec backend bash -c "cd backend && python manage.py shell -c 'exec(open(\"apps/utils/loadData.py\").read())'"
 
 with open(os.path.abspath("apps/utils/data/universities_Russia.csv")) as f:
     reader = csv.reader(f)

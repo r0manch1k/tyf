@@ -9,6 +9,7 @@
     </div>
     <Footer />
   </div>
+  <NotFoundView v-else-if="isError" />
   <LoginView v-else-if="isLogin" />
   <RegisterView v-else-if="isRegister" />
   <ResetPasswordView v-else-if="isResetPassword" />
@@ -75,10 +76,13 @@ onMounted(async () => {
   text-align: center;
   height: 100vh;
   width: 100vw;
+  display: flex; /* Создаем гибкую структуру */
+  flex-direction: column; /* Располагаем элементы вертикально */
+  min-height: 100vh;
 }
 
 #app::-webkit-scrollbar {
-    display: none;
+  display: none;
 }
 
 .main__content {

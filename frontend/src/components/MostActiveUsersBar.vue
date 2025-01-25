@@ -28,7 +28,9 @@
       </table>
     </div>
   </div>
-  <LoadingCircle v-else />
+  <div v-else class="media-container">
+    <LoadingCircle />
+  </div>
 </template>
 
 <script setup lang="ts">

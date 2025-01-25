@@ -22,11 +22,9 @@ class VerificationPermissions(BasePermission):
         try:
             user = User.objects.get(pk=force_str(urlsafe_base64_decode(uid)))
         except (TypeError, ValueError, OverflowError, User.DoesNotExist, BaseException):
-            print("0")
             return False
 
         if not incoming_token:
-            print("1")
             return False
 
         try:
@@ -34,14 +32,13 @@ class VerificationPermissions(BasePermission):
                 token=getHash(f"{incoming_token}-{remote_addr}-{user.email}")
             )
             if cache.get(redis_key) is None:
-                print("2")
                 return False
         except BaseException:
             return False
+
         try:
             redis_data = cache.get(redis_key)
             if not AccountActivationToken.check_token(user, redis_data["user_token"]):
-                print("3")
                 return False
         except BaseException:
             return False

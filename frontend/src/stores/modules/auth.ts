@@ -4,6 +4,7 @@ import { ActionTree, GetterTree, MutationTree } from "vuex";
 class State {
   login = false;
   loading = false;
+  showMessage = false;
   message: MessageModel = {
     text: "",
     type: "",
@@ -14,6 +15,7 @@ const getters: GetterTree<State, unknown> = {
   getLogin: (state) => state.login,
   getLoading: (state) => state.loading,
   getMessage: (state) => state.message,
+  getShowMessage: (state) => state.showMessage,
 };
 
 const mutations: MutationTree<State> = {
@@ -22,6 +24,9 @@ const mutations: MutationTree<State> = {
   },
   setLoading: (state, payload: boolean) => {
     state.loading = payload;
+  },
+  setShowMessage: (state, payload: boolean) => {
+    state.showMessage = payload;
   },
   setMessage(state, message) {
     state.message.text = message.text;

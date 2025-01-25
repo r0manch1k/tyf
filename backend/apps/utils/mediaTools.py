@@ -10,7 +10,11 @@ def generate_uuid(length=8, klass=None):
     UUID = str(uuid.uuid4())
     length = min(length, len(UUID))
     if klass:
-        while klass.objects.filter(identifier=UUID[:length]).exists():
+        if klass.__name__ == "Post":
+            klass = klass.manager
+        else:
+            klass = klass.objects
+        while klass.filter(identifier=UUID[:length]).exists():
             UUID = str(uuid.uuid4())
     return UUID[:length]
 
