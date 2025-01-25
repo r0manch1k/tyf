@@ -5,6 +5,7 @@ from corsheaders.defaults import default_headers
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+
 SECRET_KEY = os.getenv("SECRET_KEY")
 DEBUG = int(os.getenv("DEBUG", default=0))
 ALLOWED_HOSTS = ["*"]
@@ -48,7 +49,23 @@ CORS_ALLOWED_ORIGINS = [
 
 AUTH_USER_MODEL = "users.User"
 
+# Daphne
+ASGI_APPLICATION = "tyf.asgi.application"
+
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [os.getenv("REDIS_LOCATION")],
+        },
+    },
+}
+
 INSTALLED_APPS = [
+    "daphne",
+    "channels",
+    "channels_redis",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -60,6 +77,7 @@ INSTALLED_APPS = [
     "rest_framework_api_key",
     "rest_framework_simplejwt",
     "rest_framework_simplejwt.token_blacklist",
+    "apps.celery_app",
     "apps.users",
     "apps.profiles",
     "apps.registry",
@@ -70,6 +88,8 @@ INSTALLED_APPS = [
     "apps.comments",
     "apps.media",
     "apps.follows",
+    "apps.chats",
+    "apps.notifications",
     "django_select2",
     "mdeditor",
 ]
@@ -116,7 +136,7 @@ TEMPLATES = [
 ]
 
 
-WSGI_APPLICATION = "tyf.wsgi.application"
+# WSGI_APPLICATION = "tyf.wsgi.application"
 
 
 DATABASES = {
@@ -154,7 +174,12 @@ CACHES = {
 
 CELERY_BROKER_URL = os.getenv("REDIS_LOCATION")
 CELERY_RESULT_BACKEND = os.getenv("REDIS_LOCATION")
+CELERY_ACCEPT_CONTENT = ["application/json"]
+CELERY_TASK_SERIALIZER = "json"
+CELERY_RESULT_SERIALIZER = "json"
 
+# CELERY_broker_url = "amqp://myuser:mypassword@localhost:5672/myvhost"
+# result_backend = "redis://localhost:6379"
 
 AUTH_PASSWORD_VALIDATORS = [
     {

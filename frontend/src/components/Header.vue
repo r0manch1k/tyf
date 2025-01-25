@@ -29,18 +29,12 @@
       >Создать</router-link
     >
 
-    <!-- <router-link
-      :to="{ name: 'home' }"
-      class="header__notifications-button btn-light fs-6 ms-4"
-      >Notifications(10)</router-link
-    > -->
-
-    <!-- <a
-      href="notifications"
-      class="header__notifications-button btn-light fs-5 ms-4"
-      v-if="isAuth"
-      ><i class="bi bi-bell"></i
-    ></a> -->
+    <router-link
+      :to="{ name: 'messages' }"
+      class="header__messages-button btn-light fs-6 ms-4"
+      v-if="isAuth && !loading"
+      >Сообщения</router-link
+    >
 
     <div class="header__dropdown-container navbar-nav align-items-center ms-0">
       <div class="header__profile-container nav-item dropdown ms-4">

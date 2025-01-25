@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import Follow
-from apps.profiles.serializer import ProfileListSerializer
+from apps.profiles.serializers import ProfileListSerializer
 
 
 class FollowSerializer(serializers.ModelSerializer):

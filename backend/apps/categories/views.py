@@ -6,7 +6,7 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.permissions import AllowAny
 
 # from rest_framework.decorators import action
-from .serializer import CategorySerializer
+from .serializers import CategorySerializer
 from .models import Category
 
 

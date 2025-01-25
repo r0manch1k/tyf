@@ -41,6 +41,9 @@ const getters: GetterTree<State, unknown> = {
   getProfile: (state) => state.profile,
   getLoading: (state) => state.loading,
   getDefaultProfile: () => new State().profile,
+  getIsAuth: (state) =>
+    (state.profile && state.profile.id > 0) ||
+    localStorage.getItem("accessToken") !== "",
 };
 
 const mutations: MutationTree<State> = {

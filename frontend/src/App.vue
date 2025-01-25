@@ -55,7 +55,28 @@ const isHome = computed(
 
 onMounted(async () => {
   await store.dispatch("profile/fetchProfile");
+  connectWebsocket();
 });
+
+function connectWebsocket() {
+  const websocket = new WebSocket("ws://localhost:8000/ws/notifications/");
+
+  websocket.onmessage = (event) => {
+    console.log(event);
+  };
+
+  websocket.onopen = () => {
+    console.log("Connected to the websocket");
+  };
+
+  websocket.onclose = () => {
+    console.log("Disconnected from the websocket");
+
+    setTimeout(() => {
+      connectWebsocket();
+    }, 1000);
+  };
+}
 </script>
 
 <style>

@@ -36,7 +36,6 @@ onMounted(() => {
     link_line_width = 0.8,
     dis_limit = 260,
     // add_mouse_point = true,
-    mouse_in = false,
     mouse_ball = {
       x: 0,
       y: 0,
@@ -246,11 +245,9 @@ onMounted(() => {
   goMovie();
 
   canvas.addEventListener("mouseenter", function () {
-    mouse_in = true;
     balls.push(mouse_ball);
   });
   canvas.addEventListener("mouseleave", function () {
-    mouse_in = false;
     var new_balls = [];
     Array.prototype.forEach.call(balls, function (b) {
       if (!Object.prototype.hasOwnProperty.call(b, "type")) {

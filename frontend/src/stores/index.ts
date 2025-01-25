@@ -4,6 +4,7 @@ import collection from "@/stores/modules/collection";
 import error from "@/stores/modules/error";
 import profile from "@/stores/modules/profile";
 import registry from "@/stores/modules/registry";
+import chat from "@/stores/modules/chat";
 import { createStore } from "vuex";
 
 export default createStore({
@@ -18,5 +19,6 @@ export default createStore({
     category,
     auth,
     registry,
+    chat,
   },
 });
