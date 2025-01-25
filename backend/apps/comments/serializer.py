@@ -87,15 +87,17 @@ class RecursiveSerializer(serializers.Serializer):
 #             "replies",
 #         ]
 class CommentSerializer(serializers.ModelSerializer):
+    print("CommentSerializer")
     media = MediaSerializer(many=True, read_only=True)
     replies = RecursiveSerializer(many=True, read_only=True)
     post = serializers.SerializerMethodField()
-    author = serializers.SerializerMethodField()
+    # author = serializers.SerializerMethodField()
     author = serializers.SlugRelatedField(slug_field="username", read_only=True)
     # author = serializers.PrimaryKeyRelatedField(queryset=Profile.objects.all(), write_only=True)
 
     created_at = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", read_only=True)
     updated_at = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", read_only=True)
+    parent = serializers.CharField(required=False, allow_null=True)
 
     class Meta:
         model = Comment
@@ -121,11 +123,14 @@ class CommentSerializer(serializers.ModelSerializer):
         return obj.author.username
 
     def to_representation(self, instance):
+        print(f"Representing comment: {instance}")
         response = super().to_representation(instance)
         response["author"] = instance.author.username
+        response["parent"] = instance.parent.identifier if instance.parent else None
         return response
 
     def create(self, validated_data):
+        print("create start")
         post = validated_data.pop("post")
         author = validated_data.pop("author", None)
 
@@ -135,10 +140,19 @@ class CommentSerializer(serializers.ModelSerializer):
         if not isinstance(author, Profile):
             raise ValueError("Invalid author provided")
 
-        parent = validated_data.pop("parent", None)
+        parent_identifier = validated_data.get("parent", None)
+        parent = None
+        if parent_identifier:
+            if isinstance(parent_identifier, str):
+                parent = Comment.objects.get(identifier=parent_identifier)
+                validated_data["parent"] = parent
+            else:
+                raise serializers.ValidationError("Parent identifier must be a string.")
+        print(f"Parent in create: {parent}")
+
         media = validated_data.pop("media", [])
 
-        comment = Comment.objects.create(post=post, author=author, parent=parent, **validated_data)
+        comment = Comment.objects.create(post=post, author=author, **validated_data)
 
         if media:
             comment.media.add(*media)

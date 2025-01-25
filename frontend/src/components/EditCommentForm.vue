@@ -24,9 +24,10 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import CommentsDataService from "@/services/CommentsDataService";
+import { defineProps, defineEmits } from "vue";
 
 const content = ref("");
-// const emit = defineEmits(["updateComment"]);
+const emit = defineEmits(["updateComment"]);
 const props = defineProps(
   {
     postId: {
@@ -49,9 +50,9 @@ const updateComment = async () => {
   };
 
   try {
-    const updatedComment = await CommentsDataService.updateCommentByIdentifier(props.comment.identifier, commentData);
+    const updatedComment = await CommentsDataService.updateCommentByIdentifier(props.comment.identifier, commentData); 
     console.log("Comment updated:", updatedComment);
-    // emit("updateComment", updatedComment);
+    emit("updateComment", updatedComment);
     content.value = "";
   } catch (error) {
     console.error("Error updating comment:", error);

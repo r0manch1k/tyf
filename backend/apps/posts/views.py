@@ -67,6 +67,7 @@ class PostViewSet(viewsets.ViewSet):
         authentication_classes=[JWTAuthentication],
     )
     def comment(self, request, pk=None):
+        print(f"Request data: {request.data}")
         if not request:
             return Response({"detail": "You need to login to comment."}, status=401)
 
@@ -75,6 +76,9 @@ class PostViewSet(viewsets.ViewSet):
             data=request.data,
             context={"request": request},
         )
+        if not serializer.is_valid():
+            print(f"Invalid data: {serializer.errors}")  # Печатаем ошибки
+            return Response(serializer.errors, status=400)
         serializer.is_valid(raise_exception=True)
         serializer.save(post=post)
         return Response(serializer.data, status=201)

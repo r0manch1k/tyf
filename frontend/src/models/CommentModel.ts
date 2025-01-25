@@ -12,6 +12,6 @@ export default interface CommentModel {
   media: MediaModel;
   post: PostModel;
   author: ProfileModel;
-  parent: number;
+  parent: string; 
   replies: CommentModel[];
 }

@@ -30,7 +30,11 @@
           <hr />
         </div>
         <!--TODO: why we use props here instead post.ide...-->
-        <AddCommentFormVue :postId="props!.identifier" :profile="profile" @addComment="addComment" /> 
+        <AddCommentFormVue
+          :postId="props!.identifier"
+          :profile="profile"
+          @addComment="addComment"
+        />
         <div class="post-info d-flex gap-3 text-muted">
           <span class="fs-9">
             <a href="#" class="text-muted fs-9">
@@ -63,6 +67,7 @@
 import CommentsList from "@/components/CommentsList.vue";
 import LoadingCircle from "@/components/LoadingCircle.vue";
 import AddCommentFormVue from "@/components/AddCommentForm.vue";
+import ReplyCommentForm from "@/components/ReplyCommentForm.vue";
 import type CommentModel from "@/models/CommentModel";
 import type { PostDetailModel } from "@/models/PostModel";
 import PostDataService from "@/services/PostDataService";
@@ -86,6 +91,19 @@ const profile = ref<ProfileDetailModel>({
   ...store.getters["profile/getDefaultProfile"],
 });
 
+const fetchCommentWithAuthors = async (comment: any) => {
+  const author = await ProfileDataService.getProfileByUsername(comment.author);
+
+  const repliesWithAuthors = await Promise.all(
+    comment.replies.map(async (reply: any) => {
+      const replyWithAuthor = await fetchCommentWithAuthors(reply);
+      return { ...replyWithAuthor };
+    })
+  );
+
+  return { ...comment, author, replies: repliesWithAuthors };
+};
+
 onMounted(async () => {
   loading.value = true;
 
@@ -105,10 +123,7 @@ onMounted(async () => {
   if (post.value?.comments) {
     nestedComments.value = await Promise.all(
       post.value.comments.map(async (comment: any) => {
-        const author = await ProfileDataService.getProfileByUsername(
-          comment.author
-        );
-        return { ...comment, author };
+        return await fetchCommentWithAuthors(comment);
       })
     );
   }
@@ -126,7 +141,6 @@ const addComment = (newComment: CommentModel) => {
   newComment.author = profile.value;
   nestedComments.value.push(newComment);
 };
-
 
 </script>
 

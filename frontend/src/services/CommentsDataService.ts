@@ -70,6 +70,27 @@ class CommentsDataService {
         return Promise.reject(error);
       });
   }
+
+  async createReply(payload: CommentPayload): Promise<any> {
+    const { post, ...rest } = payload;
+    console.log("CommentsDataService.createReply", post, rest);
+
+    return api
+      .post(`/posts/${post}/comments/`, rest)
+      .then((response) => {
+        if (response.status === 201) {
+          return response.data;
+        } else {
+          return Promise.reject(
+            `Unexpected response status: ${response.status}`
+          );
+        }
+      })
+      .catch((error) => {
+        console.error("Error creating reply:", error);
+        return Promise.reject(error);
+      });
+  }
 }
 
 export default new CommentsDataService();

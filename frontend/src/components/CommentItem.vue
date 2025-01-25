@@ -29,11 +29,12 @@
       <!--   v-if="profile.username === comment.author.username" -->
       <!--   >edit</button> -->
       <EditCommentForm :comment="comment" /> 
+      <ReplyCommentForm :comment="comment" @submitReply="addReply" /> 
     </div>
     <p class="text-light mt-2 text-start">{{ comment.content }}</p>
     <div v-if="comment.replies.length > 0" class="nested-comments ms-4">
       <div v-for="reply in comment.replies" :key="reply.identifier">
-        <CommentItem :comment="reply" :profile="profile" @deleteComment="deleteComment" /> 
+        <CommentItem :comment="reply" :profile="profile" @addReply="addReply" /> 
       </div>
     </div>
   </div>
@@ -45,6 +46,7 @@ import type CommentModel from "@/models/CommentModel";
 import CommentsDataService from "@/services/CommentsDataService";
 import ProfileModel from "@/models/ProfileModel";
 import EditCommentForm from "@/components/EditCommentForm.vue";
+import ReplyCommentForm from "@/components/ReplyCommentForm.vue";
 
 
 const props = defineProps<{
@@ -59,7 +61,10 @@ const deleteComment = async () => {
   emit("deleteComment", props.comment.identifier); 
 };
 
-
+const addReply = (reply: CommentModel) => {
+  reply.author = props.profile;
+  props.comment.replies.push(reply);
+};
 
 
 </script>
