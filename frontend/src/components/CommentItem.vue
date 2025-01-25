@@ -20,14 +20,20 @@
       </div>
       <button
         class="btn btn-danger btn-sm ms-auto"
+        v-if="profile.username === comment.author.username"
         @click="deleteComment"
         >delete</button>
+      <!-- Edit -->
+      <!-- <button -->
+      <!--   class="btn btn-warning btn-sm ms-2" -->
+      <!--   v-if="profile.username === comment.author.username" -->
+      <!--   >edit</button> -->
+      <EditCommentForm :comment="comment" /> 
     </div>
     <p class="text-light mt-2 text-start">{{ comment.content }}</p>
-
     <div v-if="comment.replies.length > 0" class="nested-comments ms-4">
       <div v-for="reply in comment.replies" :key="reply.identifier">
-        <CommentItem :comment="reply" />
+        <CommentItem :comment="reply" :profile="profile" @deleteComment="deleteComment" /> 
       </div>
     </div>
   </div>
@@ -37,10 +43,13 @@
 import { defineProps } from "vue";
 import type CommentModel from "@/models/CommentModel";
 import CommentsDataService from "@/services/CommentsDataService";
+import ProfileModel from "@/models/ProfileModel";
+import EditCommentForm from "@/components/EditCommentForm.vue";
 
 
 const props = defineProps<{
   comment: CommentModel;
+  profile: ProfileModel;
 }>();
 
 const emit = defineEmits();
@@ -49,6 +58,9 @@ const deleteComment = async () => {
   await CommentsDataService.deleteCommentByIdentifier(props.comment.identifier);
   emit("deleteComment", props.comment.identifier); 
 };
+
+
+
 
 </script>
 

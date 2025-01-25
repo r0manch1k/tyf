@@ -53,7 +53,7 @@
         </div>
       </div>
       <h3 class="mb-4 fs-3 text-start text-light">Comments</h3>
-      <CommentsList :comments="nestedComments" />
+      <CommentsList :comments="nestedComments" :profile="profile" /> 
     </div>
   </div>
   <LoadingCircle v-else />

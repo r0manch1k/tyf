@@ -61,7 +61,4 @@ const addComment = async () => {
     console.error("Error adding comment:", error);
   }
 };
-
-
-
 </script>

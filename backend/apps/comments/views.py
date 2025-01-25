@@ -34,3 +34,12 @@ class CommentViewSet(viewsets.ViewSet):
             raise PermissionDenied("You can't delete this comment.")
         comment.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+    def partial_update(self, request, pk=None):
+        comment = Comment.objects.get(identifier=pk)
+        if comment.author.id != request.user.profile.id:
+            raise PermissionDenied("You can't update this comment.")
+        serializer = CommentSerializer(comment, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
