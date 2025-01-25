@@ -17,6 +17,19 @@ class CommentsDataService {
         return Promise.reject(error);
       });
   }
+
+  async deleteCommentByIdentifier(identifier: string): Promise<void> {
+    await api
+      .delete(`/comments/${identifier}/`)
+      .then((response) => {
+        if (response.status !== 204) {
+          return Promise.reject(response);
+        }
+      })
+      .catch((error) => {
+        return Promise.reject(error);
+      });
+  }
 }
 
 export default new CommentsDataService();

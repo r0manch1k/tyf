@@ -43,6 +43,7 @@ const props = defineProps({
 })
 
 const content = ref("");
+const emit = defineEmits(["addComment"]);
 
 const addComment = async () => {
   console.log("Preparing to submit comment:", content.value);
@@ -53,10 +54,9 @@ const addComment = async () => {
 
   try {
     await CommentsDataService.createComment(commentData);
-    console.log("Comment submitted successfully");
+    emit("addComment");
     content.value = "";
   } catch (error) {
-    console.error("Error submitting comment:", error);
   }
 };
 

@@ -30,7 +30,7 @@
           <hr />
         </div>
         <!--TODO: why we use props here instead post.ide...-->
-        <AddCommentFormVue :postId="props!.identifier" :profile="profile" />
+        <AddCommentFormVue :postId="props!.identifier" :profile="profile" @addComment="addComment" /> 
         <div class="post-info d-flex gap-3 text-muted">
           <span class="fs-9">
             <a href="#" class="text-muted fs-9">
@@ -141,6 +141,19 @@ onMounted(async () => {
     loading.value = false;
   });
 });
+
+const addComment = async () => {
+  if (props.identifier) {
+    post.value = await PostDataService.getPostByIdentifier(props.identifier);
+  } else {
+    console.error("Identifier is undefined");
+  }
+
+  if (post.value?.comments) {
+    nestedComments.value = post.value.comments;
+  }
+};
+
 </script>
 
 <style>

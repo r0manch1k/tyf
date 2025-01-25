@@ -18,6 +18,10 @@
         </router-link>
         <span class="text-muted fs-9">{{ comment.created_at }}</span>
       </div>
+      <button
+        class="btn btn-danger btn-sm ms-auto"
+        @click="deleteComment"
+        >delete</button>
     </div>
     <p class="text-light mt-2 text-start">{{ comment.content }}</p>
 
@@ -32,10 +36,20 @@
 <script setup lang="ts">
 import { defineProps } from "vue";
 import type CommentModel from "@/models/CommentModel";
+import CommentsDataService from "@/services/CommentsDataService";
 
-defineProps<{
+
+const props = defineProps<{
   comment: CommentModel;
 }>();
+
+const emit = defineEmits();
+
+const deleteComment = async () => {
+  await CommentsDataService.deleteCommentByIdentifier(props.comment.identifier);
+  emit("deleteComment", props.comment.identifier); 
+};
+
 </script>
 
 <style scoped>
