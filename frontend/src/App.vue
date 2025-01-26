@@ -27,6 +27,7 @@ import RegisterView from "@/views/Authorization/RegisterView.vue";
 import ResetPasswordView from "@/views/Authorization/ResetPasswordView.vue";
 import SetPasswordView from "@/views/Authorization/SetPasswordView.vue";
 import VerificationView from "@/views/Authorization/VerificationView.vue";
+import AuthService from "@/services/AuthService";
 import NotFoundView from "@/views/NotFoundView.vue";
 import { computed, onMounted } from "vue";
 import { useRoute } from "vue-router";
@@ -59,7 +60,9 @@ onMounted(async () => {
 });
 
 function connectWebsocket() {
-  const websocket = new WebSocket("ws://localhost:8000/ws/notifications/");
+  const websocket = new WebSocket(
+    `ws://localhost:8000/ws/notifications/?token=${AuthService.getAccessTokenFromLocalStorage()}`
+  );
 
   websocket.onmessage = (event) => {
     console.log(event);

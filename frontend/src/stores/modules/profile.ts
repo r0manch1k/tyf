@@ -68,7 +68,6 @@ const actions: ActionTree<State, unknown> = {
       });
   },
   setDefault: ({ commit }) => {
-    console.log("setDefault");
     commit("setProfile", new State().profile);
     commit("setLoading", new State().loading);
   },
