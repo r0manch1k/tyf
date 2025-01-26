@@ -17,7 +17,7 @@
   <BackgroundGraphs />
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import BackgroundGraphs from "@/components/BackgroundGraphs.vue";
 import Footer from "@/components/Footer.vue";
 import Header from "@/components/Header.vue";
@@ -32,6 +32,7 @@ import NotFoundView from "@/views/NotFoundView.vue";
 import { computed, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import { useStore } from "vuex";
+import NotificationModel from "@/models/NotificationModel";
 
 const route = useRoute();
 const store = useStore();
@@ -65,7 +66,8 @@ function connectWebsocket() {
   );
 
   websocket.onmessage = (event) => {
-    console.log(event);
+    const data: NotificationModel = JSON.parse(event.data);
+    store.dispatch("notification/addNotification", data);
   };
 
   websocket.onopen = () => {
@@ -77,7 +79,7 @@ function connectWebsocket() {
 
     setTimeout(() => {
       connectWebsocket();
-    }, 1000);
+    }, 5000);
   };
 }
 </script>

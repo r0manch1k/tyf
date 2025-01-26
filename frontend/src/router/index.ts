@@ -13,6 +13,7 @@ import ProfileEditView from "@/views/ProfileEditView.vue";
 import PostDetailView from "@/views/PostDetailView.vue";
 import ProfileView from "@/views/ProfileView.vue";
 import ChatsView from "@/views/ChatsView.vue";
+import NotificationsView from "@/views/NotificationsView.vue";
 
 import store from "@/stores";
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
@@ -69,9 +70,19 @@ const routes: Array<RouteRecordRaw> = [
     },
   },
   {
-    path: "/messages",
-    name: "messages",
+    path: "/chats",
+    name: "chats",
     component: ChatsView,
+    beforeEnter: () => {
+      if (store.getters["profile/getIsAuth"] === false) {
+        return { name: "login" };
+      }
+    },
+  },
+  {
+    path: "/notifications",
+    name: "notifications",
+    component: NotificationsView,
     beforeEnter: () => {
       if (store.getters["profile/getIsAuth"] === false) {
         return { name: "login" };

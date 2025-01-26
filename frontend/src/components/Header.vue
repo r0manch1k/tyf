@@ -29,11 +29,18 @@
       >Создать</router-link
     >
 
-    <router-link
-      :to="{ name: 'messages' }"
+    <!-- <router-link
+      :to="{ name: 'chats' }"
       class="header__messages-button btn-light fs-6 ms-4"
       v-if="isAuth && !loading"
-      >Сообщения</router-link
+      >Чаты</router-link
+    > -->
+
+    <router-link
+      :to="{ name: 'notifications' }"
+      class="header__notifications-button btn-light fs-6 ms-4"
+      v-if="isAuth && !loading"
+      >Уведомления({{ notificationsUnread.length }})</router-link
     >
 
     <div class="header__dropdown-container navbar-nav align-items-center ms-0">
@@ -90,6 +97,7 @@
 <script setup lang="ts">
 import LoadingCircle from "@/components/LoadingCircle.vue";
 import type { ProfileListItemModel } from "@/models/ProfileModel";
+import type NotificationModel from "@/models/NotificationModel";
 import { computed } from "vue";
 import { useStore } from "vuex";
 
@@ -99,6 +107,13 @@ const loading = computed(() => store.state.profile.loading);
 
 const profile = computed<ProfileListItemModel>(
   () => store.state.profile.profile
+);
+
+const notifications = computed<NotificationModel[]>(
+  () => store.state.notification.notifications
+);
+const notificationsUnread = computed<NotificationModel[]>(() =>
+  notifications.value.filter((notification) => !notification.read)
 );
 
 const isAuth = computed(() => profile.value.id > -1);

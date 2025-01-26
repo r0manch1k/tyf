@@ -5,6 +5,7 @@ import error from "@/stores/modules/error";
 import profile from "@/stores/modules/profile";
 import registry from "@/stores/modules/registry";
 import chat from "@/stores/modules/chat";
+import notification from "@/stores/modules/notification";
 import { createStore } from "vuex";
 
 export default createStore({
@@ -20,5 +21,6 @@ export default createStore({
     auth,
     registry,
     chat,
+    notification,
   },
 });

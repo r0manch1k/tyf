@@ -157,7 +157,7 @@ h6 {
 }
 
 .btn-light:hover {
-  color: var(--primary);
+  color: var(--light);
   background: transparent;
   text-decoration-color: var(--primary);
 }
@@ -176,6 +176,14 @@ h6 {
   text-decoration-color: var(--light) !important;
   border: 0 !important;
   box-shadow: none !important;
+}
+
+.btn-light:disabled,
+.btn-light.disabled {
+  color: var(--secondary-xx-light);
+  background: transparent;
+  border: 0;
+  text-decoration: none;
 }
 
 .btn-secondary-x-light {

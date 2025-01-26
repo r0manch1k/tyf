@@ -1,13 +1,10 @@
 import os
 from django.core.asgi import get_asgi_application
 from channels.routing import ProtocolTypeRouter, URLRouter
-from channels.middleware import BaseMiddleware
 from channels.security.websocket import AllowedHostsOriginValidator
 from django.contrib.auth.models import AnonymousUser
 from channels.db import database_sync_to_async
-from rest_framework.authtoken.models import Token
 from rest_framework_simplejwt.authentication import JWTAuthentication
-from django.core.exceptions import ObjectDoesNotExist
 from apps.chats import routing as chats_routing
 from apps.notifications import routing as notifications_routing
 
