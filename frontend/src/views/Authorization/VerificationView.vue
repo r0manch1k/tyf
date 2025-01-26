@@ -1,110 +1,113 @@
 <template>
-  <div class="verification">
-    <div
-      class="verification__container flex row vh-100 align-items-center justify-content-center"
-      style="min-height: 100vh"
-    >
+  <div :class="{ 'd-none': loading }">
+    <div class="verification">
       <div
-        class="verification__content col-12 row col-sm-8 col-md-6 col-lg-5 col-xl-4"
+        class="verification__container flex row vh-100 align-items-center justify-content-center"
+        style="min-height: 100vh"
       >
-        <Message
-          :message="message"
-          :show="showMessage"
-          @update:show="showMessage = $event"
-        />
-        <div class="verification__box bg-secondary rounded p-4">
+        <div
+          class="verification__content col-12 row col-sm-8 col-md-6 col-lg-5 col-xl-4"
+        >
+          <Message
+            :message="message"
+            :show="showMessage"
+            @update:show="showMessage = $event"
+          />
           <div
-            class="verification__header text-center align-items-center justify-content-between mb-2"
-          >
-            <h3 class="verification__title fs-5 fw-normal">
-              Введите код подтверждения
-            </h3>
-          </div>
-          <div
-            class="verification__subheader text-center align-items-center justify-content-between mb-4"
-          >
-            <h3
-              class="verification__subtitle fw-normal text-secondary-xx-light fs-6"
-            >
-              Код подтверждения был отправлен на вашу эл. почту
-            </h3>
-          </div>
-          <form
-            id="otp-form"
-            method="post"
-            role="form"
-            v-on:submit.prevent="verifySubmit"
+            class="verification__box bg-secondary rounded p-4"
+            style="border-radius: 1rem !important"
           >
             <div
-              id="otp"
-              class="verification__inputs inputs d-flex flex-row justify-content-center mt-2 mb-4"
+              class="verification__header text-center align-items-center justify-content-between mb-2"
             >
-              <input
-                v-for="(num, index) in otpNumbers"
-                :key="index"
-                class="verification__input m-2 text-center form-control rounded-3"
-                style="border-radius: 0.8rem !important"
-                :name="`otp_${index + 1}`"
-                :id="`otp_${index + 1}`"
-                maxlength="1"
-                required
-                v-model="otpNumbers[index]"
-              />
+              <h3 class="verification__title fs-5">
+                Введите код подтверждения
+              </h3>
             </div>
-            <button
-              type="submit"
-              class="verification__submit btn btn-primary py-3 w-100 mb-3"
-              :disabled="loading"
+            <div
+              class="verification__subheader text-center align-items-center justify-content-between mb-4"
             >
-              <label v-if="!loading" style="color: var(--dark) !important"
-                >Подтвердить</label
+              <h3
+                class="verification__subtitle fw-normal text-secondary-xx-light fs-6"
               >
-              <LoadingCircle v-else />
-            </button>
-          </form>
-          <div class="verification__footer text-center">
-            <span
-              v-if="timerOn"
-              class="verification__timer d-block text-center"
-              ref="countdown"
+                Код подтверждения был отправлен на вашу эл. почту
+              </h3>
+            </div>
+            <form
+              id="otp-form"
+              method="post"
+              role="form"
+              v-on:submit.prevent="verifySubmit"
             >
-              Отправить новый код через
-              {{
-                countdownMinutes < 10
-                  ? "0" + countdownMinutes
-                  : countdownMinutes
-              }}:{{
-                countdownSeconds < 10
-                  ? "0" + countdownSeconds
-                  : countdownSeconds
-              }}
-            </span>
-            <span v-else class="verification__resend d-block text-center">
-              Не получили код?
-              <a
-                class="verification__resend-link text-color"
-                ref="sendOtp"
-                style="cursor: pointer !important"
-                @click="startTimer(60, true)"
+              <div
+                id="otp"
+                class="verification__inputs inputs d-flex flex-row justify-content-center mt-2 mb-4"
               >
-                Отправить новый код
-              </a>
-            </span>
+                <input
+                  v-for="(num, index) in otpNumbers"
+                  :key="index"
+                  class="verification__input m-2 text-center form-control rounded-3"
+                  style="border-radius: 0.8rem !important"
+                  :name="`otp_${index + 1}`"
+                  :id="`otp_${index + 1}`"
+                  maxlength="1"
+                  required
+                  v-model="otpNumbers[index]"
+                />
+              </div>
+              <button
+                type="submit"
+                class="verification__submit btn btn-primary py-3 w-100 mb-3"
+                :disabled="loading"
+              >
+                <label style="color: var(--dark) !important">Подтвердить</label>
+              </button>
+            </form>
+            <div class="verification__footer text-center">
+              <span
+                v-if="timerOn"
+                class="verification__timer d-block text-center"
+                ref="countdown"
+              >
+                Отправить новый код через
+                {{
+                  countdownMinutes < 10
+                    ? "0" + countdownMinutes
+                    : countdownMinutes
+                }}:{{
+                  countdownSeconds < 10
+                    ? "0" + countdownSeconds
+                    : countdownSeconds
+                }}
+              </span>
+              <span v-else class="verification__resend d-block text-center">
+                Не получили код?
+                <a
+                  class="verification__resend-link text-color"
+                  ref="sendOtp"
+                  style="cursor: pointer !important"
+                  @click="startTimer(60, true)"
+                >
+                  Отправить новый код
+                </a>
+              </span>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
+  <LoadingCircle v-if="loading" />
 </template>
 
 <script lang="ts" setup>
+import LoadingCircle from "@/components/LoadingCircle.vue";
 import MessageModel from "@/models/MessageModel";
 import AuthService from "@/services/AuthService";
 import { computed, onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useStore } from "vuex";
 
-import LoadingCircle from "@/components/LoadingCircle.vue";
 import Message from "@/components/Message.vue";
 
 const store = useStore();
@@ -148,23 +151,30 @@ const verifySubmit = async () => {
     (route.params.token as string) ?? "",
     (route.params.uid as string) ?? ""
   )
-    .then(() => {
-      const message: MessageModel = {
-        text: "Аккаунт успешно подтвержден.",
-        type: "success",
-      };
-      store.dispatch("auth/setMessage", message);
-      router.push({ name: "login" });
-    })
-    .catch((error) => {
-      if (error.status === 401) {
+    .then((response: any) => {
+      if (response.status === 201) {
+        const uid = response.data.payload.uid ?? "";
+        const resetPasswordToken = response.data.payload.token ?? "";
+        router.push(`/login/set-password/${uid}/${resetPasswordToken}`);
+      } else if (response.status === 200) {
         const message: MessageModel = {
-          text: "Ваша сессия подтверждения аккаунта истекла. Пройдите процесс регистрации заново.",
+          text: "Аккаунт успешно подтвержден.",
+          type: "success",
+        };
+        store.commit("auth/setMessage", message);
+        store.commit("auth/setShowMessage", true);
+        router.push("/login");
+      }
+    })
+    .catch((error: any) => {
+      if (error.status === 403) {
+        const message: MessageModel = {
+          text: "Ваша сессия подтверждения почты истекла. Повторите попытку ещё раз.",
           type: "info",
         };
-        store.dispatch("auth/setMessage", message);
-        showMessage.value = true;
-        router.push("/register");
+        store.commit("auth/setMessage", message);
+        store.commit("auth/setShowMessage", true);
+        router.push("/login");
       } else {
         const message: MessageModel = {
           text:
@@ -194,20 +204,27 @@ const resendOTP = async () => {
         text: "Новый код подтверждения был отправлен на вашу эл. почту.",
         type: "success",
       };
-      store.dispatch("auth/setMessage", message);
+      store.commit("auth/setMessage", message);
+      showMessage.value = true;
     })
     .catch((error) => {
-      if (error.status === 401) {
-        store.dispatch("auth/setMessage", {
-          text: "Ваша сессия подтверждения аккаунта истекла. Пройдите процесс регистрации заново.",
+      if (error.status === 403) {
+        const message: MessageModel = {
+          text: "Ваша сессия подтверждения почты истекла. Повторите попытку ещё раз.",
           type: "info",
-        });
+        };
+        store.commit("auth/setMessage", message);
+        store.commit("auth/setShowMessage", true);
         router.push("/register");
       } else {
-        store.dispatch("auth/setMessage", {
-          text: "Что-то пошло не так, повторите попытку позже.",
+        const message: MessageModel = {
+          text:
+            error.data?.message ||
+            "Что-то пошло не так, повторите попытку позже.",
           type: "error",
-        });
+        };
+        store.commit("auth/setMessage", message);
+        showMessage.value = true;
       }
     })
     .finally(() => {

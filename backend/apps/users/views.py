@@ -204,11 +204,9 @@ class Login(GenericAPIView):
             elif e.detail.keys().__contains__("email"):
                 error = e.detail.get("email")[0].capitalize()
             elif e.detail.keys().__contains__("info"):
-                error = e.detail.get("info")[0].capitalize()
+                error = e.detail.get("info")[0]
             else:
                 error = "Что-то пошло не так, повторите попытку позже."
-
-            error = gettext(error)
 
             return Response(
                 {"message": error, "payload": {}},
@@ -293,11 +291,9 @@ class Register(CreateAPIView):
             elif e.detail.keys().__contains__("email"):
                 error = e.detail.get("email")[0].capitalize()
             elif e.detail.keys().__contains__("info"):
-                error = e.detail.get("info")[0].capitalize()
+                error = e.detail.get("info")[0]
             else:
                 error = "Something went wrong, please try again later."
-
-            error = gettext(error)
 
             return Response(
                 {"message": error, "payload": {}},
@@ -366,11 +362,9 @@ class ResetPassword(GenericAPIView):
             if e.detail.keys().__contains__("email"):
                 error = e.detail.get("email")[0].capitalize()
             elif e.detail.keys().__contains__("info"):
-                error = e.detail.get("info")[0].capitalize()
+                error = e.detail.get("info")[0]
             else:
                 error = "Что-то пошло не так, повторите попытку позже."
-
-            error = gettext(error)
 
             return Response(
                 {"message": error, "payload": {}},
@@ -436,11 +430,9 @@ class SetPassword(GenericAPIView):
             elif e.detail.keys().__contains__("password2"):
                 error = e.detail.get("password2")[0].capitalize()
             elif e.detail.keys().__contains__("info"):
-                error = e.detail.get("info")[0].capitalize()
+                error = e.detail.get("info")[0]
             else:
                 error = "Что-то пошло не так, повторите попытку позже."
-
-            gettext(error)
 
             return Response(
                 {"message": error, "payload": {}},
@@ -489,7 +481,7 @@ class Verification(APIView):
         if user.otp == getHash(str(otp)):
             time_difference = max(user.created_at, user.updated_at)
             mins_difference = (timezone.now() - time_difference).total_seconds() / 60
-            if mins_difference >= 1:
+            if mins_difference >= 1.5:
                 return Response(
                     {
                         "message": "Ваш код истёк. Запросите новый код и попробуйте снова.",
@@ -559,15 +551,25 @@ class Verification(APIView):
         if user.otp is None:
             return Response(
                 {
-                    "message": gettext("Ваш аккаунт не нуждается в подтверждении."),
+                    "message": "Ваш аккаунт не нуждается в подтверждении.",
                     "payload": {},
                 },
                 status=status.HTTP_400_BAD_REQUEST,
             )
+
         otp = generateOTP()
         user.otp = getHash(otp)
         user.save()
-        sendEmail(user=user, otp=otp, reset_password=False, register_confirm=True)
+
+        redis_key = settings.TYF_USER_VERIFICATION_KEY.format(
+            token=getHash(
+                f"""{request.query_params.get("token")}-{request.META.get("REMOTE_ADDR")}-{user.email}"""
+            )
+        )
+        if cache.get(redis_key)["is_reset_password_confirm"]:
+            sendEmail(user=user, otp=otp, reset_password=True, register_confirm=False)
+        else:
+            sendEmail(user=user, otp=otp, reset_password=False, register_confirm=True)
 
         return Response(
             {

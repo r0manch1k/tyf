@@ -37,6 +37,8 @@ class PostAdmin(admin.ModelAdmin):
         "updated_at",
     ]
 
+    exclude = ["full_search_vector"]
+
     class Meta:
         model = Post
 

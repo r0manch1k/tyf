@@ -24,15 +24,13 @@
 <style></style>
 
 <script setup lang="ts">
-import CommentsDataService from "@/services/CommentsDataService";
-import { defineProps } from "vue";
 import { ref } from "vue";
+import { defineProps, defineEmits } from "vue"; // Импортируйте defineEmits
+import CommentsDataService from "@/services/CommentsDataService";
 
 const replyContent = ref("");
 
-
-
-// add ComentModel
+// Определите свойства
 const props = defineProps({
   comment: {
     type: Object,
@@ -40,8 +38,7 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits();
-
+const emit = defineEmits(["submitReply"]);
 
 async function submitReply() {
   console.log("Preparing to submit reply...");
@@ -54,7 +51,7 @@ async function submitReply() {
   try {
     const newReply = await CommentsDataService.createReply(replyData);
     console.log("Reply submitted:", newReply);
-    emit("submitReply", newReply);
+    emit("submitReply", newReply); 
   } catch (error) {
     console.error("Error submitting reply:", error);
   }

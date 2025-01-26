@@ -22,12 +22,7 @@
         class="btn btn-danger btn-sm ms-auto"
         v-if="profile.username === comment.author.username"
         @click="deleteComment"
-        >delete</button>
-      <!-- Edit -->
-      <!-- <button -->
-      <!--   class="btn btn-warning btn-sm ms-2" -->
-      <!--   v-if="profile.username === comment.author.username" -->
-      <!--   >edit</button> -->
+      >delete</button>
       <EditCommentForm :comment="comment" /> 
       <ReplyCommentForm :comment="comment" @submitReply="addReply" /> 
     </div>
@@ -41,20 +36,19 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps } from "vue";
+import { defineEmits, defineProps } from "vue";
 import type CommentModel from "@/models/CommentModel";
 import CommentsDataService from "@/services/CommentsDataService";
 import ProfileModel from "@/models/ProfileModel";
 import EditCommentForm from "@/components/EditCommentForm.vue";
 import ReplyCommentForm from "@/components/ReplyCommentForm.vue";
 
-
 const props = defineProps<{
   comment: CommentModel;
   profile: ProfileModel;
 }>();
 
-const emit = defineEmits();
+const emit = defineEmits(["deleteComment", "addReply"]);
 
 const deleteComment = async () => {
   await CommentsDataService.deleteCommentByIdentifier(props.comment.identifier);
@@ -63,9 +57,8 @@ const deleteComment = async () => {
 
 const addReply = (reply: CommentModel) => {
   reply.author = props.profile;
-  props.comment.replies.push(reply);
+  emit("addReply", { commentId: props.comment.identifier, reply });
 };
-
 
 </script>
 

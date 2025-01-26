@@ -4,22 +4,18 @@
       <img class="logo" src="@/assets/media/logo.svg" alt="tyf" />
     </router-link>
 
-    <a
+    <!-- <a
       class="header__sidebar-button"
-      data-bs-toggle="offcanvas"
       type="button"
+      data-bs-toggle="offcanvas"
       data-bs-target="#offcanvas"
       aria-controls="offcanvas"
     >
       <i class="bi bi-list fs-4 text-light"></i>
-    </a>
+    </a> -->
 
     <div class="header__search ms-4 w-100">
-      <input
-        class="header__search-input form-control fs-6 bg-dark-light border-0"
-        type="search"
-        placeholder="Поиск"
-      />
+      <SearchBar v-if="isHome"/>
     </div>
 
     <router-link
@@ -96,15 +92,17 @@
 
 <script setup lang="ts">
 import LoadingCircle from "@/components/LoadingCircle.vue";
-import type { ProfileListItemModel } from "@/models/ProfileModel";
+import SearchBar from "@/components/SearchBar.vue";
+import type ProfileListItemModel from "@/models/ProfileModel";
 import type NotificationModel from "@/models/NotificationModel";
 import { computed } from "vue";
 import { useStore } from "vuex";
+import { useRoute } from "vue-router";
 
 const store = useStore();
+const route = useRoute();
 
 const loading = computed(() => store.state.profile.loading);
-
 const profile = computed<ProfileListItemModel>(
   () => store.state.profile.profile
 );
@@ -117,6 +115,7 @@ const notificationsUnread = computed<NotificationModel[]>(() =>
 );
 
 const isAuth = computed(() => profile.value.id > -1);
+const isHome = computed(() => route.path === "/"); 
 </script>
 
 <style>

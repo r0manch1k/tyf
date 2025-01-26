@@ -37,7 +37,7 @@
 import type { ProfileListItemModel } from "@/models/ProfileModel";
 import { defineProps } from "vue";
 
-const props = defineProps<{
+defineProps<{
   profile: ProfileListItemModel;
 }>();
 </script>

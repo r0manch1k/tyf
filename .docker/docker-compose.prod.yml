@@ -5,7 +5,7 @@ services:
     container_name: tyf_nginx
     build:
       context: ./../
-      dockerfile: ./.docker/prod/nginx/Dockerfile
+      dockerfile: ./.docker/prod/nginx/Dockerfile.nginx
     restart: unless-stopped
     ports:
       - 8000:80
