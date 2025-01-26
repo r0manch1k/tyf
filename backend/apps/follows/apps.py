@@ -6,4 +6,5 @@ class FollowsConfig(AppConfig):
     name = "apps.follows"
 
     def ready(self):
+        # flake8: noqa
         from . import signals

@@ -6,4 +6,5 @@ class PostsConfig(AppConfig):
     name = "apps.posts"
 
     def ready(self):
+        # flake8: noqa
         from . import signals

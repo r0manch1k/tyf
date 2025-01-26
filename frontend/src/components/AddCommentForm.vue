@@ -28,7 +28,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import CommentsDataService from "@/services/CommentsDataService";
-import type CommentPayload from '@/models/CommentPayload';
+import type CommentPayload from "@/models/CommentPayload";
 import { ProfileDetailModel } from "@/models/ProfileModel";
 import { defineEmits, defineProps } from "vue";
 

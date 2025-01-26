@@ -6,4 +6,5 @@ class ChatsConfig(AppConfig):
     name = "apps.chats"
 
     def ready(self):
+        # flake8: noqa
         import apps.chats.signals
