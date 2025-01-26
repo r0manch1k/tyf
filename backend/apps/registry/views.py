@@ -3,7 +3,7 @@ from rest_framework import viewsets
 from rest_framework.permissions import AllowAny
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from .models import University, Major
-from .serializer import UniversityListSerializer, MajorListSerializer
+from .serializers import UniversityListSerializer, MajorListSerializer
 
 
 class UniversityViewSet(viewsets.ViewSet):

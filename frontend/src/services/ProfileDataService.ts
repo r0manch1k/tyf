@@ -1,6 +1,7 @@
 import type { ProfileDetailModel } from "@/models/ProfileModel";
 import type { ProfileListItemModel } from "@/models/ProfileModel";
 import type { PostListItemModel } from "@/models/PostModel";
+import type { ChatListItemModel } from "@/models/ChatModel";
 import api from "@/stores/services/api";
 import store from "@/stores";
 
@@ -146,6 +147,17 @@ class ProfileDataService {
       .catch((error) => {
         return Promise.reject(error);
       });
+  }
+
+  async getProfileChats(username: string): Promise<ChatListItemModel[]> {
+    let data: { data: ChatListItemModel[] } = {
+      data: [] as ChatListItemModel[],
+    };
+    await api
+      .get(`/profiles/${username}/chats/`)
+      .then((response: { data: ChatListItemModel[] }) => (data = response))
+      .catch((error: unknown) => console.error(error));
+    return data.data;
   }
 }
 

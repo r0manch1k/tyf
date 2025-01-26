@@ -69,5 +69,35 @@ services:
       retries: 5
       start_period: 40s
 
+  # worker:
+  #   container_name: tyf_worker
+  #   build:
+  #     context: ./../
+  #     dockerfile: ./.docker/dev/Dockerfile.backend.dev
+  #   command: celery -A backend.apps.celery_app worker --loglevel=info
+  #   env_file:
+  #     - ./dev/.env.dev
+  #   volumes:
+  #     - ./../backend:/tyf/backend/apps/celery_app
+  #   depends_on:
+  #     - beat
+  #     - redis
+
+  beat:
+    container_name: tyf_beat
+    restart: unless-stopped
+    build:
+      context: ./../
+      dockerfile: ./.docker/dev/Dockerfile.backend.dev
+    command: "sh ./.docker/dev/celery.sh"
+    env_file:
+      - ./dev/.env.dev
+    ports:
+      - 7999:7999
+    depends_on:
+      - database
+      - redis
+      - backend
+
 volumes:
   postgres_data:

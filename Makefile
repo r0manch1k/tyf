@@ -5,6 +5,9 @@ DOCKER_COMPOSE_PROD = docker-compose -f ./.docker/docker-compose.prod.yml
 build-dev:
 	$(DOCKER_COMPOSE_DEV) build
 
+build-beat-dev:
+	$(DOCKER_COMPOSE_DEV) build beat
+
 up-dev:
 	$(DOCKER_COMPOSE_DEV) up -d
 
