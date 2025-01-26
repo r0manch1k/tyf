@@ -6,4 +6,4 @@ class FollowsConfig(AppConfig):
     name = "apps.follows"
 
     def ready(self):
-        import apps.follows.signals
+        from . import signals
