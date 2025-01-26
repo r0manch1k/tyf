@@ -22,7 +22,7 @@ export default interface PostModel {
   author: ProfileModel;
   description: string;
   filetypes: string[];
-  thumbnail: string;
+  thumbnail?: string;
   bookmarks: BookmarkPostModel[];
   comments_count: number;
   bookmarks_count: number;

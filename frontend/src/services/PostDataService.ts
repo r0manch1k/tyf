@@ -45,6 +45,19 @@ class PostDataService {
       .catch((error: unknown) => console.error(error));
     return data.data;
   }
+  async createPost(post: PostDetailModel): Promise<PostDetailModel> {
+    let data: { data: PostDetailModel } = { data: {} as PostDetailModel };
+    await api
+      .post("/posts/", post)
+      .then((response: { data: PostDetailModel }) => (data = response))
+      .catch((error: unknown) => console.error(error));
+    return data.data;
+  }
+  async updateThumbnail(postId: number, thumbnail: string): Promise<void> {
+    await api
+      .patch(`/posts/${postId}/`, { thumbnail })
+      .catch((error: unknown) => console.error(error));
+  }
 }
 
 export default new PostDataService();

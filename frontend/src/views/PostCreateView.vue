@@ -6,7 +6,7 @@
     >
       <h1 class="fs-3 text-light">Create New Post</h1>
 
-      <form>
+      <form @submit.prevent="submitForm" class="mt-4">
         <div class="mb-3">
           <label for="title" class="form-label">Title</label>
           <input
@@ -30,9 +30,29 @@
         </div>
 
         <div class="mb-3">
+          <label for="description" class="form-label">Description</label>
+          <textarea
+            v-model="newPost.description"
+            class="form-control"
+            id="description"
+            rows="3"
+            required
+          ></textarea>
+        </div>
+
+        <div class="mb-3">
           <label for="category" class="form-label">Category</label>
-          <select v-model="newPost.category" class="form-select" id="category" required>
-            <option v-for="category in categories" :key="category.id" :value="category.id">
+          <select
+            v-model="newPost.category"
+            class="form-select"
+            id="category"
+            required
+          >
+            <option
+              v-for="category in categories"
+              :key="category.id"
+              :value="category.id"
+            >
               {{ category.name }}
             </option>
           </select>
@@ -51,10 +71,17 @@
           <label for="thumbnail" class="form-label">Thumbnail</label>
           <input
             type="file"
-            class="form-control"
-            id="thumbnail"
             accept="image/*"
+            @change="onImageInput"
+            multiple="false"
           />
+          <button
+            type="button"
+            class="btn btn-action text-decoration-none text-light"
+            @click="onImageClick"
+          >
+            Выбрать изображение
+          </button>
         </div>
 
         <button type="submit" class="btn btn-primary">Create Post</button>
@@ -79,10 +106,13 @@ const store = useStore();
 const newPost = ref({
   title: "",
   content: "",
-  category: null,
-  tags: [],
-  thumbnail: null,
+  description: "",
+  category: "",
+  tags: [] as string[],
+  thumbnail: null as string | null,
 });
+const thumbnail = ref<File | null>(null);
+
 const loading = ref(false);
 const categories = ref<CategoryModel[]>([]);
 const tags = ref<TagModel[]>([]);
@@ -95,42 +125,65 @@ onMounted(async () => {
 
   categories.value = await CategoryDataService.getAllCategories();
   tags.value = await TagsDataService.getAllTags();
-  await store.dispatch("profile/fetchProfile").then(() => {
-    profile.value = store.getters["profile/getProfile"];
-  }).finally(() => {
-    loading.value = false;
-  });
+  await store
+    .dispatch("profile/fetchProfile")
+    .then(() => {
+      profile.value = store.getters["profile/getProfile"];
+    })
+    .finally(() => {
+      loading.value = false;
+    });
 });
-//
-// // Обработчик загрузки файла
-// const handleFileUpload = (event: Event) => {
-//   const input = event.target as HTMLInputElement;
-//   if (input && input.files) {
-//     newPost.value.thumbnail = input.files[0];
-//   }
-// };
-//
-// // Метод для отправки формы
-// const submitForm = async () => {
-//   loading.value = true;
-//
-//   const formData = new FormData();
-//   formData.append("title", newPost.value.title);
-//   formData.append("content", newPost.value.content);
-//   formData.append("category", String(newPost.value.category));
-//   formData.append("tags", JSON.stringify(newPost.value.tags)); // теги должны быть массивом
-//   if (newPost.value.thumbnail) {
-//     formData.append("thumbnail", newPost.value.thumbnail);
-//   }
-//
-//   try {
-//     const response = await PostDataService.createPost(formData);
-//
-//     console.log("Post created successfully:", response);
-//   } catch (error) {
-//     console.error("Error creating post:", error);
-//   } finally {
-//     loading.value = false;
-//   }
-// };
+
+const onImageClick = () => {
+  const input = document.querySelector(
+    "input[type='file']"
+  ) as HTMLInputElement;
+  if (input) {
+    input.click();
+  }
+};
+
+
+const onImageInput = (event: Event) => {
+  const target = event.target as HTMLInputElement;
+  const file = target.files?.[0];
+  if (file) {
+    thumbnail.value = file;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      newPost.value.thumbnail = e.target?.result as string;
+    };
+    reader.readAsDataURL(file);
+  }
+};
+
+const submitForm = async () => {
+  loading.value = true;
+
+  const formData = new FormData();
+  formData.append("title", newPost.value.title);
+  formData.append("content", newPost.value.content);
+  formData.append("category", String(newPost.value.category));
+  formData.append("description", newPost.value.description);
+
+  if (newPost.value.tags) {
+    newPost.value.tags.forEach((tagId: string) => {
+      formData.append("tags[]", tagId);
+    });
+  }
+  if (thumbnail.value) {
+    formData.append("thumbnail", thumbnail.value as File);
+  }
+  console.log("thumbnail", formData.get("thumbnail"));
+
+  try {
+    const response = await PostDataService.createPost(formData);
+    console.log("Post created successfully:", response);
+  } catch (error) {
+    console.error("Error creating post:", error);
+  } finally {
+    loading.value = false;
+  }
+};
 </script>
