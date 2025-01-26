@@ -7,9 +7,6 @@ import { onMounted } from "vue";
 
 onMounted(() => {
   const script = document.createElement("script");
-  console.log(
-    "MIME type ('text/html') error are in BackgroundGrapsh.vue. I don't know how to load js"
-  );
   script.setAttribute("src", require("@/assets/styles/js/background.js"));
   script.setAttribute("type", "text/javascript");
   document.head.appendChild(script);

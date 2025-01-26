@@ -1,9 +1,9 @@
 <template>
   <div class="home content open px-5" v-if="!loading" ref="scrollComponent">
-    <!-- <div class="home__header mb-2">
-      <Tablist v-bind:tablist="categories" />
-      <CollectionsTablist v-bind:collections="collections" />
-    </div> -->
+    <div class="home__header mb-2">
+      <!-- <Tablist v-bind:tablist="categories" /> -->
+      <CollectionsTablist v-if="!searchInput.query" v-bind:collections="collections" />
+    </div>
     <div class="home__body container-fluid p-0">
       <div class="home__body__container row">
         <div class="home__body__container__left col-9">
@@ -40,9 +40,9 @@ import type PostListItemModel from "@/models/PostModel";
 import type SearchModel from "@/models/SearchModel";
 import PostDataService from "@/services/PostDataService";
 import TyeHighscoresBar from "@/tye_frontend/components/TyeHighscoresBar.vue";
-// import CollectionsTablist from "@/components/CollectionsTablist.vue";
+import CollectionsTablist from "@/components/CollectionsTablist.vue";
 // import type CategoryModel from "@/models/CategoryModel";
-// import type CollectionModel from "@/models/CollectionModel";
+import type CollectionModel from "@/models/CollectionModel";
 import { computed, onMounted, onUnmounted, ref, watch } from "vue";
 import { useStore } from "vuex";
 
@@ -61,9 +61,9 @@ const searchInput = computed<SearchModel>(
 // const categories = computed<CategoryModel[]>(
 //   () => store.getters["category/getCategories"]
 // );
-// const collections = computed<CollectionModel[]>(
-//   () => store.getters["collection/getCollections"]
-// );
+const collections = computed<CollectionModel[]>(
+  () => store.getters["collection/getCollections"]
+);
 
 let searchTimeout: ReturnType<typeof setTimeout> | null = null;
 
@@ -143,7 +143,6 @@ watch(searchInput.value, () => {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
   width: 100%;
   height: 100%;
 }

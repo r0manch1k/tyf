@@ -7,9 +7,17 @@ import profile from "@/stores/modules/profile";
 import { createStore } from "vuex";
 
 export default createStore({
-  state: {},
-  getters: {},
-  mutations: {},
+  state: {
+    isSuggestionsOpen: false,
+  },
+  getters: {
+    isSuggestionsOpen: (state) => state.isSuggestionsOpen,
+  },
+  mutations: {
+    setSuggestionsOpen(state, isOpen) {
+      state.isSuggestionsOpen = isOpen;
+    },
+  },
   actions: {},
   modules: {
     profile,

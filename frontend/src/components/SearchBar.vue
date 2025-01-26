@@ -13,7 +13,7 @@
       :style="inputTextStyle"
       type="text"
       placeholder="Поиск"
-      @input="highlightKeywords"
+      @input="handleInput"
       v-model="inputText"
       ref="inputComponent"
     />
@@ -23,7 +23,7 @@
       </p>
       <hr />
       <button
-        class="suggestions__button d-flex align-items-center rounded-3 mb-2"
+        class="suggestions__button d-block rounded-3 mb-2"
         @click="applyFilterSearch"
         id="tag-search"
       >
@@ -33,7 +33,7 @@
         <span>Искать по тегу:[тег]</span>
       </button>
       <button
-        class="suggestions__button d-flex align-items-center rounded-3 mb-2"
+        class="suggestions__button d-block rounded-3 mb-2"
         @click="applyFilterSearch"
         id="category-search"
       >
@@ -43,7 +43,7 @@
         <span>Искать по категории:[категория]</span>
       </button>
       <button
-        class="suggestions__button d-flex align-items-center rounded-3 mb-2"
+        class="suggestions__button d-block rounded-3 mb-2"
         @click="applyFilterSearch"
         id="collection-search"
       >
@@ -53,7 +53,7 @@
         <span>Искать по коллекции:[коллекция]</span>
       </button>
       <button
-        class="suggestions__button d-flex align-items-center rounded-3 mb-2"
+        class="suggestions__button d-block rounded-3 mb-2"
         @click="applyFilterSearch"
         id="title-search"
       >
@@ -63,7 +63,7 @@
         <span>Искать по заголовку:[название заголовка]</span>
       </button>
       <button
-        class="suggestions__button d-flex align-items-center rounded-3"
+        class="suggestions__button d-block rounded-3 mb-2"
         @click="applyFilterSearch"
         id="author-search"
       >
@@ -77,9 +77,17 @@
 </template>
 
 <script lang="ts" setup>
-import { onBeforeUnmount, onMounted, ref, watch } from "vue";
+import type SearchModel from "@/models/SearchModel";
+import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import { useStore } from "vuex";
 
+const KEYWORDS = {
+  "тег:": "tag",
+  "категория:": "category",
+  "коллекция:": "collection",
+  "автор:": "author",
+  "заголовок:": "title",
+};
 const BASE_COLOR = "#F2F2F2 !important";
 const KEYWORD_COLOR = "#ADF0FF !important";
 
@@ -90,94 +98,105 @@ const isExpanded = ref(false);
 const inputTextStyle = ref({ color: BASE_COLOR });
 const inputComponent = ref<HTMLElement>();
 const container = ref<HTMLElement>();
+const searchInput = computed<SearchModel>(
+  () => store.state.pagination.searchInput
+);
 
-const applyFilterSearch = (event: MouseEvent) => {
-  const buttonId = (event.currentTarget as HTMLElement).id;
-
-  if (buttonId.startsWith("author")) {
-    inputText.value = "автор:";
-  } else if (buttonId.startsWith("tag")) {
-    inputText.value = "тег:";
-  } else if (buttonId.startsWith("category")) {
-    inputText.value = "категория:";
-  } else if (buttonId.startsWith("collection")) {
-    inputText.value = "коллекция:";
-  } else if (buttonId.startsWith("title")) {
-    inputText.value = "заголовок:";
+const handleInput = () => {
+  let inputKeyword = "";
+  if (inputText.value.includes(":")) {
+    inputKeyword = `${inputText.value.toLowerCase().split(":")[0]}:`;
   }
-  isExpanded.value = false;
-};
 
-const highlightKeywords = () => {
-  if (inputText.value.includes(" ")) {
-    inputTextStyle.value.color = BASE_COLOR;
+  if (!Object.keys(KEYWORDS).includes(inputKeyword)) {
     store.dispatch("pagination/updateSearchInput", {
       query: inputText.value,
       method: "full",
     });
+
   } else {
-    if (inputText.value.toLowerCase().startsWith("тег:")) {
-      inputTextStyle.value.color = KEYWORD_COLOR;
-      store.dispatch("pagination/updateSearchInput", {
-        query: inputText.value.substring("тег:".length).trim(),
-        method: "tag",
-      });
-
-    } else if (inputText.value.toLowerCase().startsWith("категория:")) {
-      inputTextStyle.value.color = KEYWORD_COLOR;
-      store.dispatch("pagination/updateSearchInput", {
-        query: inputText.value.substring("категория:".length).trim(),
-        method: "category",
-      });
-
-    } else if (inputText.value.toLowerCase().startsWith("коллекция:")) {
-      inputTextStyle.value.color = KEYWORD_COLOR;
-      store.dispatch("pagination/updateSearchInput", {
-        query: inputText.value.substring("коллекция:".length).trim(),
-        method: "collection",
-      });
-
-    } else if (inputText.value.toLowerCase().startsWith("автор:")) {
-      inputTextStyle.value.color = KEYWORD_COLOR;
-      store.dispatch("pagination/updateSearchInput", {
-        query: inputText.value.substring("автор:".length).trim(),
-        method: "author",
-      });
-
-    } else if (inputText.value.toLowerCase().startsWith("заголовок:")) {
-      inputTextStyle.value.color = KEYWORD_COLOR;
-      store.dispatch("pagination/updateSearchInput", {
-        query: inputText.value.substring("заголовок:".length).trim(),
-        method: "title",
-      });
-
-    } else {
-      inputTextStyle.value.color = BASE_COLOR;
-      store.dispatch("pagination/updateSearchInput", {
-        query: inputText.value,
-        method: "full",
-      });
+    const inputTextLower = inputText.value.toLowerCase();
+    for (const [keyword, method] of Object.entries(KEYWORDS)) {
+      if (inputTextLower.startsWith(keyword)) {
+        inputKeyword = keyword;
+        store.dispatch("pagination/updateSearchInput", {
+          query: inputText.value.substring(keyword.length).trim(),
+          method: method,
+        });
+        break;
+      }
     }
   }
+
+  highlightKeywords(inputKeyword);
+};
+
+const handleChangeSearchInput = () => {
+  let searchKeyword = "";
+
+  if (searchInput.value.method === "full") {
+    inputText.value = searchInput.value.query;
+  } else {
+    for (const [keyword, method] of Object.entries(KEYWORDS)) {
+      if (searchInput.value.method === method) {
+        inputText.value = `${keyword}${searchInput.value.query}`;
+        searchKeyword = keyword;
+        break;
+      }
+    }
+  }
+
+  highlightKeywords(searchKeyword);
+  isExpanded.value = false;
+  store.commit("setSuggestionsOpen", false);
+};
+
+const highlightKeywords = (keyword: string) => {
+  if (!Object.keys(KEYWORDS).includes(keyword)) {
+    inputTextStyle.value.color = BASE_COLOR;
+  } else {
+    inputTextStyle.value.color = KEYWORD_COLOR;
+  }
+};
+
+const applyFilterSearch = (event: MouseEvent) => {
+  const buttonId = (event.currentTarget as HTMLElement).id;
+  for (const [keyword, method] of Object.entries(KEYWORDS)) {
+    if (buttonId.startsWith(method)) {
+      inputText.value = keyword;
+      break;
+    }
+  }
+
+  isExpanded.value = false;
+  store.commit("setSuggestionsOpen", false);
 };
 
 const handleFocused = () => {
   isExpanded.value = true;
   inputComponent.value?.focus();
+  store.commit("setSuggestionsOpen", true);
 };
 
 const handleClickOutside = (event: MouseEvent) => {
   if (container.value && !container.value.contains(event.target as Node)) {
     isExpanded.value = false;
+    store.commit("setSuggestionsOpen", false);
   }
 };
 
 watch(inputText, () => {
   if (inputText.value) {
     isExpanded.value = false;
+    store.commit("setSuggestionsOpen", false);
   } else {
     isExpanded.value = true;
+    store.commit("setSuggestionsOpen", true);
   }
+});
+
+watch(searchInput.value, () => {
+  handleChangeSearchInput();
 });
 
 onMounted(() => {

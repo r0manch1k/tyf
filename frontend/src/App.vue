@@ -3,7 +3,15 @@
   <div v-if="isHome" class="main">
     <Header />
     <Sidebar />
-    <div class="main__content bg-dark-light mx-0 pb-3 pt-7">
+    <div
+      :class="[
+        'main__content',
+        { dimmed: isSuggestionsOpen && isHome },
+        'mx-0',
+        'pb-3',
+        'pt-7',
+      ]"
+    >
       <NotFoundView v-if="isError" />
       <router-view v-else />
     </div>
@@ -36,6 +44,8 @@ import { useStore } from "vuex";
 const route = useRoute();
 const store = useStore();
 
+const isSuggestionsOpen = computed(() => store.getters.isSuggestionsOpen);
+
 const isError = computed(() => {
   return store.getters["error/getShowErrorPage"];
 });
@@ -64,8 +74,19 @@ onMounted(async () => {
 @import "@/assets/styles/css/main.css";
 /* @import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"); */
 
+.main {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.dimmed {
+  filter: brightness(60%);
+}
+
 #app {
   overflow-x: hidden;
+  /* overflow-y: hidden; */
   scrollbar-width: none;
   scroll-behavior: smooth;
   overflow-y: auto;
@@ -87,11 +108,16 @@ onMounted(async () => {
 
 .main__content {
   background-color: rgba(30, 30, 35, 0.5);
+  top: 0 !important;
+  flex: 1 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: flex-start !important;
   /* background-color: rgba(51, 51, 51, 0.8); */
   /* background: transparent; */
   /* border-top: 1px solid var(--dark-light); */
   /* border-bottom: 1px solid var(--dark-light); */
-  z-index: -50;
+  /* z-index: -50; */
 }
 
 /* a.router-link-exact-active {

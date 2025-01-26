@@ -4,15 +4,15 @@
       <img class="logo" src="@/assets/media/logo.svg" alt="tyf" />
     </router-link>
 
-    <a
+    <!-- <a
       class="header__sidebar-button"
-      data-bs-toggle="offcanvas"
       type="button"
+      data-bs-toggle="offcanvas"
       data-bs-target="#offcanvas"
       aria-controls="offcanvas"
     >
       <i class="bi bi-list fs-4 text-light"></i>
-    </a>
+    </a> -->
 
     <div class="header__search ms-4 w-100">
       <SearchBar v-if="isHome"/>

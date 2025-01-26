@@ -1,8 +1,9 @@
 <template>
   <div class="tablist">
-    <ul class="nav nav-pills fs-6">
-      <li class="nav-item">
+    <ul class="nav nav-pills">
+      <li class="nav-item me-2">
         <button
+          @click="disableSearch"
           class="nav-link active"
           data-bs-toggle="pill"
           type="button"
@@ -15,9 +16,10 @@
       <li
         v-for="collection in collections"
         :key="collection.id"
-        class="nav-item"
+        class="nav-item me-2"
       >
         <button
+          @click="enableSearch(collection.name)"
           class="nav-link"
           data-bs-toggle="pill"
           type="button"
@@ -33,38 +35,71 @@
 
 <script setup lang="ts">
 import type CollectionModel from "@/models/CollectionModel";
-import { defineProps, onMounted } from "vue";
+import { defineProps } from "vue";
+import { useStore } from "vuex";
 
-const props = defineProps({
+const store = useStore();
+
+const enableSearch = (name: string) => {
+  store.dispatch("pagination/updateSearchInput", {
+    query: name.trim(),
+    method: "collection",
+  });
+};
+
+const disableSearch = () => {
+  store.dispatch("pagination/updateSearchInput", {
+    query: "",
+    method: "full",
+  });
+};
+
+defineProps({
   collections: Array as () => CollectionModel[],
-});
-
-onMounted(() => {
-  console.log(props.collections);
 });
 </script>
 
 <style scoped>
 .tablist {
   width: 100%;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  transition: scrollbar-width 1s linear;
+}
+
+.tablist:hover {
+  overflow-y: auto !important;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.5) transparent;
+  max-height: 200px;
+}
+
+/*
+.tablist ul {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+} */
+
+.tablist::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.tablist::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 4px;
+}
+
+.tablist::-webkit-scrollbar-track {
+  background: transparent;
 }
 
 ul {
   width: 100%;
-  overflow-y: auto;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-
-  /* --mask: linear-gradient(
-      to Right,
-      rgba(0, 0, 0, 1) 0,
-      rgba(0, 0, 0, 1) 95%,
-      rgba(0, 0, 0, 0) 99%,
-      rgba(0, 0, 0, 0) 0
-    )
-    100% 50% / 100% 100% repeat-x;
-  -webkit-mask: var(--mask);
-  mask: var(--mask); */
+  padding: 0;
+  margin: 0;
+  list-style-type: none;
 }
 
 .nav {
@@ -79,8 +114,6 @@ ul {
 
 .nav-pills .nav-link.active {
   background-color: var(--primary);
-  /* border-bottom: 1px solid var(--secondary) !important;
-  border-right: 1px solid var(--secondary) !important; */
   color: var(--dark);
 }
 
@@ -91,7 +124,5 @@ ul {
   padding: 0.3rem 0.8rem;
   background-color: var(--dark-light);
   color: var(--light);
-  /* border-bottom: 1px solid var(--primary) !important;
-  border-right: 1px solid var(--primary) !important; */
 }
 </style>
