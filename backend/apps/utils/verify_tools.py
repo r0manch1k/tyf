@@ -21,16 +21,14 @@ def generateOTP(length=6):
 
 def sendEmail(user, otp, reset_password=False, register_confirm=False):
     if reset_password:
-        subject = "Reset Password - Tell Your Friends"
-        context = "reset your password"
+        subject = "Сброс пароля - Tell Your Friends"
     elif register_confirm:
-        subject = "Confirm Registration - Tell Your Friends"
-        context = "confirm registration"
+        subject = "Подтверждение регистрации - Tell Your Friends"
     else:
         return
 
     html_content = render_to_string(
-        "otp/emailTemplate.html", {"context": context, "otp_key": otp}
+        "otp/emailTemplate.html", {"otp_key": otp}
     )
 
     text_content = strip_tags(html_content)

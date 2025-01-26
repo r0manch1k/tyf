@@ -1,52 +1,51 @@
 <template>
-  <div class="set-password container-fluid">
-    <div
-      class="set-password__wrapper flex row vh-100 align-items-center justify-content-center"
-      style="min-height: 100vh"
-    >
+  <div :class="{ 'd-none': loading }">
+    <div class="set-password container-fluid">
       <div
-        class="set-password__content col-12 row col-sm-8 col-md-6 col-lg-5 col-xl-4"
+        class="set-password__wrapper flex row vh-100 align-items-center justify-content-center"
+        style="min-height: 100vh"
       >
-        <Message
-          :message="message"
-          :show="showMessage"
-          @update:show="showMessage = $event"
-        />
         <div
-          class="set-password__form bg-secondary rounded p-4"
-          style="border-radius: 1rem !important"
+          class="set-password__content col-12 row col-sm-8 col-md-6 col-lg-5 col-xl-4"
         >
+          <Message
+            :message="message"
+            :show="showMessage"
+            @update:show="showMessage = $event"
+          />
           <div
-            class="set-password__header text-center align-items-center justify-content-between mb-4"
+            class="set-password__form bg-secondary rounded p-4"
+            style="border-radius: 1rem !important"
           >
-            <h3 class="set-password__title fs-5">Введите новый пароль</h3>
-          </div>
-          <form
-            method="post"
-            role="form"
-            v-on:submit.prevent="setPasswordSubmit"
-          >
-            <div class="set-password__field form-floating mb-2">
-              <PasswordField v-model="password1" />
-            </div>
-            <div class="set-password__field form-floating mb-3">
-              <RepeatPasswordField v-model="password2" />
-            </div>
-            <button
-              type="submit"
-              class="set-password__submit btn btn-primary py-3 w-100 mb-2"
-              :disabled="loading"
+            <div
+              class="set-password__header text-center align-items-center justify-content-between mb-4"
             >
-              <label v-if="!loading" style="color: var(--dark) !important"
-              >Продолжить</label
+              <h3 class="set-password__title fs-5">Введите новый пароль</h3>
+            </div>
+            <form
+              method="post"
+              role="form"
+              v-on:submit.prevent="setPasswordSubmit"
+            >
+              <div class="set-password__field form-floating mb-2">
+                <PasswordField v-model="password1" />
+              </div>
+              <div class="set-password__field form-floating mb-3">
+                <RepeatPasswordField v-model="password2" />
+              </div>
+              <button
+                type="submit"
+                class="set-password__submit btn btn-primary py-3 w-100 mb-2"
               >
-              <LoadingCircle v-else />
-            </button>
-          </form>
+                <label style="color: var(--dark) !important">Продолжить</label>
+              </button>
+            </form>
+          </div>
         </div>
       </div>
     </div>
   </div>
+  <LoadingCircle v-if="loading" />
 </template>
 
 <script lang="ts" setup>
@@ -93,22 +92,22 @@ const setPasswordSubmit = async () => {
   loading.value = true;
 
   await AuthService.setPassword(
-    password1.value,
-    password2.value,
     Array.isArray(route.params.token)
       ? route.params.token[0]
       : route.params.token ?? "",
     Array.isArray(route.params.uid)
       ? route.params.uid[0]
-      : route.params.uid ?? ""
+      : route.params.uid ?? "",
+    password1.value,
+    password2.value
   )
     .then(() => {
       const message: MessageModel = {
         text: "Пароль успешно изменен.",
         type: "success",
       };
-      store.dispatch("auth/setMessage", message);
-      showMessage.value = true;
+      store.commit("auth/setMessage", message);
+      store.commit("auth/setShowMessage", true);
       router.push("/login");
     })
     .catch((error) => {
@@ -117,8 +116,8 @@ const setPasswordSubmit = async () => {
           text: "Ваша сессия смены пароля истекла. Пройдите процесс смены пароля заново.",
           type: "info",
         };
-        store.dispatch("auth/setMessage", message);
-        showMessage.value = true;
+        store.commit("auth/setMessage", message);
+        store.commit("auth/setShowMessage", true);
         router.push("/login");
       } else {
         const message: MessageModel = {

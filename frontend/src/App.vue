@@ -3,12 +3,21 @@
   <div v-if="isHome" class="main">
     <Header />
     <Sidebar />
-    <div class="main__content bg-dark-light mx-0 pb-3 pt-7">
+    <div
+      :class="[
+        'main__content',
+        { dimmed: isSuggestionsOpen && isHome },
+        'mx-0',
+        'pb-3',
+        'pt-7',
+      ]"
+    >
       <NotFoundView v-if="isError" />
       <router-view v-else />
     </div>
     <Footer />
   </div>
+  <NotFoundView v-else-if="isError" />
   <LoginView v-else-if="isLogin" />
   <RegisterView v-else-if="isRegister" />
   <ResetPasswordView v-else-if="isResetPassword" />
@@ -34,6 +43,8 @@ import { useStore } from "vuex";
 
 const route = useRoute();
 const store = useStore();
+
+const isSuggestionsOpen = computed(() => store.getters.isSuggestionsOpen);
 
 const isError = computed(() => {
   return store.getters["error/getShowErrorPage"];
@@ -62,19 +73,50 @@ onMounted(async () => {
 @import "@/assets/styles/css/bootstrap.min.css";
 @import "@/assets/styles/css/main.css";
 
+.main {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.dimmed {
+  filter: brightness(60%);
+}
+
 #app {
+  overflow-x: hidden;
+  /* overflow-y: hidden; */
+  scrollbar-width: none;
+  scroll-behavior: smooth;
+  overflow-y: auto;
   font-family: "MesloLGS NF", sans-serif;
   /* font-family: "Arial", sans-serif; */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  height: 100%;
-  width: 100%;
+  height: 100vh;
+  width: 100vw;
+  display: flex; /* Создаем гибкую структуру */
+  flex-direction: column; /* Располагаем элементы вертикально */
+  min-height: 100vh;
 }
+
+#app::-webkit-scrollbar {
+  display: none;
+}
+
 .main__content {
   background-color: rgba(30, 30, 35, 0.5);
-
-  z-index: -50;
+  top: 0 !important;
+  flex: 1 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: flex-start !important;
+  /* background-color: rgba(51, 51, 51, 0.8); */
+  /* background: transparent; */
+  /* border-top: 1px solid var(--dark-light); */
+  /* border-bottom: 1px solid var(--dark-light); */
+  /* z-index: -50; */
 }
 
 /* .card {

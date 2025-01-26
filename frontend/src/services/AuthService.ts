@@ -111,7 +111,6 @@ class AuthService {
       .catch((error) => {
         return Promise.reject(error);
       });
-    await store.dispatch("profile/fetchProfile");
   }
 
   async resetPassword(email: string): Promise<void> {
@@ -147,11 +146,10 @@ class AuthService {
         },
       })
       .then((response) => {
-        if (response.status === 200) {
-          console.log("AuthService.ts", response.data.payload);
-        } else {
-          return Promise.reject(response);
+        if (response.status === 202) {
+          return response;
         }
+        return Promise.reject(response);
       })
       .catch((error) => {
         return Promise.reject(error);
@@ -166,7 +164,7 @@ class AuthService {
   ): Promise<void> {
     await api
       .post(
-        "/users/set_password/",
+        "/users/set-password/",
         {
           password1: password1,
           password2: password2,
@@ -199,56 +197,35 @@ class AuthService {
         },
       })
       .then((response) => {
-        if (response.status === 200) {
-          console.log("AuthService.ts", response.data.payload);
-        } else {
-          return Promise.reject(response);
+        if (response.status === 202) {
+          return response;
         }
+        return Promise.reject(response);
       })
       .catch((error) => {
         return Promise.reject(error);
       });
   }
 
-  async verify(otp: string, token: string, uid: string): Promise<void> {
-    await api
-      .post(
-        "/users/verification/",
-        {
-          otp: otp,
+  async verify(otp: string, token: string, uid: string): Promise<any> {
+    const response = await api.post(
+      "/users/verification/",
+      {
+        otp: otp,
+      },
+      {
+        params: {
+          token: token,
+          uid: uid,
         },
-        {
-          params: {
-            token: token,
-            uid: uid,
-          },
-        }
-      )
-      .then((response) => {
-        if (response.status == 201) {
-          const resetPasswordToken = response.data.payload.token ?? "";
-          const uid = response.data.payload.uid ?? "";
-          console.log(
-            "AuthService.ts",
-            resetPasswordToken,
-            uid,
-            resetPasswordToken && uid
-          );
+      }
+    );
 
-          if (resetPasswordToken && uid) {
-            router.push(`/login/set_password/${uid}/${resetPasswordToken}`);
-          } else {
-            return Promise.reject(response);
-          }
-        } else if (response.status == 200) {
-          return Promise.resolve(response);
-        } else {
-          return Promise.reject(response);
-        }
-      })
-      .catch((error) => {
-        return Promise.reject(error);
-      });
+    if (response.status === 200 || response.status === 201) {
+      return response;
+    } else {
+      throw response;
+    }
   }
 
   async resendOTP(token: string, uid: string): Promise<void> {
@@ -261,10 +238,9 @@ class AuthService {
       })
       .then((response) => {
         if (response.status === 200) {
-          console.log("AuthService.ts", response.data.payload);
-        } else {
-          return Promise.reject(response);
+          return response;
         }
+        return Promise.reject(response);
       })
       .catch((error) => {
         return Promise.reject(error);

@@ -4,7 +4,7 @@ from rest_framework import viewsets
 from django.shortcuts import get_object_or_404
 from .serializer import CommentSerializer
 from .models import Comment
-from rest_framework.decorators import action
+# from rest_framework.decorators import action
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import PermissionDenied

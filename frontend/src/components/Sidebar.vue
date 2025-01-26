@@ -114,7 +114,7 @@
     </div>
   </div> -->
   <div
-    class="offcanvas offcanvas-start"
+    class="sidebar-main offcanvas offcanvas-start"
     tabindex="-1"
     id="offcanvas"
     aria-labelledby="offcanvasLabel"
@@ -126,6 +126,7 @@
         class="btn-close"
         data-bs-dismiss="offcanvas"
         aria-label="Закрыть"
+        style="background-color: var(--light) !important;"
       ></button>
     </div>
     <div class="offcanvas-body">
@@ -151,3 +152,11 @@
     </div>
   </div>
 </template>
+
+<style scoped>
+.sidebar-main {
+  background-color: var(--dark) !important;
+  border-right: 0.1px solid var(--secondary) !important;
+  visibility: visible !important;
+}
+</style>

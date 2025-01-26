@@ -9,7 +9,7 @@ from apps.follows.models import Follow
 from django.db.models import Count
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
-from rest_framework.permissions import AllowAny
+# from rest_framework.permissions import AllowAny
 
 # from rest_framework.decorators import authentication_classes
 
@@ -18,9 +18,6 @@ from rest_framework.permissions import AllowAny
 
 
 class ProfileViewSet(viewsets.ViewSet):
-    authentication_classes = [JWTAuthentication]
-    permission_classes = [AllowAny]
-
     def list(self, request):
         queryset = Profile.objects.all()
         serializer = ProfileListSerializer(queryset, many=True)

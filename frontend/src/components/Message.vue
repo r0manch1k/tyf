@@ -101,7 +101,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import type MessageModel from "@/models/MessageModel";
 import { CAlert } from "@coreui/vue";
 import { defineEmits, defineProps } from "vue";

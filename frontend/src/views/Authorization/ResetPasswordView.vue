@@ -15,75 +15,74 @@
       />
     </symbol>
   </svg>
-  <div class="container-fluid">
-    <div
-      class="reset-password-view__wrapper flex row vh-100 align-items-center justify-content-center"
-      style="min-height: 100vh"
-    >
+  <div :class="{ 'd-none': loading }">
+    <div class="container-fluid">
       <div
-        class="reset-password-view__content col-12 row col-sm-8 col-md-6 col-lg-5 col-xl-4"
+        class="reset-password-view__wrapper flex row vh-100 align-items-center justify-content-center"
+        style="min-height: 100vh"
       >
-        <Message
-          :message="message"
-          :show="showMessage"
-          @update:show="showMessage = $event"
-        />
         <div
-          class="reset-password-view__form-container bg-secondary rounded p-4"
-          style="border-radius: 1rem !important"
+          class="reset-password-view__content col-12 row col-sm-8 col-md-6 col-lg-5 col-xl-4"
         >
-          <div class="reset-password-view__header py-3 mb-4">
-            <div class="position-relative">
-              <div
-                class="reset-password-view__back-button position-absolute top-50 start-0 translate-middle-y"
-              >
-                <router-link to="/login">
-                  <a class="float-start">
-                    <svg width="35" height="35" role="img">
-                      <use xlink:href="#arrow-left" />
-                    </svg>
-                  </a>
-                </router-link>
-              </div>
-              <div
-                id="reset-password-title"
-                class="reset-password-view__title position-absolute top-50 start-50 translate-middle"
-                style="width: 60% !important"
-              >
-                <h3 class="text-center fs-5" style="margin: 0 !important">
-                  Восстановление пароля
-                </h3>
-              </div>
-            </div>
-          </div>
-          <form
-            method="post"
-            role="form"
-            v-on:submit.prevent="resetPasswordSubmit"
+          <Message
+            :message="message"
+            :show="showMessage"
+            @update:show="showMessage = $event"
+          />
+          <div
+            class="reset-password-view__form-container bg-secondary rounded p-4"
+            style="border-radius: 1rem !important"
           >
-            <div class="form-floating mb-3">
-              <EmailField v-model="email" />
+            <div class="reset-password-view__header py-3 mb-4">
+              <div class="position-relative">
+                <div
+                  class="reset-password-view__back-button position-absolute top-50 start-0 translate-middle-y"
+                >
+                  <router-link to="/login">
+                    <a class="float-start">
+                      <svg width="35" height="35" role="img">
+                        <use xlink:href="#arrow-left" />
+                      </svg>
+                    </a>
+                  </router-link>
+                </div>
+                <div
+                  id="reset-password-title"
+                  class="reset-password-view__title position-absolute top-50 start-50 translate-middle"
+                  style="width: 60% !important"
+                >
+                  <h3 class="text-center fs-5" style="margin: 0 !important">
+                    Восстановление пароля
+                  </h3>
+                </div>
+              </div>
             </div>
-            <button
-              type="submit"
-              class="reset-password-view__submit-button btn btn-primary py-3 w-100 mb-4"
-              :disabled="loading"
+            <form
+              method="post"
+              role="form"
+              v-on:submit.prevent="resetPasswordSubmit"
             >
-              <label v-if="!loading" style="color: var(--dark) !important"
-                >Продолжить</label
+              <div class="form-floating mb-3">
+                <EmailField v-model="email" />
+              </div>
+              <button
+                type="submit"
+                class="reset-password-view__submit-button btn btn-primary py-3 w-100 mb-4"
               >
-              <LoadingCircle v-else />
-            </button>
-          </form>
-          <router-link to="/register">
-            <p class="reset-password-view__register-link text-center mb-0">
-              <a>Создать новый аккаунт</a>
-            </p>
-          </router-link>
+                <label style="color: var(--dark) !important">Продолжить</label>
+              </button>
+            </form>
+            <router-link to="/register">
+              <p class="reset-password-view__register-link text-center mb-0">
+                <a>Создать новый аккаунт</a>
+              </p>
+            </router-link>
+          </div>
         </div>
       </div>
     </div>
   </div>
+  <LoadingCircle v-if="loading" />
 </template>
 
 <script lang="ts" setup>

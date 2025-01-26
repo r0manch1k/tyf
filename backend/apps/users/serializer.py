@@ -68,6 +68,7 @@ class LoginSerializer(serializers.ModelSerializer):
 
 
 class RegisterSerializer(serializers.ModelSerializer):
+    email = serializers.CharField(required=True)
     password1 = serializers.CharField(
         write_only=True,
         min_length=8,
@@ -100,6 +101,12 @@ class RegisterSerializer(serializers.ModelSerializer):
             if not isActiveUser:
                 user = User.objects.get(email=email)
                 user.delete()
+            elif not isSocialUser:
+                raise serializers.ValidationError(
+                    detail={
+                        "info": "Пользователь с таким адресом эл. почты уже зарегистрирован"
+                    }
+                )
 
         if isSocialUser:
             raise serializers.ValidationError(

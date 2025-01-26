@@ -64,7 +64,7 @@ INSTALLED_APPS = [
     "apps.profiles",
     "apps.registry",
     "apps.categories",
-    "apps.collections_",
+    "apps.collections",
     "apps.tags",
     "apps.posts",
     "apps.comments",
@@ -145,7 +145,7 @@ CACHES = {
     },
     "select2": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": os.getenv("REDIS_SELECT2_LOCATION"),
+        "LOCATION": os.getenv("REDIS_LOCATION"),
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         },

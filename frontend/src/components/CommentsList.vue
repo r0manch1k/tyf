@@ -12,7 +12,7 @@
 
 <script setup lang="ts">
 import { defineProps } from "vue";
-import { defineEmits } from "vue";
+// import { defineEmits } from "vue";
 import { ref } from "vue";
 import CommentItem from "@/components/CommentItem.vue";
 import type CommentModel from "@/models/CommentModel";
@@ -23,7 +23,7 @@ const props = defineProps<{
   profile: ProfileModel;
 }>();
 
-const emit = defineEmits();
+// const emit = defineEmits();
 const comments = ref<CommentModel[]>(props.comments);
 
 const deleteComment = (identifier: string) => {

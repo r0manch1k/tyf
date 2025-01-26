@@ -28,8 +28,9 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import CommentsDataService from "@/services/CommentsDataService";
+import type CommentPayload from '@/models/CommentPayload';
 import { ProfileDetailModel } from "@/models/ProfileModel";
-import { onMounted, defineProps } from "vue";
+import { defineEmits, defineProps } from "vue";
 
 const props = defineProps({
   postId: {
@@ -47,9 +48,10 @@ const emit = defineEmits(["addComment"]);
 
 const addComment = async () => {
   console.log("Preparing to submit comment:", content.value);
-  const commentData = {
+  const commentData: CommentPayload = {
     post: props.postId, 
     content: content.value,
+    parent: Number(props.postId)
   };
 
   try {
