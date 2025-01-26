@@ -44,7 +44,10 @@ class Post(models.Model):
         related_name="posts",
     )
     collections = models.ManyToManyField(
-        Collection, verbose_name="collections", related_name="posts", blank=True
+        Collection,
+        verbose_name="collections",
+        related_name="posts",
+        blank=True,
     )
     author = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="posts")
     title = models.CharField(verbose_name="title", max_length=255)

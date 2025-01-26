@@ -15,7 +15,7 @@
     </a> -->
 
     <div class="header__search ms-4 w-100">
-      <SearchBar v-if="isHome"/>
+      <SearchBar v-if="isHome" />
     </div>
 
     <router-link
@@ -110,12 +110,13 @@ const profile = computed<ProfileListItemModel>(
 const notifications = computed<NotificationModel[]>(
   () => store.state.notification.notifications
 );
-const notificationsUnread = computed<NotificationModel[]>(() =>
-  notifications.value.filter((notification) => !notification.read)
-);
+const notificationsUnread = computed<NotificationModel[]>(() => {
+  if (notifications.value.length === 0) return [];
+  return notifications.value.filter((notification) => !notification.read);
+});
 
 const isAuth = computed(() => profile.value.id > -1);
-const isHome = computed(() => route.path === "/"); 
+const isHome = computed(() => route.path === "/");
 </script>
 
 <style>
