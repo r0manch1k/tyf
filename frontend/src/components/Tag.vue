@@ -4,7 +4,7 @@
       <a
         @click="enableSearch(tag.name.substring(1))"
         class="tag__content fs-8"
-        >{{ tag.name }}</a
+      >{{ tag.name }}</a
       >
     </span>
   </div>

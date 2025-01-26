@@ -188,7 +188,7 @@ class AuthService {
       });
   }
 
-  async checkVerificationAccess(token: string, uid: string): Promise<any> {
+  async checkVerificationAccess(token: string, uid: string): Promise<void> {
     await api
       .get("/users/verification/", {
         params: {
@@ -208,28 +208,23 @@ class AuthService {
   }
 
   async verify(otp: string, token: string, uid: string): Promise<any> {
-    try {
-      const response = await api.post(
-        "/users/verification/",
-        {
-          otp: otp,
+    const response = await api.post(
+      "/users/verification/",
+      {
+        otp: otp,
+      },
+      {
+        params: {
+          token: token,
+          uid: uid,
         },
-        {
-          params: {
-            token: token,
-            uid: uid,
-          },
-        }
-      );
-
-      console.log("service", response.status);
-      if (response.status === 200 || response.status === 201) {
-        return response;
-      } else {
-        throw response;
       }
-    } catch (error) {
-      throw error;
+    );
+
+    if (response.status === 200 || response.status === 201) {
+      return response;
+    } else {
+      throw response;
     }
   }
 

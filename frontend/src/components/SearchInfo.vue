@@ -13,25 +13,25 @@
       />
     </svg>
     <span v-if="searchInfo.method === 'full'"
-      >Результаты поиска постов по запросу: "{{ searchInfo.query }}".
+    >Результаты поиска постов по запросу: "{{ searchInfo.query }}".
     </span>
     <span v-else-if="searchInfo.method === 'tag'"
-      >Результаты поиска постов по тегу: "#{{ searchInfo.query }}".
+    >Результаты поиска постов по тегу: "#{{ searchInfo.query }}".
     </span>
     <span v-else-if="searchInfo.method === 'category'"
-      >Результаты поиска постов по категории: "{{ searchInfo.query }}".
+    >Результаты поиска постов по категории: "{{ searchInfo.query }}".
     </span>
     <span v-else-if="searchInfo.method === 'collection'"
-      >Результаты поиска постов по коллекции: "{{ searchInfo.query }}".
+    >Результаты поиска постов по коллекции: "{{ searchInfo.query }}".
     </span>
     <span v-else-if="searchInfo.method === 'author'"
-      >Результаты поиска постов по имени автора: "{{ searchInfo.query }}".
+    >Результаты поиска постов по имени автора: "{{ searchInfo.query }}".
     </span>
     <span v-else-if="searchInfo.method === 'title'"
-      >Результаты поиска постов по заголовку: "{{ searchInfo.query }}".
+    >Результаты поиска постов по заголовку: "{{ searchInfo.query }}".
     </span>
     <span
-      >Количество найденных постов: {{ resultsCount }}.
+    >Количество найденных постов: {{ resultsCount }}.
     </span>
     <hr />
   </div>

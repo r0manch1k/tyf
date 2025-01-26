@@ -29,7 +29,7 @@
                   <span
                     class="register-view__brand text-primary fs-5"
                     style="color: var(--primary) !important"
-                    >tyf</span
+                  >tyf</span
                   >
                 </router-link>
               </h3>

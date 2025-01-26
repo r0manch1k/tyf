@@ -160,7 +160,7 @@ const verifySubmit = async () => {
         const message: MessageModel = {
           text: "Аккаунт успешно подтвержден.",
           type: "success",
-        }; 
+        };
         store.commit("auth/setMessage", message);
         store.commit("auth/setShowMessage", true);
         router.push("/login");

@@ -26,7 +26,7 @@
                   <span
                     class="login-view__brand text-primary fs-5"
                     style="color: var(--primary) !important"
-                    >tyf</span
+                  >tyf</span
                   >
                 </router-link>
               </h3>
@@ -62,7 +62,7 @@
             <p class="login-view__register text-center mb-0">
               У вас нет аккаунта?
               <router-link to="/register"
-                ><a>Зарегистрироваться.</a></router-link
+              ><a>Зарегистрироваться.</a></router-link
               >
             </p>
           </div>

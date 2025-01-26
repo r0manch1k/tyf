@@ -36,7 +36,7 @@ const mutations: MutationTree<State> = {
 
 const actions: ActionTree<State, unknown> = {
   updateSearchInput({ commit }, payload) {
-    commit('setSearchInput', payload);
+    commit("setSearchInput", payload);
   }
 }
 
