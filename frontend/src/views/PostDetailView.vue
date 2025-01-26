@@ -29,7 +29,12 @@
           </div>
           <hr />
         </div>
-
+        <!--TODO: why we use props here instead post.ide...-->
+        <AddCommentFormVue
+          :postId="props!.identifier"
+          :profile="profile"
+          @addComment="addComment"
+        />
         <div class="post-info d-flex gap-3 text-muted">
           <span class="fs-9">
             <a href="#" class="text-muted fs-9">
@@ -51,26 +56,8 @@
           ></div>
         </div>
       </div>
-      <div class="mt-5 comments-form">
-        <h3 class="fs-3 text-light text-start">Write your comment...</h3>
-        <form>
-          <div class="form-group">
-            <textarea
-              class="form-control"
-              placeholder="..."
-              required
-            ></textarea>
-          </div>
-          <button
-            class="mb-2 btn border-start-0 border-top-0 btn-outline-primary mt-2 fs-8 action-unchecked d-block"
-            type="submit"
-          >
-            Submit
-          </button>
-        </form>
-      </div>
       <h3 class="mb-4 fs-3 text-start text-light">Comments</h3>
-      <CommentsList :comments="nestedComments" />
+      <CommentsList :comments="nestedComments" :profile="profile" /> 
     </div>
   </div>
   <LoadingCircle v-else />
@@ -79,22 +66,47 @@
 <script setup lang="ts">
 import CommentsList from "@/components/CommentsList.vue";
 import LoadingCircle from "@/components/LoadingCircle.vue";
+import AddCommentFormVue from "@/components/AddCommentForm.vue";
+import ReplyCommentForm from "@/components/ReplyCommentForm.vue";
 import type CommentModel from "@/models/CommentModel";
 import type { PostDetailModel } from "@/models/PostModel";
 import PostDataService from "@/services/PostDataService";
+import { ProfileDetailModel } from "@/models/ProfileModel";
+import ProfileDataService from "@/services/ProfileDataService";
+import { useStore } from "vuex";
 import { marked } from "marked";
 import { onMounted, ref, defineProps } from "vue";
+import CommentsDataService from "@/services/CommentsDataService";
 
 const props = defineProps({
   identifier: String,
 });
 
+const store = useStore();
 const post = ref<PostDetailModel | null>(null);
 const loading = ref(true);
 const renderedContent = ref<string>("");
 const nestedComments = ref<CommentModel[]>([]);
+const profile = ref<ProfileDetailModel>({
+  ...store.getters["profile/getDefaultProfile"],
+});
+
+const fetchCommentWithAuthors = async (comment: any) => {
+  const author = await ProfileDataService.getProfileByUsername(comment.author);
+
+  const repliesWithAuthors = await Promise.all(
+    comment.replies.map(async (reply: any) => {
+      const replyWithAuthor = await fetchCommentWithAuthors(reply);
+      return { ...replyWithAuthor };
+    })
+  );
+
+  return { ...comment, author, replies: repliesWithAuthors };
+};
 
 onMounted(async () => {
+  loading.value = true;
+
   if (props.identifier) {
     post.value = await PostDataService.getPostByIdentifier(props.identifier);
   } else {
@@ -109,10 +121,27 @@ onMounted(async () => {
   }
 
   if (post.value?.comments) {
-    nestedComments.value = post.value.comments;
+    nestedComments.value = await Promise.all(
+      post.value.comments.map(async (comment: any) => {
+        return await fetchCommentWithAuthors(comment);
+      })
+    );
   }
-  loading.value = false;
+
+  await Promise.all([
+    store.dispatch("profile/fetchProfile").then(() => {
+      profile.value = store.getters["profile/getProfile"];
+    }),
+  ]).finally(() => {
+    loading.value = false;
+  });
 });
+
+const addComment = (newComment: CommentModel) => {
+  newComment.author = profile.value;
+  nestedComments.value.push(newComment);
+};
+
 </script>
 
 <style>

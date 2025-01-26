@@ -34,5 +34,7 @@ class Comment(models.Model):
         **kwargs,
     ):
 
+        if isinstance(self.parent, str):
+            self.parent = Comment.objects.get(identifier=self.parent)
         self.identifier = generate_uuid(klass=Comment)
         super(Comment, self).save(force_insert, force_update, *args, **kwargs)

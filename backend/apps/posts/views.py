@@ -6,7 +6,9 @@ from django.shortcuts import get_object_or_404
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.permissions import AllowAny
 from .serializers import PostDetailSerializer, PostListSerializer
+from apps.comments.serializers import CommentSerializer
 from .models import Post
+from rest_framework.permissions import IsAuthenticated
 
 
 class PostViewSet(viewsets.ViewSet):
@@ -55,3 +57,28 @@ class PostViewSet(viewsets.ViewSet):
         )[:5]
         serializer = PostListSerializer(queryset, many=True)
         return Response(serializer.data)
+
+    @action(
+        detail=True,
+        methods=["POST"],
+        url_path="comments",
+        url_name="comments",
+        permission_classes=[IsAuthenticated],
+        authentication_classes=[JWTAuthentication],
+    )
+    def comment(self, request, pk=None):
+        print(f"Request data: {request.data}")
+        if not request:
+            return Response({"detail": "You need to login to comment."}, status=401)
+
+        post = get_object_or_404(Post, identifier=pk)
+        serializer = CommentSerializer(
+            data=request.data,
+            context={"request": request},
+        )
+        if not serializer.is_valid():
+            print(f"Invalid data: {serializer.errors}")  # Печатаем ошибки
+            return Response(serializer.errors, status=400)
+        serializer.is_valid(raise_exception=True)
+        serializer.save(post=post)
+        return Response(serializer.data, status=201)
