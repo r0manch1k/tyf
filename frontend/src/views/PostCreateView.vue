@@ -1,88 +1,136 @@
 <template>
-  <div class="post-create">
-    <div class="post-create__header">
-      <h1 class="post-create__header__title">Создание поста</h1>
-    </div>
-    <div class="post-create__body">
-      <form class="post-create__body__form" @submit.prevent="submitForm">
+  <div v-if="!loading" class="h-100 p-4">
+    <div
+      class="card rounded-0 border-top-0 border-bottom-0 bg-dark-light border-light p-4"
+      style="border-left: 0 !important; border-right: 0 !important"
+    >
+      <h1 class="fs-3 text-light">Create New Post</h1>
+
+      <form>
         <div class="mb-3">
-          <label for="title" class="form-label">Заголовок</label>
+          <label for="title" class="form-label">Title</label>
           <input
+            v-model="newPost.title"
             type="text"
             class="form-control"
             id="title"
-            v-model="post.title"
-            placeholder="Введите заголовок"
+            required
           />
         </div>
+
         <div class="mb-3">
-          <label for="description" class="form-label">Описание</label>
+          <label for="content" class="form-label">Content</label>
           <textarea
-            class="form-control"
-            id="description"
-            v-model="post.description"
-            rows="3"
-            placeholder="Введите описание"
-          ></textarea>
-        </div>
-        <div class="mb-3">
-          <label for="content" class="form-label">Контент</label>
-          <textarea
+            v-model="newPost.content"
             class="form-control"
             id="content"
-            v-model="post.content"
-            rows="3"
-            placeholder="Введите контент"
+            rows="5"
+            required
           ></textarea>
         </div>
+
         <div class="mb-3">
-          <label for="media" class="form-label">Файл</label>
+          <label for="category" class="form-label">Category</label>
+          <select v-model="newPost.category" class="form-select" id="category" required>
+            <option v-for="category in categories" :key="category.id" :value="category.id">
+              {{ category.name }}
+            </option>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label for="tags" class="form-label">Tags</label>
+          <select v-model="newPost.tags" class="form-select" id="tags" multiple>
+            <option v-for="tag in tags" :key="tag.id" :value="tag.id">
+              {{ tag.name }}
+            </option>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label for="thumbnail" class="form-label">Thumbnail</label>
           <input
+            type="file"
             class="form-control"
-            type="media"
-            id="media"
-            @change="handlemediaUpload"
+            id="thumbnail"
+            accept="image/*"
           />
         </div>
-        <button type="submit" class="btn btn-primary">Создать</button>
+
+        <button type="submit" class="btn btn-primary">Create Post</button>
       </form>
     </div>
   </div>
+  <LoadingCircle v-else />
 </template>
 
-<script setup lang="ts">
-import type PostModel from "@/models/PostModel";
+<script lang="ts" setup>
+import { ref, onMounted } from "vue";
 import PostDataService from "@/services/PostDataService";
-import { ref } from "vue";
+import { useStore } from "vuex";
+import LoadingCircle from "@/components/LoadingCircle.vue";
+import { ProfileDetailModel } from "@/models/ProfileModel";
+import CategoryModel from "@/models/CategoryModel";
+import CategoryDataService from "@/services/CategoryDataService";
+import TagsDataService from "@/services/TagsDataService";
+import TagModel from "@/models/TagModel";
 
-const post = ref<PostModel>(PostDataService.getNewPost());
+const store = useStore();
+const newPost = ref({
+  title: "",
+  content: "",
+  category: null,
+  tags: [],
+  thumbnail: null,
+});
+const loading = ref(false);
+const categories = ref<CategoryModel[]>([]);
+const tags = ref<TagModel[]>([]);
+const profile = ref<ProfileDetailModel>({
+  ...store.getters["profile/getDefaultProfile"],
+});
 
-const media = ref<File | null>(null);
+onMounted(async () => {
+  loading.value = true;
 
-const handlemediaUpload = (event: Event) => {
-  const target = event.target as HTMLInputElement;
-  if (target.files && target.files.length > 0) {
-    media.value = target.files[0];
-  }
-};
-
-const submitForm = async () => {
-  try {
-    const formData = new FormData();
-    formData.append("title", post.value.title);
-    formData.append("description", post.value.description);
-    formData.append("content", post.value.content);
-    if (media.value) {
-      formData.append("media", media.value);
-    }
-    const newPost: PostModel = {
-      ...post.value,
-      media: media.value ? [media.value.name] : [],
-    };
-    await PostDataService.createPost(newPost);
-    alert("Пост успешно создан!");
-  } catch (error) {
-    console.error("Ошибка при создании поста:", error);
-  }
-};
+  categories.value = await CategoryDataService.getAllCategories();
+  tags.value = await TagsDataService.getAllTags();
+  await store.dispatch("profile/fetchProfile").then(() => {
+    profile.value = store.getters["profile/getProfile"];
+  }).finally(() => {
+    loading.value = false;
+  });
+});
+//
+// // Обработчик загрузки файла
+// const handleFileUpload = (event: Event) => {
+//   const input = event.target as HTMLInputElement;
+//   if (input && input.files) {
+//     newPost.value.thumbnail = input.files[0];
+//   }
+// };
+//
+// // Метод для отправки формы
+// const submitForm = async () => {
+//   loading.value = true;
+//
+//   const formData = new FormData();
+//   formData.append("title", newPost.value.title);
+//   formData.append("content", newPost.value.content);
+//   formData.append("category", String(newPost.value.category));
+//   formData.append("tags", JSON.stringify(newPost.value.tags)); // теги должны быть массивом
+//   if (newPost.value.thumbnail) {
+//     formData.append("thumbnail", newPost.value.thumbnail);
+//   }
+//
+//   try {
+//     const response = await PostDataService.createPost(formData);
+//
+//     console.log("Post created successfully:", response);
+//   } catch (error) {
+//     console.error("Error creating post:", error);
+//   } finally {
+//     loading.value = false;
+//   }
+// };
 </script>

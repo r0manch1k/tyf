@@ -27,7 +27,9 @@ class PostViewSet(viewsets.ViewSet):
         return Response(serializer.data)
 
     def create(self, request):
-        serializer = PostDetailSerializer(data=request.data)  # PostCreateSerializer?
+        serializer = PostDetailSerializer(
+            data=request.data, context={"request": request}
+        )
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data, status=201)
@@ -58,6 +60,7 @@ class PostViewSet(viewsets.ViewSet):
         serializer = PostListSerializer(queryset, many=True)
         return Response(serializer.data)
 
+    # I think this should be in the comments app
     @action(
         detail=True,
         methods=["POST"],
@@ -77,7 +80,7 @@ class PostViewSet(viewsets.ViewSet):
             context={"request": request},
         )
         if not serializer.is_valid():
-            print(f"Invalid data: {serializer.errors}")  # Печатаем ошибки
+            print(f"Invalid data: {serializer.errors}")
             return Response(serializer.errors, status=400)
         serializer.is_valid(raise_exception=True)
         serializer.save(post=post)

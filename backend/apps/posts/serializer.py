@@ -6,6 +6,12 @@ from apps.comments.serializer import CommentSerializer
 from apps.tags.serializer import TagSerializer
 from apps.collections_.serializer import CollectionSerializer
 from apps.profiles.serializer import ProfileListSerializer
+from apps.categories.models import Category
+from apps.media.models import Media
+from apps.tags.models import Tag
+from apps.collections_.models import Collection
+from apps.utils.media_tools import generate_media_path
+
 from tyf import settings
 
 
@@ -103,28 +109,30 @@ class PostListSerializer(serializers.ModelSerializer):
 
 
 class PostDetailSerializer(serializers.ModelSerializer):
-    author = ProfileListSerializer()
-    category = CategorySerializer()
-    collections = CollectionSerializer(many=True)
-    tags = TagSerializer(many=True)
-    comments = CommentSerializer(many=True)
-    bookmarks = BookmarkPostSerializer(many=True)
-    media = MediaSerializer(many=True)
+    author = ProfileListSerializer(read_only=True)
+    category = serializers.PrimaryKeyRelatedField(queryset=Category.objects.all())
+    collections = serializers.PrimaryKeyRelatedField(
+        queryset=Collection.objects.all(), many=True, required=False
+    )
+    tags = serializers.PrimaryKeyRelatedField(
+        queryset=Tag.objects.all(), many=True, required=False
+    )
+    comments = CommentSerializer(many=True, read_only=True)
+    bookmarks = BookmarkPostSerializer(many=True, read_only=True)
+    media = serializers.PrimaryKeyRelatedField(
+        queryset=Media.objects.all(), many=True, required=False
+    )
     filetypes = serializers.SerializerMethodField()
-    thumbnail = serializers.SerializerMethodField()
+    thumbnail = serializers.ImageField(required=False)
     created_at = serializers.DateTimeField(
         format="%Y-%m-%d %H:%M:%S",
-        input_formats=[
-            "%d.%m.%Y",
-            "iso-8601",
-        ],
+        input_formats=["%d.%m.%Y", "iso-8601"],
+        read_only=True,
     )
     updated_at = serializers.DateTimeField(
         format="%Y-%m-%d %H:%M:%S",
-        input_formats=[
-            "%d.%m.%Y",
-            "iso-8601",
-        ],
+        input_formats=["%d.%m.%Y", "iso-8601"],
+        read_only=True,
     )
 
     class Meta:
@@ -146,15 +154,48 @@ class PostDetailSerializer(serializers.ModelSerializer):
             "filetypes",
             "thumbnail",
         ]
-
-        read_only_fields = [
-            "created_at",
-        ]
+        read_only_fields = ["created_at"]
 
     def get_filetypes(self, obj):
         return obj.get_filetypes
 
     def get_thumbnail(self, obj):
         if obj.thumbnail:
-            return settings.API_ULR + obj.thumbnail.url
+            return settings.API_ULR + obj.thumbnail.url  # why ULR?
         return None
+
+    def create(self, validated_data):
+        collections = validated_data.pop("collections", [])
+        tags = validated_data.pop("tags", [])
+        media = validated_data.pop("media", [])
+        category = validated_data.pop("category", None)
+        thumbnail = validated_data.pop("thumbnail", None)
+
+        author = self.context["request"].user.profile
+
+        post = Post.objects.create(author=author, category=category, **validated_data)
+
+        if collections:
+            post.collections.set(collections)
+
+        if tags:
+            post.tags.set(tags)
+
+        if media:
+            post.media.set(media)
+
+        if thumbnail:
+            post.thumbnail = thumbnail
+
+        return post
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+
+        data["category"] = CategorySerializer(instance.category).data
+        data["collections"] = CollectionSerializer(
+            instance.collections.all(), many=True
+        ).data
+        data["tags"] = TagSerializer(instance.tags.all(), many=True).data
+
+        return data
