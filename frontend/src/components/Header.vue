@@ -26,17 +26,18 @@
     >
 
     <!-- <router-link
-      :to="{ name: 'home' }"
-      class="header__notifications-button btn-light fs-6 ms-4"
-      >Notifications(10)</router-link
+      :to="{ name: 'chats' }"
+      class="header__messages-button btn-light fs-6 ms-4"
+      v-if="isAuth && !loading"
+      >Чаты</router-link
     > -->
 
-    <!-- <a
-      href="notifications"
-      class="header__notifications-button btn-light fs-5 ms-4"
-      v-if="isAuth"
-      ><i class="bi bi-bell"></i
-    ></a> -->
+    <router-link
+      :to="{ name: 'notifications' }"
+      class="header__notifications-button btn-light fs-6 ms-4"
+      v-if="isAuth && !loading"
+      >Уведомления({{ notificationsUnread.length }})</router-link
+    >
 
     <div class="header__dropdown-container navbar-nav align-items-center ms-0">
       <div class="header__profile-container nav-item dropdown ms-4">
@@ -93,6 +94,7 @@
 import LoadingCircle from "@/components/LoadingCircle.vue";
 import SearchBar from "@/components/SearchBar.vue";
 import type ProfileListItemModel from "@/models/ProfileModel";
+import type NotificationModel from "@/models/NotificationModel";
 import { computed } from "vue";
 import { useStore } from "vuex";
 import { useRoute } from "vue-router";
@@ -103,6 +105,13 @@ const route = useRoute();
 const loading = computed(() => store.state.profile.loading);
 const profile = computed<ProfileListItemModel>(
   () => store.state.profile.profile
+);
+
+const notifications = computed<NotificationModel[]>(
+  () => store.state.notification.notifications
+);
+const notificationsUnread = computed<NotificationModel[]>(() =>
+  notifications.value.filter((notification) => !notification.read)
 );
 
 const isAuth = computed(() => profile.value.id > -1);

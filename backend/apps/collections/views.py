@@ -6,7 +6,7 @@ from rest_framework import viewsets
 # from rest_framework.permissions import AllowAny
 
 # from rest_framework.decorators import action
-from .serializer import CollectionSerializer
+from .serializers import CollectionSerializer
 from .models import Collection
 
 

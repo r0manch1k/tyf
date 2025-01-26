@@ -26,7 +26,7 @@
   <BackgroundGraphs />
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import BackgroundGraphs from "@/components/BackgroundGraphs.vue";
 import Footer from "@/components/Footer.vue";
 import Header from "@/components/Header.vue";
@@ -36,10 +36,12 @@ import RegisterView from "@/views/Authorization/RegisterView.vue";
 import ResetPasswordView from "@/views/Authorization/ResetPasswordView.vue";
 import SetPasswordView from "@/views/Authorization/SetPasswordView.vue";
 import VerificationView from "@/views/Authorization/VerificationView.vue";
+import AuthService from "@/services/AuthService";
 import NotFoundView from "@/views/NotFoundView.vue";
 import { computed, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import { useStore } from "vuex";
+import NotificationModel from "@/models/NotificationModel";
 
 const route = useRoute();
 const store = useStore();
@@ -66,7 +68,31 @@ const isHome = computed(
 
 onMounted(async () => {
   await store.dispatch("profile/fetchProfile");
+  connectWebsocket();
 });
+
+function connectWebsocket() {
+  const websocket = new WebSocket(
+    `ws://localhost:8000/ws/notifications/?token=${AuthService.getAccessTokenFromLocalStorage()}`
+  );
+
+  websocket.onmessage = (event) => {
+    const data: NotificationModel = JSON.parse(event.data);
+    store.dispatch("notification/addNotification", data);
+  };
+
+  websocket.onopen = () => {
+    console.log("Connected to the websocket");
+  };
+
+  websocket.onclose = () => {
+    console.log("Disconnected from the websocket");
+
+    setTimeout(() => {
+      connectWebsocket();
+    }, 5000);
+  };
+}
 </script>
 
 <style>

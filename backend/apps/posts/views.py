@@ -13,7 +13,7 @@ from django.shortcuts import get_object_or_404
 from apps.comments.serializer import CommentSerializer
 from django.contrib.postgres.aggregates import StringAgg
 from rest_framework.permissions import IsAuthenticated, AllowAny
-from .serializer import PostDetailSerializer, PostListSerializer
+from .serializers import PostDetailSerializer, PostListSerializer
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
 

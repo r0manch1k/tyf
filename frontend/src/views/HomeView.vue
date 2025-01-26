@@ -126,6 +126,7 @@ onMounted(async () => {
     store.dispatch("profile/fetchProfile"),
     store.dispatch("category/fetchCategories"),
     store.dispatch("collection/fetchCollections"),
+    store.dispatch("notification/fetchUnreadNotifications"),
     (posts.value = (await PostDataService.getPosts()).posts),
   ]).then(() => {
     loading.value = false;

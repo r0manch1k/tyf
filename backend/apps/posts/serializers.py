@@ -1,11 +1,11 @@
 from rest_framework import serializers
 from .models import Post, BookmarkPost
-from apps.categories.serializer import CategorySerializer
-from apps.media.serializer import MediaSerializer
-from apps.comments.serializer import CommentSerializer
-from apps.tags.serializer import TagSerializer
-from apps.collections.serializer import CollectionSerializer
-from apps.profiles.serializer import ProfileListSerializer
+from apps.categories.serializers import CategorySerializer
+from apps.media.serializers import MediaSerializer
+from apps.comments.serializers import CommentSerializer
+from apps.tags.serializers import TagSerializer
+from apps.collections.serializers import CollectionSerializer
+from apps.profiles.serializers import ProfileListSerializer
 from tyf import settings
 
 

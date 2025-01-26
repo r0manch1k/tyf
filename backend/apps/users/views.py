@@ -1,5 +1,5 @@
 import requests
-from .serializer import (
+from .serializers import (
     RegisterSerializer,
     LoginSerializer,
     SetPasswordSerializer,

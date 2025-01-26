@@ -2,8 +2,9 @@ from rest_framework.response import Response
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from django.shortcuts import get_object_or_404
-from .serializer import ProfileDetailSerializer, ProfileListSerializer
-from apps.posts.serializer import PostListSerializer
+from .serializers import ProfileDetailSerializer, ProfileListSerializer
+from apps.posts.serializers import PostListSerializer
+from apps.chats.serializers import ChatListSerializer
 from .models import Profile
 from apps.follows.models import Follow
 from django.db.models import Count
@@ -139,4 +140,19 @@ class ProfileViewSet(viewsets.ViewSet):
         serializer = ProfileDetailSerializer(profile, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
         serializer.save()
+        return Response(serializer.data)
+
+    @action(
+        detail=True,
+        methods=["GET"],
+        url_path="chats",
+        url_name="chats",
+        permission_classes=[IsAuthenticated],
+        authentication_classes=[JWTAuthentication],
+    )
+    def chats(self, request, pk=None):
+        queryset = Profile.objects.all()
+        profile = get_object_or_404(queryset, username=pk)
+        chats = profile.chats.all()
+        serializer = ChatListSerializer(chats, context={"request": request}, many=True)
         return Response(serializer.data)

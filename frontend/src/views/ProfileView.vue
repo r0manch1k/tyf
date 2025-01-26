@@ -102,7 +102,7 @@
               <div class="profile-view__links fs-6 text-light w-100 text-start">
                 <div class="profile-view__links-list d-flex flex-wrap gap-2">
                   <div
-                    class="profile-view__link-item d-flex gap-2"
+                    class="profile-view__stat fs-6 text-light w-100 text-start"
                     v-if="profile.email"
                   >
                     <p class="profile-view__stat-label">Email:</p>
@@ -116,7 +116,7 @@
                     </span>
                   </div>
                   <div
-                    class="profile-view__link-item d-flex gap-2"
+                    class="profile-view__stat fs-6 text-light w-100 text-start"
                     v-if="profile.telegram"
                   >
                     <p class="profile-view__stat-label">Телеграм:</p>
@@ -132,7 +132,7 @@
                   </div>
 
                   <div
-                    class="profile-view__link-item d-flex gap-2"
+                    class="profile-view__stat fs-6 text-light w-100 text-start"
                     v-if="profile.vkontakte"
                   >
                     <p class="profile-view__stat-label">ВКонтакте:</p>
@@ -175,6 +175,7 @@
 
         <div class="profile-view__content col-md-9 pt-3">
           <Tabs
+            :cache-lifetime="0"
             nav-item-class="profile-view__tab-item nav-item"
             nav-item-active-class="profile-view__tab-item--active nav-item-active"
             nav-item-link-class="profile-view__tab-link nav-item-link"

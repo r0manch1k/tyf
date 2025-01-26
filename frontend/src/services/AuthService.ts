@@ -3,6 +3,9 @@ import store from "@/stores";
 import api from "@/stores/services/api";
 
 class AuthService {
+  getAccessTokenFromLocalStorage(): string {
+    return localStorage.getItem("accessToken") ?? "n";
+  }
   async handleOAuthRedirect(
     accessToken: string,
     provider: string
@@ -53,7 +56,6 @@ class AuthService {
         }
       })
       .catch((error) => {
-        console.log("AuthService.ts", error);
         return Promise.reject(error);
       });
 
@@ -69,7 +71,6 @@ class AuthService {
           token: { refresh: refreshToken },
         })
         .then((response) => {
-          console.log(response);
           if (response.status == 200) {
             localStorage.removeItem("accessToken");
             localStorage.removeItem("refreshToken");
@@ -96,11 +97,6 @@ class AuthService {
       })
       .then((response) => {
         if (response.status === 201) {
-          console.log(
-            "AuthService.ts",
-            response.data.payload.uid,
-            response.data.payload.token
-          );
           router.push(
             `/verify/${response.data.payload.uid}/${response.data.payload.token}`
           );
@@ -120,11 +116,6 @@ class AuthService {
       })
       .then((response) => {
         if (response.status === 201) {
-          console.log(
-            "AuthService.ts",
-            response.data.payload.uid,
-            response.data.payload.token
-          );
           router.push(
             `/verify/${response.data.payload.uid}/${response.data.payload.token}`
           );
@@ -178,7 +169,7 @@ class AuthService {
       )
       .then((response) => {
         if (response.status === 200) {
-          console.log("AuthService.ts", response.data.payload);
+          return Promise.resolve(response);
         } else {
           return Promise.reject(response);
         }

@@ -1,7 +1,10 @@
 from rest_framework import serializers
 from .models import Profile
-from apps.registry.serializer import MajorListSerializer, UniversityListSerializer
-from apps.tags.serializer import TagSerializer
+from apps.registry.serializers import (
+    MajorListSerializer,
+    UniversityListSerializer,
+)
+from apps.tags.serializers import TagSerializer
 from tyf import settings
 
 
