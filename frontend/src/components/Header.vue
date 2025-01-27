@@ -1,6 +1,6 @@
 <template>
   <nav class="header navbar navbar-expand bg-dark-light fixed-top px-4 py-1">
-    <router-link :to="{ name: 'home' }" class="header__logo navbar-brand me-4">
+    <router-link :to="{ name: 'home' }" class="header__logo navbar-brand mx-auto">
       <img class="logo" src="@/assets/media/logo.svg" alt="tyf" />
     </router-link>
 
@@ -15,7 +15,7 @@
     </a> -->
 
     <div class="header__search ms-4 w-100">
-      <SearchBar v-if="isHome"/>
+      <SearchBar v-if="isHome" />
     </div>
 
     <router-link
@@ -52,7 +52,10 @@
           />
         </a>
 
-        <LoadingCircle v-if="loading" class="spinner-border-sm" />
+        <LoadingCircle
+          v-if="loading"
+          class="spinner-border-sm mx-auto my-auto"
+        />
 
         <router-link
           v-if="!isAuth && !loading"
@@ -93,11 +96,11 @@
 <script setup lang="ts">
 import LoadingCircle from "@/components/LoadingCircle.vue";
 import SearchBar from "@/components/SearchBar.vue";
-import type ProfileListItemModel from "@/models/ProfileModel";
 import type NotificationModel from "@/models/NotificationModel";
+import type ProfileListItemModel from "@/models/ProfileModel";
 import { computed } from "vue";
-import { useStore } from "vuex";
 import { useRoute } from "vue-router";
+import { useStore } from "vuex";
 
 const store = useStore();
 const route = useRoute();
@@ -115,7 +118,7 @@ const notificationsUnread = computed<NotificationModel[]>(() =>
 );
 
 const isAuth = computed(() => profile.value.id > -1);
-const isHome = computed(() => route.path === "/"); 
+const isHome = computed(() => route.path === "/");
 </script>
 
 <style>

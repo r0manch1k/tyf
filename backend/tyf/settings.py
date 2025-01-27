@@ -84,6 +84,7 @@ INSTALLED_APPS = [
     "apps.categories",
     "apps.collections",
     "apps.tags",
+    "apps.tye",
     "apps.posts",
     "apps.comments",
     "apps.media",
@@ -317,3 +318,5 @@ LANGUAGES = [
     ("ru", "Русский"),
     ("en", "English"),
 ]
+
+TYE_MONGO_URL=os.getenv("TYE_MONGO_URL")

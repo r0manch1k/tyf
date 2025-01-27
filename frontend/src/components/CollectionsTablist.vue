@@ -41,14 +41,14 @@ import { useStore } from "vuex";
 const store = useStore();
 
 const enableSearch = (name: string) => {
-  store.dispatch("pagination/updateSearchInput", {
+  store.dispatch("search/updateSearchInput", {
     query: name.trim(),
     method: "collection",
   });
 };
 
 const disableSearch = () => {
-  store.dispatch("pagination/updateSearchInput", {
+  store.dispatch("search/updateSearchInput", {
     query: "",
     method: "full",
   });
@@ -61,25 +61,17 @@ defineProps({
 
 <style scoped>
 .tablist {
-  width: 100%;
-  overflow-y: hidden;
-  scrollbar-width: none;
-  transition: scrollbar-width 1s linear;
+  max-width: 100%;
+  max-height: 200px;
+  overflow-x: auto;
+  /* scrollbar-width: thin; */
+  scrollbar-color: rgba(255, 255, 255, 0) transparent;
+  transition: scrollbar-color 0.15s ease-in-out;
 }
 
 .tablist:hover {
-  overflow-y: auto !important;
-  scrollbar-width: thin;
   scrollbar-color: rgba(255, 255, 255, 0.5) transparent;
-  max-height: 200px;
 }
-
-/*
-.tablist ul {
-  padding: 0;
-  margin: 0;
-  list-style: none;
-} */
 
 .tablist::-webkit-scrollbar {
   width: 8px;
@@ -87,12 +79,18 @@ defineProps({
 }
 
 .tablist::-webkit-scrollbar-thumb {
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(255, 255, 255, 0);
   border-radius: 4px;
+  -webkit-transition: background-color 0.15s ease-in-out;
+}
+
+.tablist:hover::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.5);
 }
 
 .tablist::-webkit-scrollbar-track {
   background: transparent;
+  border: none;
 }
 
 ul {

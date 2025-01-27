@@ -118,6 +118,7 @@ class ProfileDetailSerializer(serializers.ModelSerializer):
         request = self.context.get("request", None)
         if request and request.user:
             email = request.user
+            print("fhjdsjjkfdksfjdsjfdsjf", email)
             return obj.following.filter(following__email=email).exists()
         return False
 

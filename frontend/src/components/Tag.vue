@@ -18,7 +18,7 @@ import { useStore } from "vuex";
 const store = useStore();
 
 const enableSearch = (name: string) => {
-  store.dispatch("pagination/updateSearchInput", {
+  store.dispatch("search/updateSearchInput", {
     query: name.trim(),
     method: "tag",
   });

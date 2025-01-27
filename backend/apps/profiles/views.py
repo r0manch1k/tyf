@@ -10,15 +10,11 @@ from apps.follows.models import Follow
 from django.db.models import Count
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
-# from rest_framework.permissions import AllowAny
-
-# from rest_framework.decorators import authentication_classes
-
-# from rest_framework_simplejwt.authentication import JWTAuthentication
-# from rest_framework.permissions import IsAuthenticated
 
 
 class ProfileViewSet(viewsets.ViewSet):
+    authentication_classes = [JWTAuthentication]
+
     def list(self, request):
         queryset = Profile.objects.all()
         serializer = ProfileListSerializer(queryset, many=True)
@@ -37,7 +33,12 @@ class ProfileViewSet(viewsets.ViewSet):
         return Response(serializer.data)
 
     @action(
-        detail=False, methods=["GET"], url_path="most-active", url_name="most-active"
+        detail=False,
+        methods=["GET"],
+        url_path="most-active",
+        url_name="most-active",
+        permission_classes=[],
+        authentication_classes=[],
     )
     def most_active_users(self, request):
         queryset = Profile.objects.annotate(nposts=Count("posts")).order_by("-nposts")[

@@ -97,7 +97,7 @@
       </div>
     </div>
   </div>
-  <LoadingCircle v-if="loading" />
+  <LoadingCircle class="mx-auto my-auto" v-if="loading" />
 </template>
 
 <script lang="ts" setup>

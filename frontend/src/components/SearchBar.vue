@@ -99,7 +99,7 @@ const inputTextStyle = ref({ color: BASE_COLOR });
 const inputComponent = ref<HTMLElement>();
 const container = ref<HTMLElement>();
 const searchInput = computed<SearchModel>(
-  () => store.state.pagination.searchInput
+  () => store.state.search.searchInput
 );
 
 const handleInput = () => {
@@ -109,17 +109,16 @@ const handleInput = () => {
   }
 
   if (!Object.keys(KEYWORDS).includes(inputKeyword)) {
-    store.dispatch("pagination/updateSearchInput", {
+    store.dispatch("search/updateSearchInput", {
       query: inputText.value,
       method: "full",
     });
-
   } else {
     const inputTextLower = inputText.value.toLowerCase();
     for (const [keyword, method] of Object.entries(KEYWORDS)) {
       if (inputTextLower.startsWith(keyword)) {
         inputKeyword = keyword;
-        store.dispatch("pagination/updateSearchInput", {
+        store.dispatch("search/updateSearchInput", {
           query: inputText.value.substring(keyword.length).trim(),
           method: method,
         });
@@ -148,7 +147,7 @@ const handleChangeSearchInput = () => {
 
   highlightKeywords(searchKeyword);
   isExpanded.value = false;
-  store.commit("setSuggestionsOpen", false);
+  store.commit("search/setSuggestionsOpen", false);
 };
 
 const highlightKeywords = (keyword: string) => {
@@ -169,29 +168,29 @@ const applyFilterSearch = (event: MouseEvent) => {
   }
 
   isExpanded.value = false;
-  store.commit("setSuggestionsOpen", false);
+  store.commit("search/setSuggestionsOpen", false);
 };
 
 const handleFocused = () => {
   isExpanded.value = true;
   inputComponent.value?.focus();
-  store.commit("setSuggestionsOpen", true);
+  store.commit("search/setSuggestionsOpen", true);
 };
 
 const handleClickOutside = (event: MouseEvent) => {
   if (container.value && !container.value.contains(event.target as Node)) {
     isExpanded.value = false;
-    store.commit("setSuggestionsOpen", false);
+    store.commit("search/setSuggestionsOpen", false);
   }
 };
 
 watch(inputText, () => {
   if (inputText.value) {
     isExpanded.value = false;
-    store.commit("setSuggestionsOpen", false);
+    store.commit("search/setSuggestionsOpen", false);
   } else {
     isExpanded.value = true;
-    store.commit("setSuggestionsOpen", true);
+    store.commit("search/setSuggestionsOpen", true);
   }
 });
 

@@ -7,7 +7,7 @@ User = get_user_model()
 
 
 def create_profile(sender, instance, created, **kwargs):
-    if created:
+    if not instance.is_superuser and instance.is_active:
         Profile.objects.create(
             user=instance, email=instance.email, date_joined=instance.date_joined
         )

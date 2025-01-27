@@ -15,8 +15,8 @@ urlpatterns = [
     path("api/v1/", include("apps.comments.urls")),
     path("api/v1/", include("apps.registry.urls")),
     path("api/v1/", include("apps.notifications.urls")),
+    path("api/v1/", include("apps.tye.urls")),
     path("api/v1/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
-    # path('api/v1/auth/', include('social_django.urls', namespace='social')),
 ]
 
 if bool(settings.DEBUG):

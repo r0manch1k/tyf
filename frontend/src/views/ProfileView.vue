@@ -33,7 +33,10 @@
                       : "Подписаться"
                   }}
                 </span>
-                <LoadingCircle v-else class="spinner-border-sm" />
+                <LoadingCircle
+                  v-else
+                  class="spinner-border-sm mx-auto my-auto"
+                />
               </button>
 
               <router-link
@@ -201,7 +204,7 @@
                   />
                 </div>
               </div>
-              <LoadingCircle v-else />
+              <LoadingCircle class="mx-auto my-auto" v-else />
             </Tab>
             <Tab :name="`Подписчики(${profile.followers_count})`">
               <div
@@ -227,7 +230,7 @@
                   </div>
                 </div>
               </div>
-              <LoadingCircle v-else />
+              <LoadingCircle class="mx-auto my-auto" v-else />
             </Tab>
             <Tab :name="`Подписки(${profile.following_count})`">
               <div
@@ -253,29 +256,27 @@
                   </div>
                 </div>
               </div>
-              <LoadingCircle v-else />
+              <LoadingCircle class="mx-auto my-auto" v-else />
             </Tab>
           </Tabs>
         </div>
       </div>
     </div>
   </div>
-  <div v-else>
-    <LoadingCircle />
-  </div>
+  <LoadingCircle v-else class="mx-auto my-auto" />
 </template>
 
 <script setup lang="ts">
-import { ref, defineProps, onMounted, computed, watch } from "vue";
-import { useStore } from "vuex";
-import { Tabs, Tab } from "vue3-tabs-component";
 import LoadingCircle from "@/components/LoadingCircle.vue";
-import ProfileListItemLarge from "@/components/ProfileListItemLarge.vue";
 import Post from "@/components/Post.vue";
+import ProfileListItemLarge from "@/components/ProfileListItemLarge.vue";
 import Tag from "@/components/Tag.vue";
 import type { ProfileDetailModel } from "@/models/ProfileModel";
-import ProfileDataService from "@/services/ProfileDataService";
 import router from "@/router";
+import ProfileDataService from "@/services/ProfileDataService";
+import { computed, defineProps, onMounted, ref, watch } from "vue";
+import { Tab, Tabs } from "vue3-tabs-component";
+import { useStore } from "vuex";
 
 const store = useStore();
 

@@ -31,22 +31,24 @@ import BackgroundGraphs from "@/components/BackgroundGraphs.vue";
 import Footer from "@/components/Footer.vue";
 import Header from "@/components/Header.vue";
 import Sidebar from "@/components/Sidebar.vue";
+import NotificationModel from "@/models/NotificationModel";
+import AuthService from "@/services/AuthService";
 import LoginView from "@/views/Authorization/LoginView.vue";
 import RegisterView from "@/views/Authorization/RegisterView.vue";
 import ResetPasswordView from "@/views/Authorization/ResetPasswordView.vue";
 import SetPasswordView from "@/views/Authorization/SetPasswordView.vue";
 import VerificationView from "@/views/Authorization/VerificationView.vue";
-import AuthService from "@/services/AuthService";
 import NotFoundView from "@/views/NotFoundView.vue";
 import { computed, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import { useStore } from "vuex";
-import NotificationModel from "@/models/NotificationModel";
 
 const route = useRoute();
 const store = useStore();
 
-const isSuggestionsOpen = computed(() => store.getters.isSuggestionsOpen);
+const isSuggestionsOpen = computed(() => {
+  return store.getters["search/isSuggestionsOpen"];
+});
 
 const isError = computed(() => {
   return store.getters["error/getShowErrorPage"];
@@ -111,19 +113,17 @@ function connectWebsocket() {
 
 #app {
   overflow-x: hidden;
-  /* overflow-y: hidden; */
   scrollbar-width: none;
   scroll-behavior: smooth;
   overflow-y: auto;
   font-family: "MesloLGS NF", sans-serif;
-  /* font-family: "Arial", sans-serif; */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   height: 100vh;
   width: 100vw;
-  display: flex; /* Создаем гибкую структуру */
-  flex-direction: column; /* Располагаем элементы вертикально */
+  display: flex;
+  flex-direction: column;
   min-height: 100vh;
 }
 
@@ -138,16 +138,7 @@ function connectWebsocket() {
   display: flex !important;
   flex-direction: column !important;
   justify-content: flex-start !important;
-  /* background-color: rgba(51, 51, 51, 0.8); */
-  /* background: transparent; */
-  /* border-top: 1px solid var(--dark-light); */
-  /* border-bottom: 1px solid var(--dark-light); */
-  /* z-index: -50; */
 }
-
-/* .card {
-border: 1px solid var(--secondary);
-} */
 
 .btn {
   border-radius: 0.4rem !important;

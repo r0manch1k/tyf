@@ -11,26 +11,12 @@ import { ref } from "vue";
 // import type ProfileModel from "@/models/ProfileModel";
 // import PostDetailView from "@/views/PostDetailView.vue";
 
-interface PostListResponse {
-  count: number;
-  next?: number;
-  results: PostListItemModel[];
-}
-
-interface PostListParams {
-  page: number;
-  query?: string;
-  search_method?: string;
-}
-
-interface PostListResult {
-  count: number;
-  posts: PostListItemModel[];
-}
-
 class PostDataService {
-  async getPosts(query = "", searchMethod = ""): Promise<PostListResult> {
-    let data: PostListResponse = {
+  async getPosts(
+    query = "",
+    searchMethod = ""
+  ): Promise<{ posts: PostListItemModel[]; count: number }> {
+    let data = {
       count: 0,
       results: [] as PostListItemModel[],
     };
@@ -45,7 +31,11 @@ class PostDataService {
         store.getters["pagination/getCurrentPostsPage"]
       );
 
-      let parameters: PostListParams = { page: currentPageId.value };
+      let parameters: { page: number; query?: string; search_method?: string } =
+        {
+          page: currentPageId.value,
+        };
+
       if (query && searchMethod) {
         parameters = {
           ...parameters,
@@ -58,13 +48,20 @@ class PostDataService {
         .get("/posts/", {
           params: parameters,
         })
-        .then((response: { data: PostListResponse }) => {
-          data = response.data;
-
-          if (!data.next) {
-            store.commit("pagination/disablePostsFetching");
+        .then(
+          (response: {
+            data: {
+              count: number;
+              results: PostListItemModel[];
+              next?: number;
+            };
+          }) => {
+            data = response.data;
+            if (!response.data.next) {
+              store.commit("pagination/disablePostsFetching");
+            }
           }
-        })
+        )
         .catch((error: unknown) => console.error(error));
     }
     return { posts: data.results, count: data.count };
@@ -78,6 +75,7 @@ class PostDataService {
       .catch((error: unknown) => console.error(error));
     return data.data;
   }
+
   async getMostCommentedPosts(): Promise<PostListItemModel[]> {
     let data: { data: PostListItemModel[] } = {
       data: [] as PostListItemModel[],
@@ -88,6 +86,7 @@ class PostDataService {
       .catch((error: unknown) => console.error(error));
     return data.data;
   }
+  
   async getMostBookmarkedPosts(): Promise<PostListItemModel[]> {
     let data: { data: PostListItemModel[] } = {
       data: [] as PostListItemModel[],

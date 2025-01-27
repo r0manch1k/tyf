@@ -44,7 +44,7 @@
       </div>
     </div>
   </div>
-  <LoadingCircle v-else />
+  <LoadingCircle class="mx-auto my-auto" v-else />
 </template>
 
 <script lang="ts" setup>

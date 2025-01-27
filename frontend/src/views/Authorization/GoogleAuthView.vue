@@ -4,7 +4,7 @@
     :show="showMessage"
     @update:show="showMessage = $event"
   />
-  <LoadingCircle v-if="loading" />
+  <LoadingCircle class="mx-auto my-auto" v-if="loading" />
   <NotFoundView v-else />
 </template>
 

@@ -2,7 +2,10 @@
   <div class="home content open px-5" v-if="!loading" ref="scrollComponent">
     <div class="home__header mb-2">
       <!-- <Tablist v-bind:tablist="categories" /> -->
-      <CollectionsTablist v-if="!searchInput.query" v-bind:collections="collections" />
+      <CollectionsTablist
+        v-if="!searchInput.query"
+        v-bind:collections="collections"
+      />
     </div>
     <div class="home__body container-fluid p-0">
       <div class="home__body__container row">
@@ -16,7 +19,7 @@
               :results-count="resultsCount"
             />
             <Post v-for="post in posts" :key="post.identifier" :post="post" />
-            <LoadingCircle v-if="isFetching" />
+            <LoadingCircle class="mx-auto my-auto" v-if="isFetching" />
           </div>
         </div>
         <div
@@ -30,21 +33,21 @@
       </div>
     </div>
   </div>
-  <LoadingCircle v-else />
+  <LoadingCircle class="mx-auto my-auto" v-else />
 </template>
 
 <script lang="ts" setup>
+import CollectionsTablist from "@/components/CollectionsTablist.vue";
 import LoadingCircle from "@/components/LoadingCircle.vue";
 import MostActiveUsersBar from "@/components/MostActiveUsersBar.vue";
+import MostBookmarkedPostsBar from "@/components/MostBookmarkedPostsBar.vue";
+import MostCommentedPostsBar from "@/components/MostCommentedPostsBar.vue";
 import Post from "@/components/Post.vue";
 import SearchInfo from "@/components/SearchInfo.vue";
 import type PostListItemModel from "@/models/PostModel";
 import type SearchModel from "@/models/SearchModel";
 import PostDataService from "@/services/PostDataService";
 import TyeHighscoresBar from "@/tye_frontend/components/TyeHighscoresBar.vue";
-import CollectionsTablist from "@/components/CollectionsTablist.vue";
-import MostCommentedPostsBar from "@/components/MostCommentedPostsBar.vue";
-import MostBookmarkedPostsBar from "@/components/MostBookmarkedPostsBar.vue";
 // import type CategoryModel from "@/models/CategoryModel";
 import type CollectionModel from "@/models/CollectionModel";
 import { computed, onMounted, onUnmounted, ref, watch } from "vue";
@@ -60,7 +63,7 @@ const posts = ref<PostListItemModel[]>([]);
 const scrollComponent = ref<HTMLElement | null>(null);
 
 const searchInput = computed<SearchModel>(
-  () => store.state.pagination.searchInput
+  () => store.state.search.searchInput
 );
 // const categories = computed<CategoryModel[]>(
 //   () => store.getters["category/getCategories"]
