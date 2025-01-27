@@ -7,6 +7,7 @@ from rest_framework.permissions import AllowAny
 
 MAX_RECORDS = 10
 
+
 class LeaderBoard(APIView):
     permission_classes = [AllowAny]
 

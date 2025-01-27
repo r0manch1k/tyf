@@ -319,4 +319,4 @@ LANGUAGES = [
     ("en", "English"),
 ]
 
-TYE_MONGO_URL=os.getenv("TYE_MONGO_URL")
+TYE_MONGO_URL = os.getenv("TYE_MONGO_URL")

@@ -67,7 +67,7 @@
 import CommentsList from "@/components/CommentsList.vue";
 import LoadingCircle from "@/components/LoadingCircle.vue";
 import AddCommentFormVue from "@/components/AddCommentForm.vue";
-import ReplyCommentForm from "@/components/ReplyCommentForm.vue";
+// import ReplyCommentForm from "@/components/ReplyCommentForm.vue";
 import type CommentModel from "@/models/CommentModel";
 import type { PostDetailModel } from "@/models/PostModel";
 import PostDataService from "@/services/PostDataService";
@@ -76,7 +76,7 @@ import ProfileDataService from "@/services/ProfileDataService";
 import { useStore } from "vuex";
 import { marked } from "marked";
 import { onMounted, ref, defineProps } from "vue";
-import CommentsDataService from "@/services/CommentsDataService";
+// import CommentsDataService from "@/services/CommentsDataService";
 
 const props = defineProps({
   identifier: String,
@@ -91,11 +91,11 @@ const profile = ref<ProfileDetailModel>({
   ...store.getters["profile/getDefaultProfile"],
 });
 
-const fetchCommentWithAuthors = async (comment: any) => {
-  const author = await ProfileDataService.getProfileByUsername(comment.author);
+const fetchCommentWithAuthors = async (comment: CommentModel) => {
+  const author = await ProfileDataService.getProfileByUsername(comment.author.username);
 
-  const repliesWithAuthors = await Promise.all(
-    comment.replies.map(async (reply: any) => {
+  const repliesWithAuthors: CommentModel[] = await Promise.all(
+    comment.replies.map(async (reply: CommentModel) => {
       const replyWithAuthor = await fetchCommentWithAuthors(reply);
       return { ...replyWithAuthor };
     })
@@ -122,7 +122,7 @@ onMounted(async () => {
 
   if (post.value?.comments) {
     nestedComments.value = await Promise.all(
-      post.value.comments.map(async (comment: any) => {
+      post.value.comments.map(async (comment: CommentModel) => {
         return await fetchCommentWithAuthors(comment);
       })
     );

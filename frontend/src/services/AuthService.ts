@@ -1,6 +1,7 @@
 import router from "@/router";
 import store from "@/stores";
 import api from "@/stores/services/api";
+import { AxiosResponse } from "axios";
 
 class AuthService {
   getAccessTokenFromLocalStorage(): string {
@@ -198,7 +199,11 @@ class AuthService {
       });
   }
 
-  async verify(otp: string, token: string, uid: string): Promise<any> {
+  async verify(
+    otp: string,
+    token: string,
+    uid: string
+  ): Promise<AxiosResponse> {
     const response = await api.post(
       "/users/verification/",
       {

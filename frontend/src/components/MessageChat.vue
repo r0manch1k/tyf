@@ -16,7 +16,7 @@
 import { defineProps } from "vue";
 import type MessageChatModel from "@/models/MessageChatModel";
 
-const props = defineProps<{
+defineProps<{
   message: MessageChatModel;
 }>();
 </script>

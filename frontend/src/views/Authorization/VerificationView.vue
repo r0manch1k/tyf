@@ -109,6 +109,7 @@ import { useRoute, useRouter } from "vue-router";
 import { useStore } from "vuex";
 
 import Message from "@/components/Message.vue";
+import { AxiosResponse } from "axios";
 
 const store = useStore();
 const route = useRoute();
@@ -151,7 +152,7 @@ const verifySubmit = async () => {
     (route.params.token as string) ?? "",
     (route.params.uid as string) ?? ""
   )
-    .then((response: any) => {
+    .then((response: AxiosResponse) => {
       if (response.status === 201) {
         const uid = response.data.payload.uid ?? "";
         const resetPasswordToken = response.data.payload.token ?? "";
@@ -166,7 +167,7 @@ const verifySubmit = async () => {
         router.push("/login");
       }
     })
-    .catch((error: any) => {
+    .catch((error: AxiosResponse) => {
       if (error.status === 403) {
         const message: MessageModel = {
           text: "Ваша сессия подтверждения почты истекла. Повторите попытку ещё раз.",

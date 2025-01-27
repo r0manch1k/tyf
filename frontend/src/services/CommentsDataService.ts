@@ -1,5 +1,6 @@
 import CommentPayload from "@/models/CommentPayload";
 import api from "@/stores/services/api";
+import { AxiosResponse } from "axios"
 
 class CommentsDataService {
   // async createComment(payload: CreateCommentPayload): Promise<any> {
@@ -20,7 +21,7 @@ class CommentsDataService {
   //     });
   // }
 
-  async createComment(payload: CommentPayload): Promise<any> {
+  async createComment(payload: CommentPayload): Promise<AxiosResponse> {
     const { post, ...rest } = payload;
     console.log("CommentsDataService.createComment", post, rest);
 
@@ -71,7 +72,7 @@ class CommentsDataService {
       });
   }
 
-  async createReply(payload: CommentPayload): Promise<any> {
+  async createReply(payload: CommentPayload): Promise<AxiosResponse> {
     const { post, ...rest } = payload;
     console.log("CommentsDataService.createReply", post, rest);
 

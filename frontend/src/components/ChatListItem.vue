@@ -20,7 +20,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted, computed, defineProps } from "vue";
+import { ref, defineProps } from "vue";
 import type { ChatListItemModel } from "@/models/ChatModel";
 
 const props = defineProps<{
