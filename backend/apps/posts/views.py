@@ -10,7 +10,7 @@ from django.contrib.postgres.search import (
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from django.shortcuts import get_object_or_404
-from apps.comments.serializer import CommentSerializer
+from apps.comments.serializers import CommentSerializer
 from django.contrib.postgres.aggregates import StringAgg
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from .serializers import PostDetailSerializer, PostListSerializer
