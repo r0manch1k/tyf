@@ -1,6 +1,6 @@
 FROM python:3.11.4-slim-buster
 
-WORKDIR /backend
+WORKDIR /tyf
 
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
@@ -8,24 +8,27 @@ ENV PYTHONUNBUFFERED 1
 RUN apt-get update && apt-get install -y --no-install-recommends \
     postgresql-client redis-server gettext gcc python3-dev libpq-dev netcat
 
+RUN mkdir -p backend
+
 RUN pip3 install --upgrade pip
-COPY ./backend/requirements.txt .
-RUN pip3 install --no-cache-dir -r requirements.txt
+COPY ./backend/requirements.txt ./backend/requirements.txt
+RUN pip3 install --no-cache-dir -r backend/requirements.txt
 
-COPY ./.docker/prod/entrypoint.prod.sh .
+RUN mkdir -p /tyf/backend/staticfiles/
+RUN mkdir -p /tyf/backend/mediafiles/
 
-RUN mkdir -p /backend/staticfiles/
-RUN mkdir -p /backend/mediafiles/
-
-COPY ./backend .
-COPY ./frontend ./frontend
+COPY ./backend ./backend
+COPY ./.docker/prod/conf/celery.sh ./celery.sh
+COPY ./.docker/prod/conf/backend.sh ./backend.sh
+COPY ./.docker/prod/conf/gunicorn.sh ./gunicorn.sh
 
 RUN addgroup --system app && adduser --system --ingroup app app
 
-RUN chown -R app:app /backend/
-RUN chown -R app:app /backend/staticfiles/
-RUN chown -R app:app /backend/mediafiles/
+RUN chown -R app:app /tyf/
+RUN chown -R app:app /tyf/backend/
+RUN chown -R app:app /tyf/backend/staticfiles/
+RUN chown -R app:app /tyf/backend/mediafiles/
 
 USER app
 
-ENTRYPOINT ["sh", "/backend/entrypoint.prod.sh"]
+ENTRYPOINT ["sh", "/tyf/backend.sh"]

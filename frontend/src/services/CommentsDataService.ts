@@ -23,7 +23,6 @@ class CommentsDataService {
 
   async createComment(payload: CommentPayload): Promise<AxiosResponse> {
     const { post, ...rest } = payload;
-    console.log("CommentsDataService.createComment", post, rest);
 
     return api
       .post(`/posts/${post}/comments/`, rest)
@@ -74,7 +73,6 @@ class CommentsDataService {
 
   async createReply(payload: CommentPayload): Promise<AxiosResponse> {
     const { post, ...rest } = payload;
-    console.log("CommentsDataService.createReply", post, rest);
 
     return api
       .post(`/posts/${post}/comments/`, rest)

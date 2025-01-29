@@ -4,14 +4,21 @@ from pathlib import Path
 from corsheaders.defaults import default_headers
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+# BASE_URL = (
+#     "http://localhost:8080"
+#     if not int(os.getenv("DEBUG"))
+#     else "http://localhost:8000"
+# )
 
 
 SECRET_KEY = os.getenv("SECRET_KEY")
-DEBUG = int(os.getenv("DEBUG", default=0))
+DEBUG = int(os.getenv("DEBUG"))
 ALLOWED_HOSTS = ["*"]
 
 # TODO: Change to production URL
-API_ULR = "http://localhost:8000"
+API_URL = (
+    "http://localhost:8000" if int(os.getenv("DEBUG")) else "http://localhost:8080"
+)
 
 STATIC_URL = "/static/"
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
@@ -83,6 +90,7 @@ INSTALLED_APPS = [
     "apps.registry",
     "apps.categories",
     "apps.collections",
+    "apps.exec",
     "apps.tags",
     "apps.tye",
     "apps.posts",
@@ -201,6 +209,7 @@ AUTH_PASSWORD_VALIDATORS = [
 REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework_api_key.permissions.HasAPIKey",
+        "rest_framework.permissions.AllowAny",
     ],
     "DATE_INPUT_FORMATS": [
         "%d.%m.%Y",

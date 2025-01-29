@@ -45,7 +45,6 @@ const submitGoogleAuth = () => {
   const redirectUri = `${window.location.origin}/oauth/callback/google`
 
   const url = `${googleAuthUrl}?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=${responseType}&scope=${scope}&prompt=${prompt}`;
-  console.log(url);
   window.location.href = url;
 };
 

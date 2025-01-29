@@ -1,19 +1,17 @@
-# TODO: Add celery
-
 services:
   nginx:
     container_name: tyf_nginx
     build:
       context: ./../
-      dockerfile: ./.docker/prod/nginx/Dockerfile.nginx
+      dockerfile: ./.docker/prod/Dockerfile.nginx.prod
     restart: unless-stopped
     ports:
-      - 8000:80
+      - 8080:80
     volumes:
-      - static_files:/backend/staticfiles/
-      - media_files:/backend/mediafiles/
+      - static_files:/tyf/backend/staticfiles/
+      - media_files:/tyf/backend/mediafiles/
     env_file:
-      - ./prod/.env.prod
+      - ./prod/conf/.env.prod
     depends_on:
       backend:
         condition: service_started
@@ -25,14 +23,14 @@ services:
     build:
       context: ./../
       dockerfile: ./.docker/prod/Dockerfile.backend.prod
-    command: gunicorn tyf.wsgi:application --bind 0.0.0.0:8000
+    command: "sh /tyf/gunicorn.sh"
     volumes:
-      - static_files:/backend/staticfiles/
-      - media_files:/backend/mediafiles/
+      - static_files:/tyf/backend/staticfiles/
+      - media_files:/tyf/backend/mediafiles/
     expose:
-      - 8000
+      - 8080
     env_file:
-      - ./prod/.env.prod
+      - ./prod/conf/.env.prod
     depends_on:
       database:
         condition: service_healthy
@@ -48,13 +46,14 @@ services:
     image: postgres:13.0-alpine
     restart: unless-stopped
     volumes:
-      - postgres_data:/var/lib/postgresql/data/
-    ports:
-      - 5432:5432
+      - postgres_data_prod:/var/lib/postgresql/data/
+      - ./prod/conf/init.sql:/docker-entrypoint-initdb.d/init.sql
+    expose:
+      - 5432
     env_file:
-      - ./prod/.env.prod
+      - ./prod/conf/.env.prod
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      test: ["CMD-SHELL", "pg_isready -U tyf_admin -d tyf"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -64,9 +63,21 @@ services:
 
   redis:
     container_name: tyf_redis
-    image: redis:latest
     restart: unless-stopped
-    ports:
+    env_file:
+      - ./prod/conf/.env.prod
+    build:
+      context: ./../
+      dockerfile: ./.docker/prod/Dockerfile.redis.prod
+    deploy:
+      resources:
+        limits:
+          cpus: "0.50"
+          memory: 512M
+        reservations:
+          cpus: "0.25"
+          memory: 256M
+    expose:
       - 6379
     healthcheck:
       test:
@@ -81,8 +92,26 @@ services:
     networks:
       - backend_network
 
+  beat:
+    container_name: tyf_beat
+    restart: unless-stopped
+    build:
+      context: ./../
+      dockerfile: ./.docker/prod/Dockerfile.backend.prod
+    command: "sh /tyf/celery.sh"
+    env_file:
+      - ./prod/conf/.env.prod
+    expose:
+      - 7999
+    depends_on:
+      - database
+      - redis
+      - backend
+    networks:
+      - backend_network
+
 volumes:
-  postgres_data:
+  postgres_data_prod:
   static_files:
   media_files:
 

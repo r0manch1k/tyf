@@ -22,41 +22,38 @@
 <style></style>
 
 <script setup lang="ts">
-import { ref } from "vue";
 import CommentsDataService from "@/services/CommentsDataService";
-import { defineProps, defineEmits } from "vue";
+import type CommentPayload from "@/models/CommentPayload";
+import { defineEmits, defineProps, ref } from "vue";
 
 const content = ref("");
 const emit = defineEmits(["updateComment"]);
-const props = defineProps(
-  {
-    postId: {
-      type: String,
-      default: "",
-    },
-    comment: {
-      type: Object,
-      default: () => ({}),
-    },
-  }
-);
-
+const props = defineProps({
+  postId: {
+    type: String,
+    default: "",
+  },
+  comment: {
+    type: Object,
+    default: () => ({}),
+  },
+});
 
 const updateComment = async () => {
-  console.log("Preparing to update comment:", content.value);
-  const commentData = {
-    post: props.postId, 
+  const commentData: CommentPayload = {
+    post: props.postId,
     content: content.value,
   };
 
   try {
-    const updatedComment = await CommentsDataService.updateCommentByIdentifier(props.comment.identifier, commentData); 
-    console.log("Comment updated:", updatedComment);
+    const updatedComment = await CommentsDataService.updateCommentByIdentifier(
+      props.comment.identifier,
+      commentData
+    );
     emit("updateComment", updatedComment);
     content.value = "";
   } catch (error) {
     console.error("Error updating comment:", error);
   }
 };
-
 </script>

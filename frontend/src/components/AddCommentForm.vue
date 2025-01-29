@@ -47,7 +47,6 @@ const content = ref("");
 const emit = defineEmits(["addComment"]);
 
 const addComment = async () => {
-  console.log("Preparing to submit comment:", content.value);
   const commentData: CommentPayload = {
     post: props.postId, 
     content: content.value,
@@ -56,7 +55,6 @@ const addComment = async () => {
 
   try {
     const newComment = await CommentsDataService.createComment(commentData);
-    console.log("New comment created:", newComment);
     emit("addComment", newComment);
     content.value = "";
   } catch (error) {

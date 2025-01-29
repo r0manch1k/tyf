@@ -107,9 +107,6 @@ const resetPasswordSubmit = async () => {
   loading.value = true;
   showMessage.value = false;
   await AuthService.resetPassword(email.value)
-    .then(() => {
-      console.log("Success");
-    })
     .catch((error) => {
       const message: MessageModel = {
         text: error.data.message,

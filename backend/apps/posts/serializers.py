@@ -98,7 +98,7 @@ class PostListSerializer(serializers.ModelSerializer):
 
     def get_thumbnail(self, obj):
         if obj.thumbnail:
-            return settings.API_ULR + obj.thumbnail.url
+            return settings.API_URL + obj.thumbnail.url
         return None
 
 
@@ -156,5 +156,5 @@ class PostDetailSerializer(serializers.ModelSerializer):
 
     def get_thumbnail(self, obj):
         if obj.thumbnail:
-            return settings.API_ULR + obj.thumbnail.url
+            return settings.API_URL + obj.thumbnail.url
         return None

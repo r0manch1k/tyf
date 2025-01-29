@@ -1,17 +1,14 @@
-# TODO: Add celery
-
 services:
   frontend:
     container_name: tyf_frontend
     build:
       context: ./../
       dockerfile: ./.docker/dev/Dockerfile.frontend.dev
+    command: "sh -c 'cd frontend && npm run serve'"
     volumes:
       - ./../frontend:/frontend
     ports:
       - 8080:8080
-    env_file:
-      - ./dev/.env.dev
     depends_on:
       backend:
         condition: service_started
@@ -31,7 +28,7 @@ services:
     ports:
       - 8000:8000
     env_file:
-      - ./dev/.env.dev
+      - ./dev/conf/.env.dev
     depends_on:
       database:
         condition: service_healthy
@@ -42,12 +39,12 @@ services:
     container_name: tyf_postgres
     image: postgres:13.0-alpine
     volumes:
-      - postgres_data:/var/lib/postgresql/data/
-      - ./dev/init.sql:/docker-entrypoint-initdb.d/init.sql 
+      - postgres_data_dev:/var/lib/postgresql/data/
+      - ./dev/conf/init.sql:/docker-entrypoint-initdb.d/init.sql 
     ports:
       - 5432:5432
     env_file:
-      - ./dev/.env.dev
+      - ./dev/conf/.env.dev
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 10s
@@ -90,9 +87,9 @@ services:
     build:
       context: ./../
       dockerfile: ./.docker/dev/Dockerfile.backend.dev
-    command: "sh ./.docker/dev/celery.sh"
+    command: "sh /tyf/celery.sh"
     env_file:
-      - ./dev/.env.dev
+      - ./dev/conf/.env.dev
     ports:
       - 7999:7999
     depends_on:
@@ -101,4 +98,4 @@ services:
       - backend
 
 volumes:
-  postgres_data:
+  postgres_data_dev:

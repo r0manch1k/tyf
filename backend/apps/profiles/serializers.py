@@ -11,8 +11,8 @@ from tyf import settings
 class AvatarField(serializers.ImageField):
     def to_representation(self, value):
         if value:
-            return settings.API_ULR + value.url
-        return settings.API_ULR + settings.DEFAULT_USER_AVATAR
+            return settings.API_URL + value.url
+        return settings.API_URL + settings.DEFAULT_USER_AVATAR
 
     def to_internal_value(self, data):
         return super().to_internal_value(data)

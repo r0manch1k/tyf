@@ -2,7 +2,10 @@ import store from "@/stores";
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: process.env.VUE_APP_API_URL,
+  baseURL:
+    process.env.NODE_ENV === "production"
+      ? process.env.VUE_APP_HTTP_API_URL_PROD
+      : process.env.VUE_APP_HTTP_API_URL_DEV,
   timeout: 50000,
   responseType: "json",
   responseEncoding: "utf8",
@@ -18,7 +21,6 @@ const api = axios.create({
 api.interceptors.request.use(
   (config) => {
     const accessToken = localStorage.getItem("accessToken") ?? "";
-    // console.log(`Access token: ${accessToken}`);
     if (accessToken) {
       config.headers["Authorization"] = `Bearer ${accessToken}`;
     }

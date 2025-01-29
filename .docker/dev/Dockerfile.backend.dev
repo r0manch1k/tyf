@@ -8,10 +8,14 @@ ENV PYTHONUNBUFFERED 1
 RUN apt-get update && apt-get install -y --no-install-recommends \
     postgresql-client redis-server gettext gcc python3-dev libpq-dev netcat
 
+RUN mkdir -p backend
+
 RUN pip3 install --upgrade pip
-COPY ./backend/requirements.txt .
-RUN pip3 install --no-cache-dir -r requirements.txt
+COPY ./backend/requirements.txt ./backend/requirements.txt
+RUN pip3 install --no-cache-dir -r backend/requirements.txt
 
-COPY . .
+COPY ./backend ./backend
+COPY ./.docker/dev/conf/celery.sh ./celery.sh
+COPY ./.docker/dev/conf/backend.sh ./backend.sh
 
-ENTRYPOINT ["sh", "/tyf/.docker/dev/entrypoint.dev.sh"]
+ENTRYPOINT ["sh", "/tyf/backend.sh"]

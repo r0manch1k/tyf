@@ -74,8 +74,13 @@ onMounted(async () => {
 });
 
 function connectWebsocket() {
+  const websocketUrl =
+    process.env.NODE_ENV === "production"
+      ? process.env.VUE_APP_WS_API_URL_PROD
+      : process.env.VUE_APP_WS_API_URL_DEV;
+
   const websocket = new WebSocket(
-    `ws://localhost:8000/ws/notifications/?token=${AuthService.getAccessTokenFromLocalStorage()}`
+    `${websocketUrl}/notifications/?token=${AuthService.getAccessTokenFromLocalStorage()}`
   );
 
   websocket.onmessage = (event) => {
