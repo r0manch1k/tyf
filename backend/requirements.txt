@@ -107,3 +107,4 @@ watchfiles==1.0.4
 wcwidth==0.2.13
 websockets==14.2
 zope.interface==7.2
+django-prometheus==2.3.1

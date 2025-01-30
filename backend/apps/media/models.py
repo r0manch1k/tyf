@@ -4,9 +4,10 @@ from django.db import models
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
 from apps.utils.media_tools import generate_media_path
+from django_prometheus.models import ExportModelOperationsMixin
 
 
-class Media(models.Model):
+class Media(ExportModelOperationsMixin("media"), models.Model):
     content_type = models.ForeignKey(
         ContentType, on_delete=models.CASCADE, related_name="media"
     )

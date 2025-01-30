@@ -1,8 +1,9 @@
 from django.db import models
 from apps.profiles.models import Profile
+from django_prometheus.models import ExportModelOperationsMixin
 
 
-class Follow(models.Model):
+class Follow(ExportModelOperationsMixin("follow"), models.Model):
     follower = models.ForeignKey(
         Profile, related_name="following", on_delete=models.CASCADE
     )

@@ -1,7 +1,9 @@
 import os
 import datetime
 from pathlib import Path
-from corsheaders.defaults import default_headers
+from corsheaders.defaults import (
+    default_headers,
+)
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -94,15 +96,17 @@ INSTALLED_APPS = [
     "apps.notifications",
     "django_select2",
     "mdeditor",
+    "django_prometheus",
 ]
 
 if DEBUG:
-  INSTALLED_APPS += ["django.contrib.admin"]
+    INSTALLED_APPS += ["django.contrib.admin"]
 else:
-  INSTALLED_APPS += ["hide_admin.apps.HideAdminConfig"]
+    INSTALLED_APPS += ["hide_admin.apps.HideAdminConfig"]
 
 
 MIDDLEWARE = [
+    "django_prometheus.middleware.PrometheusBeforeMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "corsheaders.middleware.CorsMiddleware",
@@ -111,6 +115,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "django_prometheus.middleware.PrometheusAfterMiddleware",
 ]
 
 AUTHENTICATION_BACKENDS = ("django.contrib.auth.backends.ModelBackend",)
@@ -148,7 +153,7 @@ TEMPLATES = [
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.postgresql",
+        "ENGINE": "django_prometheus.db.backends.postgresql",
         "NAME": os.getenv("POSTGRES_DB"),
         "USER": os.getenv("POSTGRES_USER"),
         "PASSWORD": os.getenv("POSTGRES_PASSWORD"),
@@ -163,7 +168,7 @@ TYF_USER_VERIFICATION_TIMEOUT = 15 * 60
 
 CACHES = {
     "default": {
-        "BACKEND": "django_redis.cache.RedisCache",
+        "BACKEND": "django_prometheus.cache.backends.redis.RedisCache",
         "LOCATION": os.getenv("REDIS_LOCATION"),
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
@@ -327,3 +332,27 @@ LANGUAGES = [
 ]
 
 TYE_MONGO_URL = os.getenv("TYE_MONGO_URL")
+
+PROMETHEUS_LATENCY_BUCKETS = (
+    0.01,
+    0.025,
+    0.05,
+    0.075,
+    0.1,
+    0.25,
+    0.5,
+    0.75,
+    1.0,
+    2.5,
+    5.0,
+    7.5,
+    10.0,
+    25.0,
+    50.0,
+    75.0,
+    float("inf"),
+)
+
+PROMETHEUS_METRIC_NAMESPACE = "tyf"
+
+PROMETHEUS_EXPORT_MIGRATIONS = False
