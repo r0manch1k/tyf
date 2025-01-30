@@ -6,7 +6,7 @@ services:
       dockerfile: ./.docker/dev/Dockerfile.frontend.dev
     command: "sh -c 'cd frontend && npm run serve'"
     volumes:
-      - ./../frontend:/frontend
+      - ./../frontend:/tyf/frontend
     ports:
       - 8080:8080
     depends_on:
@@ -81,8 +81,8 @@ services:
   #     - beat
   #     - redis
 
-  beat:
-    container_name: tyf_beat
+  celery:
+    container_name: tyf_celery
     restart: unless-stopped
     build:
       context: ./../

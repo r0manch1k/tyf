@@ -35,3 +35,6 @@ lib64/
 # Some trash
 *.md
 *.gitignore
+
+# Env
+.env.prod

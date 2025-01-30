@@ -92,8 +92,8 @@ services:
     networks:
       - backend_network
 
-  beat:
-    container_name: tyf_beat
+  celery:
+    container_name: tyf_celery
     restart: unless-stopped
     build:
       context: ./../
