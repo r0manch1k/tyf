@@ -1,4 +1,5 @@
 import requests
+from tyf import settings
 from .serializers import (
     RegisterSerializer,
     LoginSerializer,
@@ -6,11 +7,13 @@ from .serializers import (
     ResetPasswordSerializer,
     SocialLoginSerializer,
 )
+from django.urls import reverse
 from django.contrib import auth
 from django.conf import settings
 from django.utils import timezone
 from rest_framework import status
 from django.core.cache import cache
+from django.http import HttpResponseRedirect
 from apps.utils.verify_tools import (
     generateOTP,
     sendEmail,
@@ -25,6 +28,7 @@ from django.utils.translation import gettext
 from django.contrib.auth import get_user_model
 from rest_framework.permissions import AllowAny
 from .permissions import VerificationPermissions
+from django.contrib.auth import login as login_user
 from rest_framework.exceptions import ValidationError
 from django.utils.encoding import force_bytes, force_str
 from rest_framework.generics import CreateAPIView, GenericAPIView
@@ -175,13 +179,28 @@ class Login(GenericAPIView):
 
     def post(self, request):
         try:
+            user = auth.authenticate(
+                email=request.data.get("email"),
+                password=request.data.get("password"),
+            )
+
+            if user and not settings.DEBUG:
+                if user.is_superuser:
+                    login_user(request, user)
+                    return Response(
+                        {
+                            "message": "OK",
+                            "payload": {
+                                "redirect_url": settings.API_URL
+                                + reverse("admin:index")
+                            },
+                        },
+                        status=status.HTTP_202_ACCEPTED,
+                    )
+
             serializer = self.serializer_class(data=request.data)
             serializer.is_valid(raise_exception=True)
 
-            user = auth.authenticate(
-                email=request.data.get("email").lower(),
-                password=request.data.get("password"),
-            )
             refresh = RefreshToken.for_user(user)
             refresh.payload.update({"user_id": user.id, "email": user.email})
 

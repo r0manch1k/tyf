@@ -87,7 +87,6 @@ class RecursiveSerializer(serializers.Serializer):
 #             "replies",
 #         ]
 class CommentSerializer(serializers.ModelSerializer):
-    print("CommentSerializer")
     media = MediaSerializer(many=True, read_only=True)
     replies = RecursiveSerializer(many=True, read_only=True)
     post = serializers.SerializerMethodField()

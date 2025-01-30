@@ -4,12 +4,6 @@ from pathlib import Path
 from corsheaders.defaults import default_headers
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-# BASE_URL = (
-#     "http://localhost:8080"
-#     if not int(os.getenv("DEBUG"))
-#     else "http://localhost:8000"
-# )
-
 
 SECRET_KEY = os.getenv("SECRET_KEY")
 DEBUG = int(os.getenv("DEBUG"))
@@ -73,7 +67,6 @@ INSTALLED_APPS = [
     "daphne",
     "channels",
     "channels_redis",
-    "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
@@ -102,6 +95,11 @@ INSTALLED_APPS = [
     "django_select2",
     "mdeditor",
 ]
+
+if DEBUG:
+  INSTALLED_APPS += ["django.contrib.admin"]
+else:
+  INSTALLED_APPS += ["hide_admin.apps.HideAdminConfig"]
 
 
 MIDDLEWARE = [
