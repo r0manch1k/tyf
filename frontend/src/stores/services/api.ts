@@ -34,34 +34,53 @@ api.interceptors.request.use(
 api.interceptors.response.use(async (response) => {
   if (response.status === 401 && response.data.code === "token_not_valid") {
     const originalRequest = response.config;
+    const refreshToken = localStorage.getItem("refreshToken");
+
+    if (!refreshToken) {
+      window.location.href = "/login";
+      return Promise.reject(response);
+    }
+
     try {
-      await updateTokens();
-      delete originalRequest.headers["Authorization"];
-      return await api(originalRequest);
-    } catch (updateError) {
-      return Promise.reject(updateError);
+      const baseURL =
+        process.env.NODE_ENV === "production"
+          ? process.env.VUE_APP_HTTP_API_URL_PROD
+          : process.env.VUE_APP_HTTP_API_URL_DEV;
+
+      const refreshResponse = await axios.post(
+        `${baseURL}/token/refresh/`,
+        {
+          refresh: refreshToken,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            "X-Api-Key": process.env.VUE_APP_API_KEY,
+          },
+        }
+      );
+
+      const newAccessToken = refreshResponse.data.access;
+      const newRefreshToken = refreshResponse.data.refresh;
+
+      if (newAccessToken && newRefreshToken) {
+        localStorage.setItem("accessToken", newAccessToken);
+        localStorage.setItem("refreshToken", newRefreshToken);
+        api.defaults.headers.common.Authorization = `Bearer ${newAccessToken}`;
+      }
+
+      return api(originalRequest);
+    } catch (error) {
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
+      window.location.href = "/login";
+      return response;
     }
   } else if (response.status >= 404) {
     store.dispatch("error/setShowErrorPage", response.status);
   }
   return response;
 });
-
-const updateTokens = async () => {
-  await api
-    .post("/token/refresh/", {
-      refresh: localStorage.getItem("refreshToken"),
-    })
-    .then((response) => {
-      const newAccessToken = response.data.access;
-      const newRefreshToken = response.data.refresh;
-      localStorage.setItem("accessToken", newAccessToken);
-      localStorage.setItem("refreshToken", newRefreshToken);
-    })
-
-    .catch((error) => {
-      console.error("Ошибка при обновлении токена:", error);
-    });
-};
 
 export default api;

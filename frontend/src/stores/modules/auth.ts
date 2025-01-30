@@ -5,6 +5,7 @@ class State {
   login = false;
   loading = false;
   showMessage = false;
+  refreshAttempts = 0;
   message: MessageModel = {
     text: "",
     type: "",
@@ -16,9 +17,16 @@ const getters: GetterTree<State, unknown> = {
   getLoading: (state) => state.loading,
   getMessage: (state) => state.message,
   getShowMessage: (state) => state.showMessage,
+  getRefreshAttempts: (state) => state.refreshAttempts,
 };
 
 const mutations: MutationTree<State> = {
+  incrementRefreshAttempts: (state) => {
+    state.refreshAttempts = state.refreshAttempts + 1;
+  },
+  clearRefreshAttempts: (state) => {
+    state.refreshAttempts = 0;
+  },
   setLogin: (state, payload: boolean) => {
     state.login = payload;
   },
@@ -40,6 +48,12 @@ const actions: ActionTree<State, unknown> = {
   },
   setMessage({ commit }, message) {
     commit("setMessage", message);
+  },
+  incrementRefreshAttempts: ({ commit }) => {
+    commit("incrementRefreshAttempts");
+  },
+  clearRefreshAttempts: ({ commit }) => {
+    commit("clearRefreshAttempts");
   },
 };
 
