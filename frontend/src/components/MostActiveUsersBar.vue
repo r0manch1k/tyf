@@ -2,7 +2,7 @@
   <div class="most-active-users-bar bg-dark-light p-1">
     <div class="most-active-users-bar__list" v-if="!loading">
       <h3
-        class="most-active-users-bar__title fs-5 text-light p-1 m-0 text-start text-decoration-none"
+        class="most-active-users-bar__title text-light px-1 py-0 m-0 text-start text-decoration-none"
       >
         <span class="text-decoration-underline">Топ 5</span>
         <span class="most-active-users-bar__emoji"> 🤓</span>
@@ -87,5 +87,9 @@ onMounted(async () => {
 .most-active-users-bar {
   border-radius: 0.4rem;
   /* border: 1px solid var(--secondary); */
+}
+
+.most-active-users-bar__title {
+  font-size: large;
 }
 </style>

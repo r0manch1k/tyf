@@ -8,7 +8,7 @@ from .models import Follow
 def send_new_follower_notification(sender, instance, created, **kwargs):
     if created:
         follow = instance
-        send_new_follower_notification_task.delay(follow.following.id)
+        send_new_follower_notification_task.delay(follow.id)
 
 
 post_save.connect(send_new_follower_notification, sender=Follow)

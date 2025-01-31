@@ -2,7 +2,7 @@ import type NotificationModel from "@/models/NotificationModel";
 import api from "@/stores/services/api";
 
 class NotificationDataService {
-  async getNotifications(): Promise<NotificationModel[]> {
+  async getAllNotifications(): Promise<NotificationModel[]> {
     let data: { data: NotificationModel[] } = {
       data: [] as NotificationModel[],
     };
@@ -30,6 +30,17 @@ class NotificationDataService {
       });
 
     return data.data;
+  }
+  async deleteReadNotifications(): Promise<void> {
+    // Should be a DELETE request or GET request?
+    await api
+      .get("/notifications/delete-read/")
+      .then((response) => {
+        return Promise.resolve(response);
+      })
+      .catch((error: unknown) => {
+        return Promise.reject(error);
+      });
   }
   async readNotification(id: number): Promise<void> {
     await api

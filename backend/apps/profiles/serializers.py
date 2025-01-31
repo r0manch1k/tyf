@@ -45,8 +45,8 @@ class ProfileListSerializer(serializers.ModelSerializer):
 
 class ProfileDetailSerializer(serializers.ModelSerializer):
     avatar = AvatarField(allow_empty_file=False, required=False, allow_null=True)
-    telegram = serializers.URLField(required=False, allow_blank=True)
-    vkontakte = serializers.URLField(required=False, allow_blank=True)
+    telegram = serializers.URLField(allow_null=True)
+    vkontakte = serializers.URLField(allow_null=True)
     telegram_alias = serializers.SerializerMethodField()
     vkontakte_alias = serializers.SerializerMethodField()
     date_joined = serializers.DateTimeField(

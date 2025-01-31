@@ -8,6 +8,7 @@
   --secondary-xx-light: #aaaaaa;
   --thirdary: #7d80da;
   --light: #f2f2f2;
+  --dark-x-light: #2f2f2f;
   --dark-light: #222222;
   --dark: #111111;
   --text-color: #f2f2f2;
@@ -62,15 +63,15 @@ h6 {
 }
 
 .text-secondary-light {
-  color: var(--secondary-light);
+  color: var(--secondary-light) !important;
 }
 
 .text-secondary-x-light {
-  color: var(--secondary-x-light);
+  color: var(--secondary-x-light) !important;
 }
 
 .text-secondary-xx-light {
-  color: var(--secondary-xx-light);
+  color: var(--secondary-xx-light) !important;
 }
 
 .text-alert {
@@ -152,14 +153,13 @@ h6 {
   font-weight: 400;
   background: transparent;
   border: 0;
-  text-decoration: underline;
-  text-decoration-color: var(--light);
+  /* text-decoration: underline; */
+  /* text-decoration-color: var(--light); */
 }
 
 .btn-light:hover {
   color: var(--light);
   background: transparent;
-  text-decoration-color: var(--primary);
 }
 
 .btn-light:active {
@@ -187,13 +187,21 @@ h6 {
 }
 
 .btn-secondary-x-light {
-  color: var(--secondary-x-light);
-  margin: 0;
-  font-weight: 400;
+  color: var(--secondary-x-light) !important;
+  background: transparent !important;
 }
 
 .btn-secondary-x-light:hover {
-  color: var(--secondary-x-light);
+  color: var(--secondary-x-light) !important;
+}
+
+.btn-secondary-xx-light {
+  color: var(--secondary-xx-light) !important;
+  background: transparent !important;
+}
+
+.btn-secondary-xx-light:hover {
+  color: var(--secondary-xx-light) !important;
 }
 
 .btn-action,
@@ -211,7 +219,7 @@ h6 {
 
 .btn-action:hover {
   color: var(--light);
-  background-color: var(--secondary-light);
+  background-color: var(--dark-x-light);
   /* border: 1px solid var(--secondary); */
   border-radius: 0.4rem;
   padding: 0.25rem 0.5rem;
@@ -272,6 +280,13 @@ h6 {
   text-align: center;
   padding: 0.25rem 0.5rem;
   text-decoration: none;
+}
+
+.btn-primary {
+  color: var(--dark);
+  background-color: var(--primary);
+  border: 0;
+  padding: 0.25rem 0.5rem;
 }
 
 .btn-primary:disabled,

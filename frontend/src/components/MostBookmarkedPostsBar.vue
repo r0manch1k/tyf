@@ -2,7 +2,7 @@
   <div class="most-bookmarked-posts-bar bg-dark-light p-1">
     <div class="most-bookmarked-posts-bar__content" v-if="!loading">
       <h3
-        class="most-bookmarked-posts-bar__title fs-5 text-light p-1 m-0 text-start text-decoration-none"
+        class="most-bookmarked-posts-bar__title text-light px-1 py-0 m-0 text-start text-decoration-none"
       >
         <span class="text-decoration-underline">Маст хэв</span>
         <span class="most-bookmarked-posts-bar__emoji"> 📚</span>
@@ -103,5 +103,9 @@ onMounted(async () => {
 .most-bookmarked-posts-bar {
   border-radius: 0.4rem;
   /* border: 1px solid var(--secondary); */
+}
+
+.most-bookmarked-posts-bar__title {
+  font-size: large;
 }
 </style>

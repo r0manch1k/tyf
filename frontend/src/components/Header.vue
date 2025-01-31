@@ -1,6 +1,9 @@
 <template>
   <nav class="header navbar navbar-expand bg-dark-light fixed-top px-4 py-1">
-    <router-link :to="{ name: 'home' }" class="header__logo navbar-brand mx-auto">
+    <router-link
+      :to="{ name: 'home' }"
+      class="header__logo navbar-brand mx-auto"
+    >
       <img class="logo" src="@/assets/media/logo.svg" alt="tyf" />
     </router-link>
 
@@ -15,7 +18,7 @@
     </a> -->
 
     <div class="header__search ms-4 w-100">
-      <SearchBar v-if="isHome" />
+      <SearchBar />
     </div>
 
     <router-link
@@ -25,12 +28,12 @@
       >Создать</router-link
     >
 
-    <!-- <router-link
+    <router-link
       :to="{ name: 'chats' }"
       class="header__messages-button btn-light fs-6 ms-4"
       v-if="isAuth && !loading"
       >Чаты</router-link
-    > -->
+    >
 
     <router-link
       :to="{ name: 'notifications' }"
@@ -40,7 +43,7 @@
     >
 
     <div class="header__dropdown-container navbar-nav align-items-center ms-0">
-      <div class="header__profile-container nav-item dropdown ms-4">
+      <div class="header__profile-container nav-item dropdown ms-3">
         <a
           v-if="isAuth && !loading"
           class="header__profile-img-container nav-link dropdown-toggle"
@@ -142,6 +145,16 @@ const isHome = computed(() => route.path === "/");
 .dropdown-menu-dark .dropdown-item:hover,
 .dropdown-menu-dark .dropdown-item:focus {
   color: var(--light) !important;
+  border-radius: 0.1rem;
+  background-color: var(--dark-x-light) !important;
+}
+
+.dropdown-item {
+  padding: 0.1em 0.5em !important;
+}
+
+.dropdown-menu {
+  padding: 0.25rem 0 !important;
 }
 
 .header__search-input {

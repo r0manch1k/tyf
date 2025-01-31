@@ -428,6 +428,10 @@ ul {
   color: var(--light);
 }
 
+.nav-item-link:hover {
+  color: var(--light) !important;
+}
+
 .tab-panels-wrapper {
   display: flex;
   gap: 1rem;

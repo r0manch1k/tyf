@@ -1,14 +1,44 @@
 <template>
-  <div class="notification-list-item bg-secondary p-2">
+  <div
+    class="notification-list-item ps-2"
+    :style="{
+      borderLeft: notification.read
+        ? '2px solid var(--secondary-light)'
+        : '2px solid var(--primary)',
+    }"
+  >
     <div class="notification-list-item__container d-flex align-items-center">
-      <!-- <div class="notification-list-item__icon-container">
-        <i class="bi bi-bell text-secondary-xx-light h-100 pb-auto"></i>
-      </div> -->
       <div class="notification-list-item__content">
+        <h2
+          v-if="notification.kind === 'post'"
+          class="fs-6 text-start m-0"
+          :class="{
+            'text-secondary-xx-light': notification.read,
+            'text-primary': !notification.read,
+          }"
+        >
+          Новая публикация
+        </h2>
+        <h2
+          v-else-if="notification.kind === 'follower'"
+          class="fs-6 text-start m-0"
+          :class="{
+            'text-secondary-x-light': notification.read,
+            'text-primary': !notification.read,
+          }"
+        >
+          Новая подпсика на ваш профиль
+        </h2>
         <div
           class="notification-list-item__text-container d-flex flex-wrap gap-1"
         >
-          <p class="notification-list-item__text d-flex align-items-center m-0">
+          <p
+            class="notification-list-item__text d-flex align-items-center m-0"
+            :class="{
+              'text-secondary-light': notification.read,
+              'text-light': !notification.read,
+            }"
+          >
             {{ notification.text }}
           </p>
           <router-link
@@ -17,17 +47,25 @@
               name: 'post-detail',
               params: { identifier: notification.target },
             }"
-            class="notification-list-item__link btn btn-light p-0"
+            class="notification-list-item__link btn-light text-decoration-underline p-0"
+            :class="{
+              'text-secondary-light': notification.read,
+              'text-light': !notification.read,
+            }"
           >
             Подробнее
           </router-link>
           <router-link
-            v-if="notification.kind === 'profile'"
+            v-if="notification.kind === 'follower'"
             :to="{
               name: 'profile',
               params: { username: notification.target },
             }"
-            class="notification-list-item__link btn btn-light p-0"
+            class="notification-list-item__link btn-light text-decoration-underline p-0"
+            :class="{
+              'text-secondary-light': notification.read,
+              'text-light': !notification.read,
+            }"
           >
             Подробнее
           </router-link>
@@ -36,7 +74,11 @@
           class="notification-list-item__date d-flex align-items-center gap-2"
         >
           <div
-            class="notification-list-item__date-container d-flex align-items-center fs-6 text-secondary-xx-light gap-2"
+            class="notification-list-item__date-container d-flex align-items-center fs-6 gap-2"
+            :class="{
+              'text-secondary-x-light': notification.read,
+              'text-secondary-xx-light': !notification.read,
+            }"
           >
             {{ notification.created_at }}
           </div>
@@ -44,16 +86,12 @@
             class="btn btn-light text-decoration-none p-0"
             @click="read"
             :disabled="loadingRead || notification.read"
+            v-if="!notification.read"
           >
-            <span
-              v-if="notification.read && !loadingRead"
-              class="text-secondary-xx-ligth fw-normal"
-              >Прочитано</span
-            >
-            <span v-else-if="!loadingRead" class="text-primary fw-normal"
+            <span class="text-primary fw-normal" v-if="!loadingRead"
               >Отметить прочитанным</span
             >
-            <span v-else class="text-primary fw-normal">Отмечаю...</span>
+            <span v-else>Отмечаю...</span>
           </button>
         </div>
       </div>
@@ -86,7 +124,6 @@ const read = async () => {
 
 <style scoped>
 .notification-list-item {
-  border-radius: 0.4rem;
   width: fit-content;
 }
 </style>

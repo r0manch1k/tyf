@@ -5,7 +5,7 @@ from .models import Notification
 class NotificationSerializer(serializers.ModelSerializer):
     recipient = serializers.SerializerMethodField()
     created_at = serializers.DateTimeField(
-        format="%d.%m.%Y в %H:%M",
+        format="%d.%m.%Y - %H:%M",
         input_formats=[
             "%d.%m.%Y",
             "iso-8601",

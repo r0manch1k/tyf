@@ -6,8 +6,8 @@ build-dev:
 	$(DOCKER_COMPOSE_DEV) build
 
 # For development 
-build-beat-dev:
-	$(DOCKER_COMPOSE_DEV) build beat	
+build-celery-dev:
+	$(DOCKER_COMPOSE_DEV) build celery	
 
 # For development 
 up-dev:

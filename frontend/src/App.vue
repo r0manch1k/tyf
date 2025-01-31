@@ -88,8 +88,9 @@ function connectWebsocket() {
     store.dispatch("notification/addNotification", data);
   };
 
-  websocket.onopen = () => {
+  websocket.onopen = async () => {
     console.log("Connected to the websocket");
+    await store.dispatch("notification/fetchAllNotifications");
   };
 
   websocket.onclose = () => {

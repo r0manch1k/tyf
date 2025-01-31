@@ -9,7 +9,7 @@ from apps.notifications.serializers import NotificationSerializer
 from apps.posts.models import Post
 from apps.notifications.models import Notification
 from apps.chats.models import Message
-from apps.profiles.models import Profile
+from apps.follows.models import Follow
 
 
 @app.task
@@ -75,24 +75,24 @@ def send_new_message_notification(id):
 @app.task
 def send_new_follower_notification(id):
     try:
-        follower = Profile.objects.get(id=id)
+        follow = Follow.objects.get(id=id)
         channel_layer = get_channel_layer()
 
         notification = Notification.objects.create(
-            recipient=follower,
+            recipient=follow.following,
             kind="follower",
-            target=follower.username,
-            text=f"{follower.username} подписался на вас!",
+            target=follow.follower.username,
+            text=f"{follow.follower.username} подписался на вас!",
         )
 
         json = JSON.dumps(NotificationSerializer(notification).data)
 
         async_to_sync(channel_layer.group_send)(
-            f"notifications_{slugify(follower.email)}",
+            f"notifications_{slugify(follow.following.email)}",
             {
                 "type": "notifications.send_one",
                 "json": json,
             },
         )
-    except Profile.DoesNotExist:
+    except Follow.DoesNotExist:
         pass

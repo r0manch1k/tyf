@@ -33,6 +33,15 @@ const actions: ActionTree<State, unknown> = {
     const data = await NotificationDataService.getUnreadNotifications();
     commit("setNotifications", data);
   },
+  fetchAllNotifications: async ({ commit }) => {
+    const data = await NotificationDataService.getAllNotifications();
+    commit("setNotifications", data);
+  },
+  deleteReadNotifications: async ({ commit }) => {
+    await NotificationDataService.deleteReadNotifications();
+    const data = await NotificationDataService.getAllNotifications();
+    commit("setNotifications", data);
+  },
   readNotification: async ({ commit }, id: number) => {
     await NotificationDataService.readNotification(id);
     commit("setNotificationRead", id);

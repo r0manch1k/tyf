@@ -5,6 +5,7 @@
       <CollectionsTablist
         v-if="!searchInput.query"
         v-bind:collections="collections"
+        class="mb-2"
       />
     </div>
     <div class="home__body container-fluid p-0">
@@ -62,9 +63,7 @@ const showSearchInfo = ref(false);
 const posts = ref<PostListItemModel[]>([]);
 const scrollComponent = ref<HTMLElement | null>(null);
 
-const searchInput = computed<SearchModel>(
-  () => store.state.search.searchInput
-);
+const searchInput = computed<SearchModel>(() => store.state.search.searchInput);
 // const categories = computed<CategoryModel[]>(
 //   () => store.getters["category/getCategories"]
 // );
@@ -129,7 +128,7 @@ onMounted(async () => {
     store.dispatch("profile/fetchProfile"),
     store.dispatch("category/fetchCategories"),
     store.dispatch("collection/fetchCollections"),
-    store.dispatch("notification/fetchUnreadNotifications"),
+
     (posts.value = (await PostDataService.getPosts()).posts),
   ]).then(() => {
     loading.value = false;

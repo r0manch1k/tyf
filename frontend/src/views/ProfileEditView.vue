@@ -312,6 +312,7 @@ const updateProfile = async () => {
       : Promise.resolve(),
     ProfileDataService.updateProfile(profileEditData),
   ]).catch((error) => {
+    console.error(error);
     if (error.data && typeof error.data === "object") {
       for (const key in error.data) {
         if (Object.prototype.hasOwnProperty.call(error.data, key)) {

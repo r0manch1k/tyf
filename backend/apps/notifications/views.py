@@ -14,7 +14,7 @@ class NotificationViewSet(viewsets.ViewSet):
 
     def list(self, request):
         email = request.user
-        queryset = Notification.objects.filter(recipient__email=email, read=False)
+        queryset = Notification.objects.filter(recipient__email=email)
         serializer = NotificationSerializer(queryset, many=True)
         return Response(serializer.data)
 
@@ -24,6 +24,18 @@ class NotificationViewSet(viewsets.ViewSet):
         notification = get_object_or_404(queryset, pk=pk)
         serializer = NotificationSerializer(notification)
         return Response(serializer.data)
+
+    @action(
+        detail=False,
+        methods=["GET"],
+        url_path="delete-read",
+        url_name="delete-read",
+    )
+    def delete_read(self, request):
+        email = request.user
+        queryset = Notification.objects.filter(recipient__email=email, read=True)
+        queryset.delete()
+        return Response({"status": 200})
 
     @action(detail=False, methods=["GET"], url_path="unread", url_name="unread")
     def unread(self, request):
