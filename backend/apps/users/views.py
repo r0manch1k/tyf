@@ -13,7 +13,6 @@ from django.conf import settings
 from django.utils import timezone
 from rest_framework import status
 from django.core.cache import cache
-from django.http import HttpResponseRedirect
 from apps.utils.verify_tools import (
     generateOTP,
     sendEmail,
@@ -179,27 +178,13 @@ class Login(GenericAPIView):
 
     def post(self, request):
         try:
+            serializer = self.serializer_class(data=request.data)
+            serializer.is_valid(raise_exception=True)
+
             user = auth.authenticate(
                 email=request.data.get("email"),
                 password=request.data.get("password"),
             )
-
-            if user and not settings.DEBUG:
-                if user.is_superuser:
-                    login_user(request, user)
-                    return Response(
-                        {
-                            "message": "OK",
-                            "payload": {
-                                "redirect_url": settings.API_URL
-                                + reverse("admin:index")
-                            },
-                        },
-                        status=status.HTTP_202_ACCEPTED,
-                    )
-
-            serializer = self.serializer_class(data=request.data)
-            serializer.is_valid(raise_exception=True)
 
             refresh = RefreshToken.for_user(user)
             refresh.payload.update({"user_id": user.id, "email": user.email})

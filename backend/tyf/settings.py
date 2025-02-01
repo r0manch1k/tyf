@@ -12,9 +12,7 @@ DEBUG = int(os.getenv("DEBUG"))
 ALLOWED_HOSTS = ["*"]
 
 # TODO: Change to production URL
-API_URL = (
-    "http://localhost:8000" if int(os.getenv("DEBUG")) else "http://localhost:8080"
-)
+API_URL = os.getenv("API_URL")
 
 STATIC_URL = "/static/"
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
@@ -36,17 +34,16 @@ CSRF_COOKIE_SECURE = False
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:8080",
     "http://localhost:8000",
-    "http://127.0.0.1:8080",
-    "http://127.0.0.1:8000",
+    "http://admin.localhost:8080",
+    "http://grafana.localhost:8080",
 ]
 CORS_ALLOW_HEADERS = list(default_headers) + [
     "X-Api-Key",
 ]
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:8080",
-    "http://localhost:8000",
-    "http://127.0.0.1:8080",
-    "http://127.0.0.1:8000",
+    "http://admin.localhost:8080",
+    "http://grafana.localhost:8080",
 ]
 
 
@@ -69,6 +66,7 @@ INSTALLED_APPS = [
     "daphne",
     "channels",
     "channels_redis",
+    "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
@@ -99,10 +97,10 @@ INSTALLED_APPS = [
     "django_prometheus",
 ]
 
-if DEBUG:
-    INSTALLED_APPS += ["django.contrib.admin"]
-else:
-    INSTALLED_APPS += ["hide_admin.apps.HideAdminConfig"]
+# if DEBUG:
+#     INSTALLED_APPS += ["django.contrib.admin"]
+# else:
+#     INSTALLED_APPS += ["hide_admin.apps.HideAdminConfig"]
 
 
 MIDDLEWARE = [
@@ -190,8 +188,6 @@ CELERY_ACCEPT_CONTENT = ["application/json"]
 CELERY_TASK_SERIALIZER = "json"
 CELERY_RESULT_SERIALIZER = "json"
 
-# CELERY_broker_url = "amqp://myuser:mypassword@localhost:5672/myvhost"
-# result_backend = "redis://localhost:6379"
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -219,6 +215,11 @@ REST_FRAMEWORK = {
     ],
 }
 
+if not DEBUG:
+    REST_FRAMEWORK["DEFAULT_RENDERER_CLASSES"] = [
+        "rest_framework.renderers.JSONRenderer"
+    ]
+
 REST_USE_JWT = True
 JWT_AUTH_COOKIE = "jwt-auth"
 
@@ -240,7 +241,6 @@ X_FRAME_OPTIONS = "SAMEORIGIN"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-# Email Configurations
 EMAIL_PORT = os.getenv("EMAIL_PORT")
 EMAIL_USE_SSL = True
 EMAIL_USE_TLS = False

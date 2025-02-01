@@ -1,4 +1,6 @@
 services:
+# -------------------- MAIN SERVICES --------------------
+
   nginx:
     container_name: tyf_nginx
     build:
@@ -6,7 +8,7 @@ services:
       dockerfile: ./.docker/prod/Dockerfile.nginx.prod
     restart: unless-stopped
     ports:
-      - 8080:80
+      - 8080:8080
     volumes:
       - static_files:/tyf/backend/staticfiles/
       - media_files:/tyf/backend/mediafiles/
@@ -30,7 +32,7 @@ services:
       - static_files:/tyf/backend/staticfiles/
       - media_files:/tyf/backend/mediafiles/
     expose:
-      - 8080
+      - 8000
     env_file:
       - ./prod/conf/.env.prod
     depends_on:
@@ -40,8 +42,9 @@ services:
         condition: service_healthy
     restart: always
     networks:
-      - backend_network
       - nginx_network
+      - backend_network
+      - metrics_network
 
   database:
     container_name: tyf_postgres
@@ -62,6 +65,7 @@ services:
       start_period: 40s
     networks:
       - backend_network
+      - metrics_network
 
   redis:
     container_name: tyf_redis
@@ -93,6 +97,7 @@ services:
       start_period: 40s
     networks:
       - backend_network
+      - metrics_network
 
   celery:
     container_name: tyf_celery
@@ -112,6 +117,8 @@ services:
     networks:
       - backend_network
 
+# -------------------- MONITORING SERVICES --------------------
+
   prometheus:
     container_name: tyf_prometheus
     image: prom/prometheus
@@ -122,28 +129,45 @@ services:
       - 9090
     volumes:
       - ./prod/conf/prometheus.yml:/etc/prometheus/prometheus.yml
+    depends_on:
+      backend:
+        condition: service_started
+      redis:
+        condition: service_started
+      database:
+        condition: service_started
     networks:
-      - backend_network
+      - metrics_network
 
   grafana:
     container_name: tyf_grafana
     image: grafana/grafana
     restart: unless-stopped
+    command:
+      - "--config=/etc/grafana/grafana.ini"
+    volumes:
+      - ./prod/conf/grafana.ini:/etc/grafana/grafana.ini
+      - grafana_data:/var/lib/grafana
     environment:
-      GF_SERVER_ROOT_URL: "http://localhost:3000/grafana"
-      GF_SERVER_SERVE_FROM_SUB_PATH: "true"
+      - GF_PATHS_CONFIG=/etc/grafana/grafana.ini
+    depends_on:
+      backend:
+        condition: service_started
     expose:
       - 3000
     networks:
-      - backend_network
       - nginx_network
+      - metrics_network
 
 volumes:
   postgres_data_prod:
+  grafana_data:
   static_files:
   media_files:
 
 networks:
+  metrics_network:
+    driver: bridge
   nginx_network:
     driver: bridge
   backend_network:
