@@ -1,5 +1,5 @@
 services:
-# -------------------- MAIN SERVICES --------------------
+  # -------------------- MAIN SERVICES --------------------
 
   nginx:
     container_name: tyf_nginx
@@ -117,7 +117,7 @@ services:
     networks:
       - backend_network
 
-# -------------------- MONITORING SERVICES --------------------
+  # -------------------- MONITORING SERVICES --------------------
 
   prometheus:
     container_name: tyf_prometheus
@@ -129,6 +129,9 @@ services:
       - 9090
     volumes:
       - ./prod/conf/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/etc/prometheus/
+    environment:
+      TZ: "Asia/Vladivostok"
     depends_on:
       backend:
         condition: service_started
@@ -147,11 +150,15 @@ services:
       - "--config=/etc/grafana/grafana.ini"
     volumes:
       - ./prod/conf/grafana.ini:/etc/grafana/grafana.ini
+      - ./prod/grafana_dashboards:/var/lib/grafana/dashboards
       - grafana_data:/var/lib/grafana
     environment:
       - GF_PATHS_CONFIG=/etc/grafana/grafana.ini
+      - GF_DASHBOARDS_JSON_ENABLED=true
+      - GF_DASHBOARDS_JSON_PATH=/var/lib/grafana/dashboards
+      - TZ=Asia/Vladivostok
     depends_on:
-      backend:
+      prometheus:
         condition: service_started
     expose:
       - 3000
@@ -161,6 +168,7 @@ services:
 
 volumes:
   postgres_data_prod:
+  prometheus_data:
   grafana_data:
   static_files:
   media_files:
