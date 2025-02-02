@@ -1,6 +1,7 @@
 import os
 import uuid
 import random
+from PIL import Image, ImageDraw
 from tyf.settings import MEDIA_ROOT
 from django.utils.text import get_valid_filename
 
@@ -47,3 +48,15 @@ def generate_pastel_color():
     hex_color = "#{:02x}{:02x}{:02x}".format(red, green, blue).upper()
 
     return hex_color
+
+
+def generate_colored_image(width=300, height=300):
+    image = Image.new("RGB", (width, height))
+    draw = ImageDraw.Draw(image)
+
+    color = generate_pastel_color()
+
+    for i in range(width):
+        draw.line((i, 0, i, height), fill=color)
+
+    return image

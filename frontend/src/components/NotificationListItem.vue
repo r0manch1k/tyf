@@ -10,25 +10,17 @@
     <div class="notification-list-item__container d-flex align-items-center">
       <div class="notification-list-item__content">
         <h2
-          v-if="notification.kind === 'post'"
           class="fs-6 text-start m-0"
           :class="{
             'text-secondary-xx-light': notification.read,
             'text-primary': !notification.read,
           }"
         >
-          Новая публикация
+          <span v-if="notification.kind === 'post'">Новый пост</span>
+          <span v-if="notification.kind === 'follower'">Новый подписчик</span>
+          <span v-if="notification.kind === 'message'">Новое сообщение</span>
         </h2>
-        <h2
-          v-else-if="notification.kind === 'follower'"
-          class="fs-6 text-start m-0"
-          :class="{
-            'text-secondary-x-light': notification.read,
-            'text-primary': !notification.read,
-          }"
-        >
-          Новая подпсика на ваш профиль
-        </h2>
+
         <div
           class="notification-list-item__text-container d-flex flex-wrap gap-1"
         >
@@ -69,6 +61,20 @@
           >
             Подробнее
           </router-link>
+          <router-link
+            v-if="notification.kind === 'message'"
+            :to="{
+              name: 'chat',
+              params: { uuid: notification.target },
+            }"
+            class="notification-list-item__link btn-light text-decoration-underline p-0"
+            :class="{
+              'text-secondary-light': notification.read,
+              'text-light': !notification.read,
+            }"
+          >
+            Подробнее
+          </router-link>
         </div>
         <div
           class="notification-list-item__date d-flex align-items-center gap-2"
@@ -80,7 +86,7 @@
               'text-secondary-xx-light': !notification.read,
             }"
           >
-            {{ notification.created_at }}
+            {{ created_at }}
           </div>
           <button
             class="btn btn-light text-decoration-none p-0"
@@ -103,6 +109,8 @@
 import { ref, defineProps } from "vue";
 import { useStore } from "vuex";
 import type NotificationModel from "@/models/NotificationModel";
+import moment from "moment";
+import "moment/locale/ru";
 
 const store = useStore();
 const loadingRead = ref<boolean>(false);
@@ -120,6 +128,8 @@ const read = async () => {
       loadingRead.value = false;
     });
 };
+
+const created_at = moment(props.notification.created_at).fromNow();
 </script>
 
 <style scoped>

@@ -233,7 +233,7 @@
     </div>
   </div>
 
-  <LoadingCircle v-else />
+  <LoadingCircle v-else class="mx-auto my-auto" />
 </template>
 
 <script lang="ts" setup>

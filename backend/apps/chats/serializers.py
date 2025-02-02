@@ -4,10 +4,32 @@ from .models import Chat, Message
 from tyf import settings
 
 
+class LastMessageField(serializers.Field):
+    def get_attribute(self, instance):
+        return instance
+
+    def to_representation(self, value):
+        last_message = value.messages.last()
+        if last_message:
+            return MessageSerializer(last_message).data
+        return None
+
+
+class ThumbnailField(serializers.Field):
+    def get_attribute(self, instance):
+        return instance
+
+    def to_representation(self, value):
+        if value:
+            return settings.API_URL + value.thumbnail.url
+        return None
+
+
 class ChatListSerializer(serializers.ModelSerializer):
-    last_message = serializers.SerializerMethodField()
     participants = ProfileListSerializer(many=True)
-    thumbnail = serializers.SerializerMethodField()
+    thumbnail = ThumbnailField()
+    last_message = LastMessageField()
+    updated_at = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
 
     class Meta:
         model = Chat
@@ -15,28 +37,19 @@ class ChatListSerializer(serializers.ModelSerializer):
             "id",
             "uuid",
             "name",
-            "last_message",
             "participants",
+            "last_message",
             "thumbnail",
             "created_at",
             "updated_at",
         )
         read_only_fields = ("id", "created_at", "updated_at")
 
-    def get_last_message(self, obj):
-        last_message = obj.messages.last()
-        if last_message:
-            return MessageSerializer(last_message).data
-        return None
-
-    def get_thumbnail(self, obj):
-        profile = obj.participants.exclude(email=self.context["request"].user).first()
-        return settings.API_ULR + profile.get_avatar
-
 
 class ChatDetailSerializer(serializers.ModelSerializer):
     messages = serializers.SerializerMethodField()
     participants = ProfileListSerializer(many=True)
+    thumbnail = ThumbnailField()
 
     class Meta:
         model = Chat
@@ -45,6 +58,7 @@ class ChatDetailSerializer(serializers.ModelSerializer):
             "uuid",
             "name",
             "participants",
+            "thumbnail",
             "messages",
             "created_at",
             "updated_at",
@@ -52,12 +66,14 @@ class ChatDetailSerializer(serializers.ModelSerializer):
         read_only_fields = ("id", "created_at", "updated_at")
 
     def get_messages(self, obj):
-        messages = obj.messages.all().order_by("-created_at")
+        messages = obj.messages.all().order_by("created_at")
         return MessageSerializer(messages, many=True).data
 
 
 class MessageSerializer(serializers.ModelSerializer):
+    author = ProfileListSerializer()
+
     class Meta:
         model = Message
-        fields = ["id", "author", "content", "created_at", "updated_at"]
-        read_only_fields = ("id", "created_at", "updated_at")
+        fields = ["id", "author", "text", "created_at", "updated_at"]
+        read_only_fields = ("id", "author", "created_at", "updated_at")

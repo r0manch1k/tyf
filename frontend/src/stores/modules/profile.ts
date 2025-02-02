@@ -33,6 +33,7 @@ class State {
     is_followed_by_request_user: false,
     following_count: 0,
     followers_count: 0,
+    chat_uuid: "",
   };
   loading = false;
 }

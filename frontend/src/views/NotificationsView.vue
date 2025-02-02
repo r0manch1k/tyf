@@ -1,5 +1,5 @@
 <template>
-  <div class="notifications px-5" v-if="!loading">
+  <div class="notifications px-5">
     <div class="notifications__container container-fluid p-0">
       <h1 class="notifications__title fs-5 fw-normal text-start m-0">
         Уведомления
@@ -13,6 +13,7 @@
       <hr class="my-1" />
       <div
         class="notifications__header d-flex flex-row gap-3 justify-content-start"
+        v-if="!loading"
       >
         <button
           class="btn btn-light text-decoration-underline p-0 mb-2"
@@ -26,7 +27,7 @@
         <button
           class="btn btn-light text-decoration-underline p-0 mb-2"
           @click="deleteRead"
-          v-if="notifications.length > 0"
+          v-if="notifications.length - notificationsUnreadCount > 0"
           :disabled="loadingDeleteRead"
         >
           <span v-if="loadingDeleteRead">Удаляю...</span>
@@ -34,7 +35,7 @@
         </button>
       </div>
 
-      <div class="notifications__row row">
+      <div class="notifications__row row" v-if="!loading">
         <div class="notifications__main col-md-9 d-flex flex-column gap-2">
           <div
             class="notifications__list d-flex flex-column alight-items-start gap-2 mt-2"
@@ -48,9 +49,9 @@
         </div>
         <!-- <div class="notifications__sidebar col-md-3 pt-3 bg-dark-light"></div> -->
       </div>
+      <LoadingCircle class="spinner-border-sm mx-auto my-auto" v-else />
     </div>
   </div>
-  <LoadingCircle class="mx-auto my-auto" v-else />
 </template>
 
 <script lang="ts" setup>
@@ -115,6 +116,6 @@ const deleteRead = async () => {
 }
 
 .notifications__title {
-  color: var(--light);
+  color: var(--primary);
 }
 </style>

@@ -74,6 +74,7 @@ class ProfileDetailSerializer(serializers.ModelSerializer):
     following_count = serializers.SerializerMethodField()
     followers_count = serializers.SerializerMethodField()
     posts_count = serializers.SerializerMethodField()
+    chat_uuid = serializers.SerializerMethodField()
 
     class Meta:
         model = Profile
@@ -101,11 +102,13 @@ class ProfileDetailSerializer(serializers.ModelSerializer):
             "following_count",
             "followers_count",
             "posts_count",
+            "chat_uuid",
         ]
 
         read_only_fields = [
             "avatar",
             "date_joined",
+            "chat_uuid",
         ]
 
     def get_telegram_alias(self, obj):
@@ -154,3 +157,11 @@ class ProfileDetailSerializer(serializers.ModelSerializer):
 
     def get_posts_count(self, obj):
         return obj.posts.count()
+
+    def get_chat_uuid(self, obj):
+        request = self.context.get("request", None)
+        if request and request.user:
+            chat = obj.chats.filter(participants__email=request.user).first()
+            if chat:
+                return serializers.UUIDField().to_representation(chat.uuid)
+        return None

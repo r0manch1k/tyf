@@ -89,12 +89,12 @@ function connectWebsocket() {
   };
 
   websocket.onopen = async () => {
-    console.log("Connected to the websocket");
+    console.log("Connected to the notifications websocket");
     await store.dispatch("notification/fetchAllNotifications");
   };
 
   websocket.onclose = () => {
-    console.log("Disconnected from the websocket");
+    console.log("Disconnected from the notifications websocket");
 
     setTimeout(() => {
       connectWebsocket();

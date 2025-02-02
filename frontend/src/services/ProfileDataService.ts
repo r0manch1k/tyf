@@ -159,6 +159,14 @@ class ProfileDataService {
       .catch((error: unknown) => console.error(error));
     return data.data;
   }
+  async createChatWithProfile(username: string): Promise<ChatListItemModel> {
+    let data: { data: ChatListItemModel } = { data: {} as ChatListItemModel };
+    await api
+      .post(`/profiles/${username}/chats/`)
+      .then((response: { data: ChatListItemModel }) => (data = response))
+      .catch((error: unknown) => console.error(error));
+    return data.data;
+  }
 }
 
 export default new ProfileDataService();

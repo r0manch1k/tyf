@@ -31,6 +31,7 @@ export default interface ProfileModel {
   is_followed_by_request_user: boolean;
   following_count: number;
   followers_count: number;
+  chat_uuid: string | null;
 }
 
 export type ProfileListItemModel = Pick<

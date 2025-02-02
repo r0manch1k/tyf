@@ -1,7 +1,7 @@
 <template>
   <div class="highscores-bar">
     <div v-if="!loading">
-      <h3 class="highscores-bar__title-header">
+      <!-- <h3 class="highscores-bar__title-header">
         <span class="highscores-bar__header-text">Tell Your Enemies</span>
         <span class="highscores-bar__emoji"> 🚀</span>
       </h3>
@@ -13,7 +13,7 @@
           target="_blank"
           >Подробнее...</a
         >
-      </h4>
+      </h4> -->
       <div class="highscores-bar__content">
         <div class="highscores-bar__title">
           <h2 class="highscores-bar__title-text">HIGH SCORES</h2>
@@ -54,7 +54,7 @@
                 target="_blank"
                 class="highscores-bar__footer-link"
               >
-                PLAY NOW
+                WHAT IS THAT?
               </a>
             </div>
           </div>
@@ -100,9 +100,9 @@ onMounted(async () => {
   src: url("@/tye_frontend/assets/fonts/PressStart2P.ttf") format("truetype");
 }
 
-.highscores-bar__content {
+/* .highscores-bar__content {
   margin-top: 1rem;
-}
+} */
 
 .highscores-bar__header-text {
   color: rgb(240, 230, 20);

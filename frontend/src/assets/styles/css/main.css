@@ -1,7 +1,7 @@
 :root {
   --primary: #ccff00;
   /* --primary: #78ff73; */
-  --hover-primary: #a3cc00;
+  --hover-primary: #a0c801;
   --secondary: #333333;
   --secondary-light: #555555;
   --secondary-x-light: #777777;
@@ -58,6 +58,10 @@ h6 {
   font-family: "MesloLGS NF", sans-serif;
 }
 
+.me-2 {
+  margin-right: 0.5rem;
+}
+
 .text-secondary {
   color: var(--secondary);
 }
@@ -74,8 +78,16 @@ h6 {
   color: var(--secondary-xx-light) !important;
 }
 
+.text-dark-x-light {
+  color: var(--dark-x-light) !important;
+}
+
+.text-dark-light {
+  color: var(--dark-light) !important;
+}
+
 .text-alert {
-  color: var(--alert);
+  color: var(--alert) !important;
 }
 
 .bg-primary {
@@ -92,6 +104,10 @@ h6 {
 
 .bg-secondary-light {
   background-color: var(--secondary-light);
+}
+
+.bg-dark-x-light {
+  background-color: var(--dark-x-light);
 }
 
 .bg-dark-light {
@@ -261,7 +277,7 @@ h6 {
 
 .btn-submit:hover {
   color: var(--dark);
-  background-color: var(--hover-primary);
+  background-color: var(--primary);
   border: 0;
   border-radius: 0.4rem;
   max-width: 20rem;
@@ -272,7 +288,7 @@ h6 {
 
 .btn-submit:disabled,
 .btn-submit.disabled {
-  color: var(--secondary-xx-light);
+  color: var(--secondary-light);
   background-color: var(--secondary);
   border: 0;
   border-radius: 0.4rem;
