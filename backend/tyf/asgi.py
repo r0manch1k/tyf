@@ -1,6 +1,8 @@
+# flake8: noqa
+from tyf.wsgi import *
+
 import os
 from django.core.asgi import get_asgi_application
-from tyf.wsgi import *
 from channels.routing import ProtocolTypeRouter, URLRouter
 from channels.security.websocket import AllowedHostsOriginValidator
 from django.contrib.auth.models import AnonymousUser

@@ -7,9 +7,7 @@ from .serializers import (
     ResetPasswordSerializer,
     SocialLoginSerializer,
 )
-from django.urls import reverse
 from django.contrib import auth
-from django.conf import settings
 from django.utils import timezone
 from rest_framework import status
 from django.core.cache import cache
@@ -27,7 +25,6 @@ from django.utils.translation import gettext
 from django.contrib.auth import get_user_model
 from rest_framework.permissions import AllowAny
 from .permissions import VerificationPermissions
-from django.contrib.auth import login as login_user
 from rest_framework.exceptions import ValidationError
 from django.utils.encoding import force_bytes, force_str
 from rest_framework.generics import CreateAPIView, GenericAPIView
