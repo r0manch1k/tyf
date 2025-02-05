@@ -32,8 +32,6 @@ class AuthService {
       .catch((error) => {
         return Promise.reject(error);
       });
-
-    await store.dispatch("profile/fetchProfile");
   }
 
   async login(email: string, password: string): Promise<void> {
