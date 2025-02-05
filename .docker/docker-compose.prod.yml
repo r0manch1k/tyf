@@ -18,7 +18,7 @@ services:
       - backend
       - grafana
     networks:
-      - nginx_network
+      - nginx_nw
 
   backend:
     container_name: main__backend
@@ -38,9 +38,9 @@ services:
       - redis
     restart: always
     networks:
-      - nginx_network
-      - backend_network
-      - metrics_network
+      - nginx_nw
+      - backend_nw
+      - metrics_nw
 
   database:
     container_name: main__postgres
@@ -60,8 +60,8 @@ services:
       retries: 5
       start_period: 40s
     networks:
-      - backend_network
-      - metrics_network
+      - backend_nw
+      - metrics_nw
 
   redis:
     container_name: main__redis
@@ -92,8 +92,8 @@ services:
       retries: 5
       start_period: 40s
     networks:
-      - backend_network
-      - metrics_network
+      - backend_nw
+      - metrics_nw
 
   celery:
     container_name: main__celery
@@ -111,7 +111,8 @@ services:
       - redis
       - backend
     networks:
-      - backend_network
+      - backend_nw
+      - metrics_nw
 
   # -------------------- MONITORING SERVICES --------------------
 
@@ -135,8 +136,8 @@ services:
     expose:
       - 3000
     networks:
-      - nginx_network
-      - metrics_network
+      - nginx_nw
+      - metrics_nw
 
   prometheus:
     container_name: monitor__prometheus
@@ -161,26 +162,8 @@ services:
       - redis
       - database
     networks:
-      - metrics_network
-  
-  node-exporter:
-    image: prom/node-exporter
-    container_name: monitor__node-exporter
-    restart: unless-stopped
-    command:
-      - "--path.procfs=/host/proc"
-      - "--path.rootfs=/rootfs"
-      - "--path.sysfs=/host/sys"
-      - "--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)"
-    volumes:
-      - /proc:/host/proc:ro
-      - /sys:/host/sys:ro
-      - /:/rootfs:ro
-    expose:
-      - 9100
-    networks:
-      - metrics_network
-  
+      - metrics_nw
+
   cadvisor:
     image: gcr.io/cadvisor/cadvisor:v0.47.0
     container_name: monitor__cadvisor
@@ -199,7 +182,34 @@ services:
     devices:
       - /dev/kmsg:/dev/kmsg
     networks:
-      - metrics_network
+      - metrics_nw
+
+  node-exporter:
+    image: prom/node-exporter
+    container_name: monitor__node-exporter
+    restart: unless-stopped
+    command:
+      - "--path.procfs=/host/proc"
+      - "--path.rootfs=/rootfs"
+      - "--path.sysfs=/host/sys"
+      - "--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)"
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    expose:
+      - 9100
+    networks:
+      - metrics_nw
+
+  postgres-exporter:
+    image: prometheuscommunity/postgres-exporter
+    expose:
+      - 9187
+    env_file:
+      - ./prod/conf/.ps_exporter.env
+    networks:
+      - metrics_nw
 
 volumes:
   postgres_data_prod:
@@ -209,9 +219,9 @@ volumes:
   media_files:
 
 networks:
-  metrics_network:
+  metrics_nw:
     driver: bridge
-  nginx_network:
+  nginx_nw:
     driver: bridge
-  backend_network:
+  backend_nw:
     driver: bridge
