@@ -4,7 +4,7 @@ from django.conf.urls.static import static
 from rest_framework_simplejwt.views import TokenRefreshView
 from django.urls import path, include
 
-api_url_prefix = "v1/" if not settings.DEBUG else "api/v1/"
+api_url_prefix = "v1/" if not bool(settings.DEBUG) else "api/v1/"
 
 urlpatterns = [
     path("admin/", admin.site.urls),
