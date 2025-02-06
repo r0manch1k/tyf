@@ -8,7 +8,6 @@ api_url_prefix = "v1/" if not settings.DEBUG else "api/v1/"
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("", include("django_prometheus.urls")),
     path(api_url_prefix, include("apps.users.urls")),
     path(api_url_prefix, include("apps.profiles.urls")),
     path(api_url_prefix, include("apps.categories.urls")),
@@ -24,6 +23,11 @@ urlpatterns = [
         name="token_refresh",
     ),
 ]
+
+if bool(settings.ENABLE_PROMETHEUS_METRICS):
+    urlpatterns += [
+        path("", include("django_prometheus.urls")),
+    ]
 
 if bool(settings.DEBUG):
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

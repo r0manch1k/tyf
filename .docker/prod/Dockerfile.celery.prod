@@ -2,18 +2,16 @@ FROM python:3.11-alpine
 
 WORKDIR /tyf
 
-ENV ENABLE_PROMETHEUS_METRICS 1
+ENV ENABLE_PROMETHEUS_METRICS 0
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
 RUN apk update && apk add --no-cache \
     bash \
-    postgresql-client \
     redis \
     gettext \
     gcc \
-    libpq-dev \
-    netcat-openbsd
+    libpq-dev
 
 RUN mkdir -p backend
 
@@ -21,20 +19,14 @@ RUN pip3 install --upgrade pip
 COPY ./backend/requirements.txt ./backend/requirements.txt
 RUN pip3 install --no-cache-dir -r backend/requirements.txt
 
-RUN mkdir -p /tyf/backend/staticfiles/
-RUN mkdir -p /tyf/backend/mediafiles/
-
 COPY ./backend ./backend
-COPY ./.docker/prod/conf/backend.sh ./backend.sh
-COPY ./.docker/prod/conf/gunicorn.sh ./gunicorn.sh
+COPY ./.docker/prod/conf/celery.sh ./celery.sh
 
 RUN addgroup --system app && adduser --system --ingroup app app
 
 RUN chown -R app:app /tyf/
 RUN chown -R app:app /tyf/backend/
-RUN chown -R app:app /tyf/backend/staticfiles/
-RUN chown -R app:app /tyf/backend/mediafiles/
 
 USER app
 
-ENTRYPOINT ["sh", "/tyf/backend.sh"]
+ENTRYPOINT ["sh", "/tyf/celery.sh"]

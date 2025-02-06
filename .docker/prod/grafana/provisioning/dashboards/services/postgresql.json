@@ -2434,7 +2434,7 @@
       {
         "current": {
           "text": "Prometheus",
-          "value": "PBFA97CFB590B2093"
+          "value": "$datasource"
         },
         "label": "datasource",
         "name": "datasource",

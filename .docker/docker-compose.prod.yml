@@ -100,12 +100,9 @@ services:
     restart: unless-stopped
     build:
       context: ./../
-      dockerfile: ./.docker/prod/Dockerfile.backend.prod
-    command: "sh /tyf/celery.sh"
+      dockerfile: ./.docker/prod/Dockerfile.celery.prod
     env_file:
       - ./prod/conf/.env.prod
-    expose:
-      - 7999
     depends_on:
       - database
       - redis
@@ -167,6 +164,7 @@ services:
   cadvisor:
     image: gcr.io/cadvisor/cadvisor:v0.47.0
     container_name: monitor__cadvisor
+    restart: unless-stopped
     privileged: true
     command: "-port=8092"
     expose:
@@ -205,22 +203,40 @@ services:
   postgres-exporter:
     image: prometheuscommunity/postgres-exporter
     container_name: monitor__postgres-exporter
+    restart: unless-stopped
     expose:
       - 9187
     env_file:
       - ./prod/conf/.ps_exporter.env
     networks:
       - metrics_nw
-  
+
   redis-exporter:
     image: oliver006/redis_exporter
     container_name: monitor__redis-exporter
+    restart: unless-stopped
     expose:
       - 9121
     env_file:
       - ./prod/conf/.redis_exporter.env
     networks:
       - metrics_nw
+
+  flower:
+    container_name: monitor__flower
+    build:
+      context: ./../
+      dockerfile: ./.docker/prod/Dockerfile.flower.prod
+    restart: unless-stopped
+    expose:
+      - 5555
+    env_file:
+      - ./prod/conf/.env.prod
+    depends_on:
+      - celery
+    networks:
+      - metrics_nw
+
 
 volumes:
   postgres_data_prod:
