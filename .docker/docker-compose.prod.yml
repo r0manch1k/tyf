@@ -204,10 +204,21 @@ services:
 
   postgres-exporter:
     image: prometheuscommunity/postgres-exporter
+    container_name: monitor__postgres-exporter
     expose:
       - 9187
     env_file:
       - ./prod/conf/.ps_exporter.env
+    networks:
+      - metrics_nw
+  
+  redis-exporter:
+    image: oliver006/redis_exporter
+    container_name: monitor__redis-exporter
+    expose:
+      - 9121
+    env_file:
+      - ./prod/conf/.redis_exporter.env
     networks:
       - metrics_nw
 

@@ -11,7 +11,7 @@ providers:
       path: /etc/grafana/provisioning/dashboards/system
 
   - name: services
-    folder: "Service Metrics"
+    folder: "Services Metrics"
     type: file
     disableDeletion: false
     editable: true
