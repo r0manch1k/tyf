@@ -112,10 +112,9 @@ class SocialLogin(CreateAPIView):
                 profile = Profile.objects.get(email=email)
                 profile.first_name = firstName
                 profile.last_name = lastName
+
+                username = re.sub("[^a-z0-9-]", "", username.lower().replace(" ", "-"))
                 if not Profile.objects.filter(username=username).exists():
-                    username = re.sub(
-                        "[^a-z0-9-]", "", username.lower().replace(" ", "-")
-                    )
                     profile.username = username
                 if avatarUrl:
                     profile.save_avatar_from_url(avatarUrl)
