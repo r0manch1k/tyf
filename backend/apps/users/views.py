@@ -1,3 +1,4 @@
+import re
 import requests
 from tyf import settings
 from .serializers import (
@@ -79,7 +80,7 @@ class SocialLogin(CreateAPIView):
 
                 userInfo = response.json()
                 email = userInfo.get("default_email", "")
-                username = userInfo.get("display_name", "")
+                username = userInfo.get("login", "")
                 firstName = userInfo.get("first_name", "")
                 lastName = userInfo.get("last_name", "")
                 avatarId = userInfo.get("default_avatar_id", "")
@@ -109,9 +110,13 @@ class SocialLogin(CreateAPIView):
                 user = serializer.save()
 
                 profile = Profile.objects.get(email=email)
-                profile.username = username
                 profile.first_name = firstName
                 profile.last_name = lastName
+                if not Profile.objects.filter(username=username).exists():
+                    username = re.sub(
+                        "[^a-z0-9-]", "", username.lower().replace(" ", "-")
+                    )
+                    profile.username = username
                 if avatarUrl:
                     profile.save_avatar_from_url(avatarUrl)
                 profile.save()
