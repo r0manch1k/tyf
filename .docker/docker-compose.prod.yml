@@ -19,6 +19,9 @@ services:
       - grafana
     networks:
       - nginx_nw
+    labels:
+      logging: "promtail"
+      logging_jobname: "containerlogs"
 
   backend:
     container_name: main__backend
@@ -152,12 +155,69 @@ services:
       - prometheus_data:/prometheus
     environment:
       TZ: "Asia/Vladivostok"
+    deploy:
+      resources:
+        limits:
+          cpus: "0.50"
+          memory: 1024M
+        reservations:
+          cpus: "0.25"
+          memory: 512M
     depends_on:
       - node-exporter
       - cadvisor
       - backend
       - redis
       - database
+    networks:
+      - metrics_nw
+
+  loki:
+    image: grafana/loki:2.9.0
+    container_name: monitor__loki
+    restart: unless-stopped
+    command:
+      - "--validation.allow-structured-metadata=false"
+      - "--config.file=/etc/loki/loki.yaml"
+    expose:
+      - 3100
+    volumes:
+      - ./prod/conf/loki.yaml:/etc/loki/loki.yaml:ro
+      - loki_data:/loki
+    user: "root"
+    deploy:
+      resources:
+        limits:
+          cpus: "0.50"
+          memory: 1024M
+        reservations:
+          cpus: "0.25"
+          memory: 512M
+    networks:
+      - metrics_nw
+
+  promtail:
+    image: grafana/promtail:2.9.0
+    container_name: monitor__promtail
+    restart: unless-stopped
+    command:
+      - "--config.file=/etc/promtail/promtail.yaml"
+    expose:
+      - 9080
+    volumes:
+      - ./prod/conf/promtail.yaml:/etc/promtail/promtail.yaml
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/lib/docker/containers:/var/lib/docker/containers
+      - promtail_data:/etc/promtail
+    environment:
+      TZ: "Asia/Vladivostok"
+    deploy:
+      mode: global
+      update_config:
+        order: stop-first
+      resources:
+        limits:
+          memory: 512M
     networks:
       - metrics_nw
 
@@ -207,7 +267,7 @@ services:
     expose:
       - 9187
     env_file:
-      - ./prod/conf/.ps_exporter.env
+      - ./prod/conf/.ps.env
     networks:
       - metrics_nw
 
@@ -218,7 +278,7 @@ services:
     expose:
       - 9121
     env_file:
-      - ./prod/conf/.redis_exporter.env
+      - ./prod/conf/.redis.env
     networks:
       - metrics_nw
 
@@ -231,19 +291,20 @@ services:
     expose:
       - 5555
     env_file:
-      - ./prod/conf/.env.prod
+      - ./prod/conf/.redis.env
     depends_on:
       - celery
     networks:
       - metrics_nw
 
-
 volumes:
   postgres_data_prod:
   prometheus_data:
+  promtail_data:
   grafana_data:
   static_files:
   media_files:
+  loki_data:
 
 networks:
   metrics_nw:

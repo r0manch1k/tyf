@@ -1,31 +1,8 @@
 FROM python:3.11-alpine
 
-WORKDIR /tyf
-
-ENV ENABLE_PROMETHEUS_METRICS 0
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
-
-RUN apk update && apk add --no-cache \
-    bash \
-    redis \
-    gettext \
-    gcc \
-    libpq-dev
-
-RUN mkdir -p backend
-
 RUN pip3 install --upgrade pip
-COPY ./backend/requirements.txt ./backend/requirements.txt
-RUN pip3 install --no-cache-dir -r backend/requirements.txt
+RUN pip3 install --no-cache-dir celery==5.4.0
+RUN pip3 install --no-cache-dir redis==5.0.0
+RUN pip3 install --no-cache-dir flower==2.0.1
 
-COPY ./backend ./backend
-
-RUN addgroup --system app && adduser --system --ingroup app app
-
-RUN chown -R app:app /tyf/
-RUN chown -R app:app /tyf/backend/
-
-USER app
-
-CMD sleep 10 && cd /tyf/backend && celery -A apps.celery_app flower --loglevel=DEBUG
+CMD celery --broker=${REDIS_LOCATION} flower --loglevel=DEBUG
