@@ -71,6 +71,8 @@ services:
     build:
       context: ./../
       dockerfile: ./.docker/prod/Dockerfile.redis.prod
+    volumes:
+      - redis_data:/data
     deploy:
       resources:
         limits:
@@ -318,6 +320,7 @@ volumes:
   grafana_data:
   static_files:
   media_files:
+  redis_data:
   alert_data:
   loki_data:
 
