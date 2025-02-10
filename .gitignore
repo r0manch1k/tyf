@@ -84,3 +84,4 @@ pnpm-debug.log*
 
 # Data
 /dumbs
+tg_token.txt

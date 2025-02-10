@@ -120,7 +120,7 @@ create-api-key-prod:
 
 # For production
 run-load-test-app:
-	locust -f ./.docker/prod/loadtest/locustfile.py
+	locust -f ./.docker/prod/test_system/locustfile.py
 
 .PHONY: build-dev up-dev down-dev migrate-dev superuser-dev makemigrations-dev startapp-dev clean-dev clean-dev-volumes load-csv-dev create-api-key-dev\
         build-prod up-prod down-prod migrate-prod superuser-prod makemigrations-prod startapp-prod clean-prod clean-prod-volumes load-csv-prod create-api-key-prod
