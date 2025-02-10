@@ -177,16 +177,16 @@ services:
     container_name: monitor__alertmanager
     restart: unless-stopped
     user: root
-    ports:
-      - "9093:9093"
+    expose:
+      - 9093
     volumes:
       - ./prod/alertmanager/:/etc/alertmanager/
-      - alert_data:/data
+      - alert_data:/alertmanager
     environment:
       TZ: "Asia/Vladivostok"
     command:
       - "--config.file=/etc/alertmanager/alertmanager.yml"
-      - "--storage.path=/data"
+      - "--storage.path=/alertmanager"
     networks:
       - metrics_nw
 

@@ -1,43 +1,38 @@
 groups:
   - name: CriticalAlers
     rules:
-      - alert: UPTIME_DOWN
+      - alert: Service_Down
         expr: up == 0
         for: 1m
         labels:
           severity: critical
         annotations:
-          description: "🚨Server is down {{ $labels.instance }}🚨"
-          summary: "СЕРВЕР НЕДОСТУПЕН БОЛЕЕ 1 МИНУТЫ. ПРОВЕРИТЬ node_exporter И САМ СЕРВЕР"
-      - alert: DISK_space_usage_is_High
+          description: "🚨 Service '{{ $labels.instance }}' is down 🚨"
+          summary: "Сервис '{{ $labels.instance }}' недоступен более 1 минуты. Проверьте этот сервис и сам сервер."
+
+      - alert: DISK_Space_Usage_Is_High
         expr: 100 - avg(node_filesystem_avail_bytes{fstype="btrfs"}) / ((sum(node_filesystem_size_bytes{fstype="btrfs"}) + sum(node_filesystem_size_bytes{fstype="tmpfs"})) / 100) > 95
         for: 1m
         labels:
           severity: critical
         annotations:
-          description: "🚨High Disk Usage {{ $labels.instance }}🚨"
-          summary: "ДИСК ЗАПОЛНЕН НА 95 ПРОЦЕНТОВ. ПРОВЕРИТЬ ДИСК"
-      - alert: DISK_space_BIGDATA_usage_is_High
-        expr: 100 * (1 - (node_filesystem_avail_bytes / node_filesystem_size_bytes{mountpoint="/bigdata"})) > 95
-        for: 1m
-        labels:
-          severity: critical
-        annotations:
-          description: "🚨High Disk Usage {{ $labels.instance }}🚨"
-          summary: "ДИСК BIGDATA ЗАПОЛНЕН НА 90 ПРОЦЕНТОВ. ПРОВЕРИТЬ ДИСК"
-      - alert: CPU_usage_is_High
+          description: "🚨 High Disk Usage: {{ $labels.instance }} 🚨"
+          summary: "Диск заполнен на 95%. Проверьте диск и примите меры."
+
+      - alert: CPU_Usage_Is_High
         expr: 100 - (avg(rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 90
         for: 1m
         labels:
           severity: critical
         annotations:
           description: "🚨High CPU Usage {{ $labels.instance }}🚨"
-          summary: "CPU ИСПОЛЬЗУЕТ БОЛЕЕ 90 ПРОЦЕНТОВ. ПРОВЕРИТЬ СЕРВЕР"
-      - alert: RAM_usage_is_High
+          summary: "Сервер использует более 90% CPU. Проверьте работу сервера."
+
+      - alert: RAM_Usage_Is_High
         expr: 100 * (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) > 90
         for: 1m
         labels:
           severity: critical
         annotations:
-          description: "🚨High RAM Usage {{ $labels.instance }}🚨"
-          summary: "RAM ИСПОЛЬЗУЕТ БОЛЕЕ 90 ПРОЦЕНТОВ. ПРОВЕРИТЬ СЕРВЕР"
+          description: "🚨 High RAM Usage {{ $labels.instance }} 🚨"
+          summary: "Сервер использует более 90% RAM. Проверьте работу сервера."
