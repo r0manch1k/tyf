@@ -12,8 +12,6 @@ services:
     volumes:
       - static_files:/tyf/backend/staticfiles/
       - media_files:/tyf/backend/mediafiles/
-    env_file:
-      - ./prod/conf/.env.prod
     depends_on:
       - backend
       - grafana
@@ -123,7 +121,7 @@ services:
       - "--config=/etc/grafana/grafana.ini"
     volumes:
       - ./prod/conf/grafana.ini:/etc/grafana/grafana.ini
-      - ./prod/grafana/provisioning/:/etc/grafana/provisioning/
+      - ./prod/conf/grafana/provisioning/:/etc/grafana/provisioning/
       - grafana_data:/var/lib/grafana
     environment:
       - GF_PATHS_CONFIG=/etc/grafana/grafana.ini
@@ -150,8 +148,8 @@ services:
     expose:
       - 9090
     volumes:
-      - ./prod/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
-      - ./prod/prometheus/rules.yml:/etc/prometheus/rules.yml
+      - ./prod/conf/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./prod/conf/prometheus/rules.yml:/etc/prometheus/rules.yml
       - prometheus_data:/prometheus
     environment:
       TZ: "Asia/Vladivostok"
@@ -180,7 +178,7 @@ services:
     expose:
       - 9093
     volumes:
-      - ./prod/alertmanager/:/etc/alertmanager/
+      - ./prod/conf/alertmanager/:/etc/alertmanager/
       - alert_data:/alertmanager
     environment:
       TZ: "Asia/Vladivostok"
@@ -284,7 +282,7 @@ services:
     expose:
       - 9187
     env_file:
-      - ./prod/conf/.ps.env
+      - ./prod/conf/.env.prod
     networks:
       - metrics_nw
 
@@ -295,7 +293,7 @@ services:
     expose:
       - 9121
     env_file:
-      - ./prod/conf/.redis.env
+      - ./prod/conf/.env.prod
     networks:
       - metrics_nw
 
@@ -308,7 +306,7 @@ services:
     expose:
       - 5555
     env_file:
-      - ./prod/conf/.redis.env
+      - ./prod/conf/.env.prod
     depends_on:
       - celery
     networks:

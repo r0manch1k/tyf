@@ -1,6 +1,6 @@
 FROM redis:latest
 
-COPY ./.docker/prod/conf/redis.sh /usr/local/bin/redis.sh
+COPY ./.docker/prod/shell/redis.sh /usr/local/bin/redis.sh
 RUN chmod +x /usr/local/bin/redis.sh
 
 ENTRYPOINT ["/usr/local/bin/redis.sh"]

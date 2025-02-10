@@ -20,7 +20,7 @@ COPY ./backend/requirements.txt ./backend/requirements.txt
 RUN pip3 install --no-cache-dir -r backend/requirements.txt
 
 COPY ./backend ./backend
-COPY ./.docker/prod/conf/celery.sh ./celery.sh
+COPY ./.docker/prod/shell/celery.sh ./celery.sh
 
 RUN addgroup --system app && adduser --system --ingroup app app
 

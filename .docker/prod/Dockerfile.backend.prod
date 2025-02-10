@@ -25,8 +25,8 @@ RUN mkdir -p /tyf/backend/staticfiles/
 RUN mkdir -p /tyf/backend/mediafiles/
 
 COPY ./backend ./backend
-COPY ./.docker/prod/conf/backend.sh ./backend.sh
-COPY ./.docker/prod/conf/gunicorn.sh ./gunicorn.sh
+COPY ./.docker/prod/shell/backend.sh ./backend.sh
+COPY ./.docker/prod/shell/gunicorn.sh ./gunicorn.sh
 
 RUN addgroup --system app && adduser --system --ingroup app app
 
