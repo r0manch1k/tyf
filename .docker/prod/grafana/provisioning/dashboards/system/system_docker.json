@@ -18,7 +18,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 6,
+  "id": 3,
   "links": [],
   "panels": [
     {
@@ -497,7 +497,7 @@
           },
           "editorMode": "code",
           "exemplar": true,
-          "expr": "100 * (1 - avg(rate(node_cpu_seconds_total{mode=\"idle\", instance=\"$node\"}[$__rate_interval])))",
+          "expr": "100 - (avg(rate(node_cpu_seconds_total{mode=\"idle\"}[5m])) * 100)",
           "interval": "",
           "intervalFactor": 2,
           "legendFormat": "",
@@ -584,7 +584,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "((node_memory_MemTotal_bytes - node_memory_MemFree_bytes) / node_memory_MemTotal_bytes) * 100",
+          "expr": "100 * (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes))",
           "format": "time_series",
           "interval": "10s",
           "intervalFactor": 1,
@@ -1287,7 +1287,7 @@
           },
           "editorMode": "code",
           "exemplar": true,
-          "expr": "sum(rate(container_cpu_user_seconds_total{job=~\"$job\",image!=\"\"}[5m]) * 100)",
+          "expr": "sum(rate(container_cpu_user_seconds_total{job=~\"$job\",image!=\"\"}[$__rate_interval]) * 100)",
           "interval": "",
           "intervalFactor": 2,
           "legendFormat": "",
@@ -2763,7 +2763,7 @@
     }
   ],
   "preload": false,
-  "refresh": "30s",
+  "refresh": "5s",
   "schemaVersion": 40,
   "tags": [],
   "templating": {
@@ -2855,9 +2855,7 @@
       },
       {
         "current": {
-          "text": [
-            "All"
-          ],
+          "text": "All",
           "value": [
             "$__all"
           ]
@@ -2892,6 +2890,6 @@
   "timezone": "browser",
   "title": "System & Containers",
   "uid": "aec44kk2tjmyod",
-  "version": 70,
+  "version": 2,
   "weekStart": ""
 }
