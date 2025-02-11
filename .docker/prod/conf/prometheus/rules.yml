@@ -20,7 +20,7 @@ groups:
           summary: "Диск заполнен на 95%. Проверьте диск и примите меры."
 
       - alert: CPU_Usage_Is_High
-        expr: 100 - (avg(rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 90
+        expr: 100 - (avg(rate(node_cpu_seconds_total{mode="idle"}[2m])) * 100) > 90
         for: 30s
         labels:
           severity: critical
