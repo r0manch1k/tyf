@@ -1,25 +1,25 @@
 services:
+  # -------------------- MAIN SERVICES --------------------
+
   nginx:
-    container_name: tyf_nginx
+    container_name: main__nginx
     build:
       context: ./../
       dockerfile: ./.docker/prod/Dockerfile.nginx.prod
     restart: unless-stopped
     ports:
-      - 8080:80
+      - 8080:8080
     volumes:
       - static_files:/tyf/backend/staticfiles/
       - media_files:/tyf/backend/mediafiles/
-    env_file:
-      - ./prod/conf/.env.prod
     depends_on:
-      backend:
-        condition: service_started
+      - backend
+      - grafana
     networks:
-      - nginx_network
+      - nginx_nw
 
   backend:
-    container_name: tyf_backend
+    container_name: main__backend
     build:
       context: ./../
       dockerfile: ./.docker/prod/Dockerfile.backend.prod
@@ -28,21 +28,20 @@ services:
       - static_files:/tyf/backend/staticfiles/
       - media_files:/tyf/backend/mediafiles/
     expose:
-      - 8080
+      - 8000
     env_file:
       - ./prod/conf/.env.prod
     depends_on:
-      database:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
+      - database
+      - redis
     restart: always
     networks:
-      - backend_network
-      - nginx_network
+      - nginx_nw
+      - backend_nw
+      - metrics_nw
 
   database:
-    container_name: tyf_postgres
+    container_name: main__postgres
     image: postgres:13.0-alpine
     restart: unless-stopped
     volumes:
@@ -59,16 +58,19 @@ services:
       retries: 5
       start_period: 40s
     networks:
-      - backend_network
+      - backend_nw
+      - metrics_nw
 
   redis:
-    container_name: tyf_redis
+    container_name: main__redis
     restart: unless-stopped
     env_file:
       - ./prod/conf/.env.prod
     build:
       context: ./../
       dockerfile: ./.docker/prod/Dockerfile.redis.prod
+    volumes:
+      - redis_data:/data
     deploy:
       resources:
         limits:
@@ -90,33 +92,240 @@ services:
       retries: 5
       start_period: 40s
     networks:
-      - backend_network
+      - backend_nw
+      - metrics_nw
 
   celery:
-    container_name: tyf_celery
+    container_name: main__celery
     restart: unless-stopped
     build:
       context: ./../
-      dockerfile: ./.docker/prod/Dockerfile.backend.prod
-    command: "sh /tyf/celery.sh"
+      dockerfile: ./.docker/prod/Dockerfile.celery.prod
     env_file:
       - ./prod/conf/.env.prod
-    expose:
-      - 7999
     depends_on:
       - database
       - redis
       - backend
     networks:
-      - backend_network
+      - backend_nw
+      - metrics_nw
+
+  # -------------------- MONITORING SERVICES --------------------
+
+  grafana:
+    container_name: monitor__grafana
+    image: grafana/grafana
+    restart: unless-stopped
+    command:
+      - "--config=/etc/grafana/grafana.ini"
+    volumes:
+      - ./prod/conf/grafana.ini:/etc/grafana/grafana.ini
+      - ./prod/conf/grafana/provisioning/:/etc/grafana/provisioning/
+      - grafana_data:/var/lib/grafana
+    environment:
+      - GF_PATHS_CONFIG=/etc/grafana/grafana.ini
+      - GF_DASHBOARDS_JSON_ENABLED=true
+      - GF_PATHS_PROVISIONING=/etc/grafana/provisioning
+      - TZ=Asia/Vladivostok
+    depends_on:
+      - prometheus
+    expose:
+      - 3000
+    networks:
+      - nginx_nw
+      - metrics_nw
+
+  prometheus:
+    container_name: monitor__prometheus
+    image: prom/prometheus
+    restart: unless-stopped
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--log.level=error"
+      - "--storage.tsdb.path=/prometheus"
+      - "--storage.tsdb.retention.time=7d"
+    expose:
+      - 9090
+    volumes:
+      - ./prod/conf/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./prod/conf/prometheus/rules.yml:/etc/prometheus/rules.yml
+      - prometheus_data:/prometheus
+    environment:
+      TZ: "Asia/Vladivostok"
+    deploy:
+      resources:
+        limits:
+          cpus: "0.50"
+          memory: 1024M
+        reservations:
+          cpus: "0.25"
+          memory: 512M
+    depends_on:
+      - node-exporter
+      - cadvisor
+      - backend
+      - redis
+      - database
+    networks:
+      - metrics_nw
+
+  alertmanager:
+    image: prom/alertmanager:latest
+    container_name: monitor__alertmanager
+    restart: unless-stopped
+    user: root
+    expose:
+      - 9093
+    volumes:
+      - ./prod/conf/alertmanager/:/etc/alertmanager/
+      - alert_data:/alertmanager
+    environment:
+      TZ: "Asia/Vladivostok"
+    command:
+      - "--config.file=/etc/alertmanager/alertmanager.yml"
+      - "--storage.path=/alertmanager"
+    networks:
+      - metrics_nw
+
+  loki:
+    image: grafana/loki:2.9.0
+    container_name: monitor__loki
+    restart: unless-stopped
+    command:
+      - "--validation.allow-structured-metadata=false"
+      - "--config.file=/etc/loki/loki.yaml"
+    expose:
+      - 3100
+    volumes:
+      - ./prod/conf/loki.yaml:/etc/loki/loki.yaml:ro
+      - loki_data:/loki
+    user: "root"
+    deploy:
+      resources:
+        limits:
+          cpus: "0.50"
+          memory: 1024M
+        reservations:
+          cpus: "0.25"
+          memory: 512M
+    networks:
+      - metrics_nw
+
+  promtail:
+    image: grafana/promtail:2.9.0
+    container_name: monitor__promtail
+    restart: unless-stopped
+    command:
+      - "--config.file=/etc/promtail/promtail.yaml"
+    expose:
+      - 9080
+    volumes:
+      - ./prod/conf/promtail.yaml:/etc/promtail/promtail.yaml
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/lib/docker/containers:/var/lib/docker/containers
+    environment:
+      TZ: "Asia/Vladivostok"
+    deploy:
+      mode: global
+      update_config:
+        order: stop-first
+      resources:
+        limits:
+          memory: 512M
+    networks:
+      - metrics_nw
+
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:v0.47.0
+    container_name: monitor__cadvisor
+    restart: unless-stopped
+    privileged: true
+    command: "-port=8092"
+    expose:
+      - 8092
+    volumes:
+      - /:/rootfs:ro
+      - /var/run/:/var/run/:rw
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /dev/disk/:/dev/disk:ro
+      - /etc/machine-id:/etc/machine-id:ro
+      - /var/lib/dbus/machine-id:/var/lib/dbus/machine-id:ro
+    devices:
+      - /dev/kmsg:/dev/kmsg
+    networks:
+      - metrics_nw
+
+  node-exporter:
+    image: prom/node-exporter
+    container_name: monitor__node-exporter
+    restart: unless-stopped
+    command:
+      - "--path.procfs=/host/proc"
+      - "--path.rootfs=/rootfs"
+      - "--path.sysfs=/host/sys"
+      - "--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)"
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    expose:
+      - 9100
+    networks:
+      - metrics_nw
+
+  postgres-exporter:
+    image: prometheuscommunity/postgres-exporter
+    container_name: monitor__postgres-exporter
+    restart: unless-stopped
+    expose:
+      - 9187
+    env_file:
+      - ./prod/conf/.env.prod
+    networks:
+      - metrics_nw
+
+  redis-exporter:
+    image: oliver006/redis_exporter
+    container_name: monitor__redis-exporter
+    restart: unless-stopped
+    expose:
+      - 9121
+    env_file:
+      - ./prod/conf/.env.prod
+    networks:
+      - metrics_nw
+
+  flower:
+    container_name: monitor__flower
+    build:
+      context: ./../
+      dockerfile: ./.docker/prod/Dockerfile.flower.prod
+    restart: unless-stopped
+    expose:
+      - 5555
+    env_file:
+      - ./prod/conf/.env.prod
+    depends_on:
+      - celery
+    networks:
+      - metrics_nw
 
 volumes:
   postgres_data_prod:
+  prometheus_data:
+  grafana_data:
   static_files:
   media_files:
+  redis_data:
+  alert_data:
+  loki_data:
 
 networks:
-  nginx_network:
+  metrics_nw:
     driver: bridge
-  backend_network:
+  nginx_nw:
+    driver: bridge
+  backend_nw:
     driver: bridge

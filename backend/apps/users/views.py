@@ -1,3 +1,4 @@
+import re
 import requests
 from tyf import settings
 from .serializers import (
@@ -7,13 +8,10 @@ from .serializers import (
     ResetPasswordSerializer,
     SocialLoginSerializer,
 )
-from django.urls import reverse
 from django.contrib import auth
-from django.conf import settings
 from django.utils import timezone
 from rest_framework import status
 from django.core.cache import cache
-from django.http import HttpResponseRedirect
 from apps.utils.verify_tools import (
     generateOTP,
     sendEmail,
@@ -28,7 +26,6 @@ from django.utils.translation import gettext
 from django.contrib.auth import get_user_model
 from rest_framework.permissions import AllowAny
 from .permissions import VerificationPermissions
-from django.contrib.auth import login as login_user
 from rest_framework.exceptions import ValidationError
 from django.utils.encoding import force_bytes, force_str
 from rest_framework.generics import CreateAPIView, GenericAPIView
@@ -83,7 +80,7 @@ class SocialLogin(CreateAPIView):
 
                 userInfo = response.json()
                 email = userInfo.get("default_email", "")
-                username = userInfo.get("display_name", "")
+                username = userInfo.get("login", "")
                 firstName = userInfo.get("first_name", "")
                 lastName = userInfo.get("last_name", "")
                 avatarId = userInfo.get("default_avatar_id", "")
@@ -113,9 +110,12 @@ class SocialLogin(CreateAPIView):
                 user = serializer.save()
 
                 profile = Profile.objects.get(email=email)
-                profile.username = username
                 profile.first_name = firstName
                 profile.last_name = lastName
+
+                username = re.sub("[^a-z0-9-]", "", username.lower().replace(" ", "-"))
+                if not Profile.objects.filter(username=username).exists():
+                    profile.username = username
                 if avatarUrl:
                     profile.save_avatar_from_url(avatarUrl)
                 profile.save()
@@ -179,27 +179,13 @@ class Login(GenericAPIView):
 
     def post(self, request):
         try:
+            serializer = self.serializer_class(data=request.data)
+            serializer.is_valid(raise_exception=True)
+
             user = auth.authenticate(
                 email=request.data.get("email"),
                 password=request.data.get("password"),
             )
-
-            if user and not settings.DEBUG:
-                if user.is_superuser:
-                    login_user(request, user)
-                    return Response(
-                        {
-                            "message": "OK",
-                            "payload": {
-                                "redirect_url": settings.API_URL
-                                + reverse("admin:index")
-                            },
-                        },
-                        status=status.HTTP_202_ACCEPTED,
-                    )
-
-            serializer = self.serializer_class(data=request.data)
-            serializer.is_valid(raise_exception=True)
 
             refresh = RefreshToken.for_user(user)
             refresh.payload.update({"user_id": user.id, "email": user.email})

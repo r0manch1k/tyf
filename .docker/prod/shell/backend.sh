@@ -9,6 +9,6 @@ then
     done
 
     echo "PostgreSQL started"
-fi
+fi  
 
 exec "$@"

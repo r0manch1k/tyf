@@ -22,7 +22,7 @@ gunicorn ${DJANGO_ASGI_MODULE} \
   --worker-class ${WORKER_CLASS} \
   --max-requests 3000 \
   --max-requests-jitter 1500 \
-  --bind 0.0.0.0:8080 \
+  --bind 0.0.0.0:8000 \
   --log-level info \
   --log-file - \
   --pid gunicorn.pid

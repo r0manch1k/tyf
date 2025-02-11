@@ -9,6 +9,7 @@ from django.contrib.contenttypes.fields import GenericRelation
 from django.contrib.postgres.indexes import GinIndex, BTreeIndex
 from apps.utils.media_tools import generate_uuid, generate_media_path
 from django.contrib.postgres.search import SearchVectorField, SearchVector
+from django_prometheus.models import ExportModelOperationsMixin
 
 
 from apps.tags.models import Tag
@@ -20,7 +21,7 @@ from apps.categories.models import Category
 from apps.collections.models import Collection
 
 
-class Post(models.Model):
+class Post(ExportModelOperationsMixin("post"), models.Model):
     manager = models.Manager()
 
     class Meta:

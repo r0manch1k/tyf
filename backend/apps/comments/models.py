@@ -4,9 +4,10 @@ from apps.profiles.models import Profile
 from apps.posts.models import Post
 from apps.media.models import Media
 from apps.utils.media_tools import generate_uuid
+from django_prometheus.models import ExportModelOperationsMixin
 
 
-class Comment(models.Model):
+class Comment(ExportModelOperationsMixin("commment"), models.Model):
     identifier = models.CharField(
         max_length=8, primary_key=False, editable=False, unique=True
     )

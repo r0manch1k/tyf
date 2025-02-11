@@ -35,6 +35,7 @@ lib64/
 # Some trash
 *.md
 *.gitignore
+.DS_Store
 
 # Env
 .env.prod

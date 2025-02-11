@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
+from django_prometheus.models import ExportModelOperationsMixin
 
 
 class UserManager(BaseUserManager):
@@ -24,7 +25,7 @@ class UserManager(BaseUserManager):
         return self.create_user(email, password, **extra_fields)
 
 
-class User(AbstractUser):
+class User(ExportModelOperationsMixin("user"), AbstractUser):
     username = None
     first_name = None
     last_name = None
