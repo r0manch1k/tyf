@@ -4,22 +4,31 @@ from django.conf.urls.static import static
 from rest_framework_simplejwt.views import TokenRefreshView
 from django.urls import path, include
 
+api_url_prefix = "v1/" if not bool(settings.DEBUG) else "api/v1/"
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("", include("django_prometheus.urls")),
-    path("api/v1/", include("apps.users.urls")),
-    path("api/v1/", include("apps.profiles.urls")),
-    path("api/v1/", include("apps.categories.urls")),
-    path("api/v1/", include("apps.collections.urls")),
-    path("api/v1/", include("apps.posts.urls")),
-    path("api/v1/", include("apps.comments.urls")),
-    path("api/v1/", include("apps.registry.urls")),
-    path("api/v1/", include("apps.notifications.urls")),
     path("api/v1/", include("apps.chats.urls")),
-    path("api/v1/", include("apps.tye.urls")),
-    path("api/v1/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
+    path(api_url_prefix, include("apps.users.urls")),
+    path(api_url_prefix, include("apps.profiles.urls")),
+    path(api_url_prefix, include("apps.categories.urls")),
+    path(api_url_prefix, include("apps.collections.urls")),
+    path(api_url_prefix, include("apps.posts.urls")),
+    path(api_url_prefix, include("apps.comments.urls")),
+    path(api_url_prefix, include("apps.registry.urls")),
+    path(api_url_prefix, include("apps.notifications.urls")),
+    path(api_url_prefix, include("apps.tye.urls")),
+    path(
+        f"{api_url_prefix}token/refresh/",
+        TokenRefreshView.as_view(),
+        name="token_refresh",
+    ),
 ]
+
+if bool(settings.ENABLE_PROMETHEUS_METRICS):
+    urlpatterns += [
+        path("", include("django_prometheus.urls")),
+    ]
 
 if bool(settings.DEBUG):
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

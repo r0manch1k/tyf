@@ -1,0 +1,8 @@
+FROM python:3.11-alpine
+
+RUN pip3 install --upgrade pip
+RUN pip3 install --no-cache-dir celery==5.4.0
+RUN pip3 install --no-cache-dir redis==5.0.0
+RUN pip3 install --no-cache-dir flower==2.0.1
+
+CMD celery --broker=${REDIS_LOCATION} flower --loglevel=DEBUG

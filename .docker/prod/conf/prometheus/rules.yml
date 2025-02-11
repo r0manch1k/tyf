@@ -1,0 +1,47 @@
+groups:
+  - name: CriticalAlers
+    rules:
+      - alert: Service_Down
+        expr: up == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          description: "🚨 Service '{{ $labels.instance }}' is down 🚨"
+          summary: "Сервис '{{ $labels.instance }}' недоступен более 1 минуты. Проверьте этот сервис и сам сервер."
+
+      - alert: DISK_Space_Usage_Is_High
+        expr: 100 - avg(node_filesystem_avail_bytes{fstype="btrfs"}) / ((sum(node_filesystem_size_bytes{fstype="btrfs"}) + sum(node_filesystem_size_bytes{fstype="tmpfs"})) / 100) > 95
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          description: "🚨 High disk usage: {{ $labels.instance }} 🚨"
+          summary: "Диск заполнен на 95%. Проверьте диск и примите меры."
+
+      - alert: CPU_Usage_Is_High
+        expr: 100 - (avg(rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 90
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          description: "🚨 High CPU usage {{ $labels.instance }} 🚨"
+          summary: "Сервер использует более 90% CPU. Проверьте работу сервера."
+
+      - alert: RAM_Usage_Is_High
+        expr: 100 * (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) > 90
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          description: "🚨 High RAM usage {{ $labels.instance }} 🚨"
+          summary: "Сервер использует более 90% RAM. Проверьте работу сервера."
+
+      - alert: Too_High_Internal_Errors
+        expr: sum(irate(django_http_responses_total_by_status_total{status=~"5.+",app=~"^$application$"}[$__rate_interval])) > 10
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          description: "🚨 Too high internal errors in: {{ $labels.instance }} 🚨"
+          summary: "'{{ $labels.instance }}' отвечает на запросы с кодом ошибки > 500 свыше 10 запросов в секунду. Проверьте работу сервиса."

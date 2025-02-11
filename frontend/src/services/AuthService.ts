@@ -32,8 +32,6 @@ class AuthService {
       .catch((error) => {
         return Promise.reject(error);
       });
-
-    await store.dispatch("profile/fetchProfile");
   }
 
   async login(email: string, password: string): Promise<void> {
@@ -52,8 +50,6 @@ class AuthService {
             "refreshToken",
             response.data.payload.token.refresh
           );
-        } else if (response.status === 202) {
-          window.location.href = response.data.payload.redirect_url;
         } else {
           return Promise.reject(response);
         }
