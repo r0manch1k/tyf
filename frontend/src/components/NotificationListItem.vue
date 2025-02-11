@@ -19,6 +19,7 @@
           <span v-if="notification.kind === 'post'">Новый пост</span>
           <span v-if="notification.kind === 'follower'">Новый подписчик</span>
           <span v-if="notification.kind === 'message'">Новое сообщение</span>
+          <span v-if="notification.kind === 'chat'">Новый чат</span>
         </h2>
 
         <div
@@ -63,6 +64,20 @@
           </router-link>
           <router-link
             v-if="notification.kind === 'message'"
+            :to="{
+              name: 'chat',
+              params: { uuid: notification.target },
+            }"
+            class="notification-list-item__link btn-light text-decoration-underline p-0"
+            :class="{
+              'text-secondary-light': notification.read,
+              'text-light': !notification.read,
+            }"
+          >
+            Подробнее
+          </router-link>
+          <router-link
+            v-if="notification.kind === 'chat'"
             :to="{
               name: 'chat',
               params: { uuid: notification.target },

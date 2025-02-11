@@ -36,6 +36,7 @@
 <script lang="ts" setup>
 import { ref, onMounted, computed, defineProps } from "vue";
 import { useStore } from "vuex";
+import { useRoute } from "vue-router";
 import type { ProfileListItemModel } from "@/models/ProfileModel";
 import type { ChatListItemModel } from "@/models/ChatModel";
 import ChatListItem from "@/components/ChatListItem.vue";
@@ -48,6 +49,7 @@ const props = defineProps<{
 }>();
 
 const store = useStore();
+const route = useRoute();
 const loading = ref(false);
 const loadingChats = ref(false);
 const chats = computed<Record<string, ChatListItemModel>>(

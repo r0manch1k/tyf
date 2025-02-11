@@ -161,7 +161,8 @@ class ProfileDetailSerializer(serializers.ModelSerializer):
     def get_chat_uuid(self, obj):
         request = self.context.get("request", None)
         if request and request.user:
-            chat = obj.chats.filter(participants__email=request.user).first()
-            if chat:
-                return serializers.UUIDField().to_representation(chat.uuid)
+            for chat in obj.chats.all():
+                participants = chat.participants.all()
+                if participants.filter(email=request.user).exists():
+                    return serializers.UUIDField().to_representation(chat.uuid)
         return None

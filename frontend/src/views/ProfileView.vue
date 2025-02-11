@@ -494,9 +494,9 @@ p {
 }
 
 .profile-view__stat-label {
-  color: var(--primary);
-  font-weight: bold;
-  /* text-decoration: underline;
-  text-decoration-color: var(--primary); */
+  color: var(--light);
+  /* font-weight: bold; */
+  text-decoration: underline;
+  /* text-decoration-color: var(--primary); */
 }
 </style>

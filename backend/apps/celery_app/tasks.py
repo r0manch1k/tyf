@@ -2,9 +2,7 @@ import json as JSON
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 from .celery import app
-from django.utils.text import slugify
 
-# from rest_framework.renderers import JSONRenderer
 from apps.notifications.serializers import NotificationSerializer
 from apps.posts.models import Post
 from apps.notifications.models import Notification
@@ -22,7 +20,7 @@ def send_notification(notification: Notification, recepient: Profile):
     channel_layer = get_channel_layer()
     json = JSON.dumps(NotificationSerializer(notification).data)
     async_to_sync(channel_layer.group_send)(
-        f"notifications_{slugify(recepient.email)}",
+        f"notifications_{recepient.username}",
         {
             "type": "notifications.send_one",
             "json": json,
@@ -69,15 +67,23 @@ def send_new_message_notification(id):
     try:
         message = Message.objects.get(id=id)
         participants = message.chat.participants.all()
-        for participant in participants:
-            if participant != message.author:
-                notification = Notification.objects.create(
-                    recipient=participant,
-                    kind="message",
-                    target=message.chat.uuid,
-                    text=f"{message.author.username} прислал вам сообщение.",
-                )
-                send_notification(notification, participant)
+
+        participants_online = message.chat.participants_online.all()
+
+        recipients = [
+            participant
+            for participant in participants
+            if participant != message.author and participant not in participants_online
+        ]
+
+        for recipient in recipients:
+            notification = Notification.objects.create(
+                recipient=recipient,
+                kind="message",
+                target=message.chat.uuid,
+                text=f"{message.author.username} прислал вам сообщение.",
+            )
+            send_notification(notification, recipient)
     except Message.DoesNotExist:
         pass
 

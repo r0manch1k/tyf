@@ -12,6 +12,9 @@ class Chat(models.Model):
     uuid = models.UUIDField(unique=True, editable=False, default=uuid.uuid4)
     name = models.CharField(max_length=255, default="Без названия")
     participants = models.ManyToManyField(Profile, related_name="chats")
+    participants_online = models.ManyToManyField(
+        Profile, related_name="chats_online", blank=True
+    )
     thumbnail = ResizedImageField(
         crop=["middle", "center"],
         size=[650, 350],
@@ -55,4 +58,4 @@ class Message(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.message
+        return self.text

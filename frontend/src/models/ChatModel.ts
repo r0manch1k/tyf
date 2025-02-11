@@ -10,7 +10,7 @@ export default interface ChatModel {
   last_message: MessageChatModel;
   created_at: string;
   updated_at: string;
-  thumbnail: string;
+  thumbnail?: string;
 }
 
 export type ChatListItemModel = Omit<ChatModel, "messages">;

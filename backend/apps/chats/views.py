@@ -1,5 +1,6 @@
 from rest_framework.response import Response
 from rest_framework import viewsets
+from django.core import exceptions
 
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
@@ -24,9 +25,14 @@ class ChatViewSet(viewsets.ViewSet):
 
     def retrieve(self, request, pk=None):
         queryset = Chat.objects.all()
-        chat = get_object_or_404(queryset, uuid=pk)
-        serializer = ChatDetailSerializer(chat, context={"request": request})
-        return Response(serializer.data)
+        try:
+            chat = get_object_or_404(queryset, uuid=pk)
+        except exceptions.ValidationError:
+            return Response(status=404)
+        if chat.participants.filter(email=request.user).exists():
+            serializer = ChatDetailSerializer(chat)
+            return Response(serializer.data)
+        return Response(status=403)
 
     @action(detail=True, methods=["GET"], url_path="messages", url_name="messages")
     def messages(self, request, pk=None):
@@ -44,3 +50,22 @@ class ChatViewSet(viewsets.ViewSet):
         )
         serializer = MessageSerializer(message)
         return Response(serializer.data)
+
+    def partial_update(self, request, pk=None):
+        chat = get_object_or_404(Chat, uuid=pk)
+        if chat.participants.filter(email=request.user).exists():
+            chat.title = request.data.get("title", chat.title)
+            chat.save()
+            serializer = ChatDetailSerializer(chat)
+            return Response(serializer.data)
+        return Response(status=403)
+
+    @action(detail=True, methods=["POST"], url_path="avatar", url_name="avatar")
+    def avatar(self, request, pk=None):
+        chat = get_object_or_404(Chat, uuid=pk)
+        if chat.participants.filter(email=request.user).exists():
+            chat.avatar = request.data["avatar"]
+            chat.save()
+            serializer = ChatDetailSerializer(chat)
+            return Response(serializer.data)
+        return Response(status=403)

@@ -1,5 +1,5 @@
 <template>
-  <div class="chat" v-if="!loading">
+  <div class="chat" v-if="!loading && !editMode">
     <div class="chat__container d-flex flex-column h-100">
       <div class="chat__chat flex-grow-1 d-flex flex-column h-100">
         <div
@@ -26,7 +26,7 @@
           <div class="chat__chat-actions d-flex gap-2">
             <div class="dropdown">
               <button
-                class="btn btn-light navbar-brand dropdown-toggle fs-7 text-secondary-xx-light"
+                class="btn btn-light navbar-brand dropdown-toggle fs-8 text-secondary-xx-light"
                 type="button"
                 id="dropdownMenuButton"
                 data-bs-toggle="dropdown"
@@ -39,22 +39,22 @@
                 aria-labelledby="dropdownMenuButton"
               >
                 <li>
-                  <button class="change-chat-name dropdown-item">
-                    Изменить название
+                  <button
+                    class="change-chat-name dropdown-item"
+                    @click="setEditMode"
+                  >
+                    Изменить чат
                   </button>
                 </li>
-                <li>
+                <!-- <li>
                   <button class="add-participant dropdown-item">
                     Добавить участника
                   </button>
-                </li>
+                </li> -->
                 <li>
-                  <button class="change-thumbnail dropdown-item">
-                    Изменить изображение
+                  <button class="leave-chat dropdown-item text-alert">
+                    Покинуть чат
                   </button>
-                </li>
-                <li>
-                  <button class="leave-chat dropdown-item">Покинуть чат</button>
                 </li>
               </ul>
             </div>
@@ -63,6 +63,8 @@
         <div
           class="chat__chat-info bg-dark-light flex-grow-1 overflow-auto p-3"
           ref="messagesContainer"
+          style="scrollbar-width: none"
+          @scroll="checkScrollPosition"
         >
           <div class="chat__chat-messages d-flex flex-column gap-2">
             <MessageChat
@@ -72,6 +74,7 @@
             />
           </div>
         </div>
+
         <div class="chat__chat-input bg-dark-x-light p-2">
           <form class="d-flex gap-2">
             <textarea
@@ -91,37 +94,45 @@
           </form>
         </div>
       </div>
+      <button
+        v-if="!isScrolledToBottom"
+        class="scroll-to-bottom"
+        @click="scrollDown"
+      >
+        ↓
+      </button>
     </div>
   </div>
+  <ChatEdit v-else-if="!loading && editMode" :uuid="props.uuid" />
   <LoadingCircle v-else class="spinner-border-sm" />
 </template>
 
 <script lang="ts" setup>
-import {
-  ref,
-  defineProps,
-  computed,
-  onMounted,
-  onUnmounted,
-  watch,
-  nextTick,
-} from "vue";
+import { ref, defineProps, computed, onMounted, onUnmounted, watch } from "vue";
 import { useStore } from "vuex";
+import { useRouter, useRoute } from "vue-router";
 import type { ChatDetailModel } from "@/models/ChatModel";
 import type { MessageChatPayloadModel } from "@/models/MessageChatModel";
 import type MessageChatModel from "@/models/MessageChatModel";
+import AuthService from "@/services/AuthService";
 import ChatDataService from "@/services/ChatDataService";
 import MessageChat from "@/components/MessageChat.vue";
 import LoadingCircle from "@/components/LoadingCircle.vue";
+import ChatEdit from "@/components/ChatEdit.vue";
+import { set } from "lodash";
 
 const props = defineProps<{
   uuid: string;
 }>();
 
 let websocket: WebSocket;
+const store = useStore();
+const router = useRouter();
+const route = useRoute();
 const loading = ref(false);
 const loadingSendMesssage = ref(false);
-const store = useStore();
+const editMode = computed<boolean>(() => store.getters["chat/getEditMode"]);
+const isScrolledToBottom = ref(true);
 const chat = computed<ChatDetailModel>(() =>
   store.getters["chat/getChatByUUID"](props.uuid)
 );
@@ -153,11 +164,25 @@ async function fetchChat() {
 }
 
 onMounted(async () => {
-  await fetchChat();
+  store.dispatch("chat/setEditMode", false);
+
+  await fetchChat().then(() => {
+    if (route.name === "chat-edit") {
+      store.dispatch("chat/setEditMode", true);
+    }
+  });
+});
+
+onUnmounted(() => {
+  if (websocket) websocket.close();
 });
 
 function connectWebsocket() {
-  websocket = new WebSocket(`ws://localhost:8000/ws/chats/${props.uuid}/`);
+  websocket = new WebSocket(
+    `ws://localhost:8000/ws/chats/${
+      props.uuid
+    }/?token=${AuthService.getAccessTokenFromLocalStorage()}`
+  );
 
   websocket.onmessage = (event) => {
     const message: MessageChatModel = JSON.parse(event.data);
@@ -165,6 +190,10 @@ function connectWebsocket() {
       uuid: props.uuid,
       message: message,
     });
+
+    if (message.author.username === store.state.profile.profile.username) {
+      scrollDown();
+    }
   };
 
   websocket.onopen = () => {
@@ -181,10 +210,6 @@ function connectWebsocket() {
   };
 }
 
-onUnmounted(() => {
-  if (websocket) websocket.close();
-});
-
 async function sendMessage() {
   const payload: MessageChatPayloadModel = {
     text: message.value.text,
@@ -195,18 +220,58 @@ async function sendMessage() {
     loadingSendMesssage.value = false;
     message.value.text = "";
   });
+
+  scrollDown();
 }
 
-watch(sortedMessages, () => {
+function scrollDown() {
   if (messagesContainer.value) {
-    messagesContainer.value.scrollTop = messagesContainer.value.scrollHeight;
+    messagesContainer.value.scrollTo({
+      top: messagesContainer.value.scrollHeight,
+      behavior: "smooth",
+    });
+    isScrolledToBottom.value = true;
   }
-});
+}
+
+function checkScrollPosition() {
+  if (messagesContainer.value) {
+    const threshold = 50;
+    const position =
+      messagesContainer.value.scrollTop + messagesContainer.value.clientHeight;
+    const height = messagesContainer.value.scrollHeight;
+    isScrolledToBottom.value = position >= height - threshold;
+  }
+}
+
+const setEditMode = () => {
+  router.push({ name: "chat-edit", params: { uuid: props.uuid } });
+};
+
+watch(
+  () => route.name,
+  () => {
+    if (route.name === "chat") {
+      store.dispatch("chat/setEditMode", false);
+    } else if (route.name === "chat-edit") {
+      store.dispatch("chat/setEditMode", true);
+    }
+  }
+);
 
 watch(
   () => props.uuid,
   async () => {
     await fetchChat();
+  }
+);
+
+watch(
+  () => sortedMessages.value,
+  () => {
+    if (isScrolledToBottom.value) {
+      scrollDown();
+    }
   }
 );
 </script>
@@ -217,11 +282,15 @@ watch(
   height: 78vh;
 }
 
+.chat__container {
+  position: relative;
+}
+
 .chat__chat-header {
   flex-shrink: 0;
   border-top-left-radius: 0.4rem;
   border-top-right-radius: 0.4rem;
-  border-bottom: 1px solid var(--dark-x-light);
+  border-bottom: 2px solid var(--dark-x-light);
 }
 
 .chat__chat-input {
@@ -263,5 +332,22 @@ textarea {
   display: none;
   margin: 0;
   border: 0;
+}
+
+.scroll-to-bottom {
+  position: absolute;
+  bottom: 4rem;
+  right: 1rem;
+  width: 2rem;
+  height: 2rem;
+  z-index: 100;
+  background-color: var(--primary);
+  color: var(--dark);
+  border: 0;
+  border-radius: 50%;
+  font-size: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>

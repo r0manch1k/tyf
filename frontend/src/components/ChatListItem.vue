@@ -20,7 +20,7 @@
             class="chat-list-item_header d-flex align-items-center justify-content-between align-items-center"
           >
             <div
-              class="chat-list-item__chat-name fw-bold"
+              class="chat-list-item__chat-name fw-bold fs-6"
               :class="{ 'chat-list-item__chat-name__selected': selected }"
             >
               {{
@@ -41,11 +41,14 @@
             class="chat-list-item__chat-last-message fs-7"
             :class="{ 'chat-list-item__chat-last-message__selected': selected }"
           >
-            {{
-              chat.last_message.text.length > 25
-                ? chat.last_message.text.substring(0, 25) + "..."
-                : chat.last_message.text
-            }}
+            <span v-if="chat.last_message"
+              >{{
+                chat.last_message.text.length > 25
+                  ? chat.last_message.text.substring(0, 25) + "..."
+                  : chat.last_message.text
+              }}
+            </span>
+            <span v-else>-</span>
           </div>
         </div>
       </div>

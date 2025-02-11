@@ -17,7 +17,7 @@ class State {
       id: -1,
       text: "",
       author: {
-        id: 0,
+        id: -1,
         username: "",
         avatar: "",
         date_joined: "",
@@ -31,6 +31,7 @@ class State {
     updated_at: "",
     thumbnail: "",
   };
+  editMode = false;
 }
 
 const getters: GetterTree<State, unknown> = {
@@ -45,6 +46,9 @@ const getters: GetterTree<State, unknown> = {
   },
   getDefaultMessage: (state) => {
     return state.default.last_message;
+  },
+  getEditMode: (state) => {
+    return state.editMode;
   },
 };
 
@@ -78,6 +82,9 @@ const mutations: MutationTree<State> = {
       state.chats[payload.uuid].last_message = payload.message;
     }
   },
+  setEditMode: (state, payload: boolean) => {
+    state.editMode = payload;
+  },
 };
 
 const actions: ActionTree<State, unknown> = {
@@ -86,15 +93,20 @@ const actions: ActionTree<State, unknown> = {
     commit("setChats", data);
   },
   fetchChatByUUID: async ({ commit }, uuid: string) => {
-    const data = await ChatDataService.getChatByUUID(uuid);
+    const data = await ChatDataService.getChatByUUID(uuid).catch((error) => {
+      return Promise.reject(error);
+    });
     commit("setChat", data);
   },
-  addMessage: async (
+  addMessage: (
     { commit },
     payload: { uuid: string; message: MessageChatModel }
   ) => {
     commit("setMessage", payload);
     commit("setLastMessage", payload);
+  },
+  setEditMode: ({ commit }, payload: boolean) => {
+    commit("setEditMode", payload);
   },
 };
 

@@ -288,7 +288,7 @@ h6 {
 
 .btn-submit:disabled,
 .btn-submit.disabled {
-  color: var(--secondary-light);
+  color: var(--secondary-x-light);
   background-color: var(--secondary);
   border: 0;
   border-radius: 0.4rem;

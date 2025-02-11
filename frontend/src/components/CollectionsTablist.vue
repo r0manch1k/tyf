@@ -16,7 +16,7 @@
       <li
         v-for="collection in collections"
         :key="collection.id"
-        class="nav-item me-2"
+        class="nav-item"
       >
         <button
           @click="enableSearch(collection.name)"

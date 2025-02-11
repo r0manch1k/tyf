@@ -35,7 +35,10 @@
           </div>
         </div>
       </div>
-      <div class="message-chat__chat-time">
+      <div
+        class="message-chat__chat-time"
+        :class="{ 'message-chat__chat-time__my': isMyMessage }"
+      >
         <p class="text-secondary-xx-light fs-8 m-0">{{ created_at }}</p>
       </div>
     </div>
@@ -91,6 +94,14 @@ const created_at = computed(() =>
 
 .message-chat-chat-container-a__my {
   align-items: flex-end;
+  text-align: right;
+}
+
+.message-chat__chat-time {
+  text-align: left;
+}
+
+.message-chat__chat-time__my {
   text-align: right;
 }
 </style>
