@@ -3,7 +3,7 @@ groups:
     rules:
       - alert: Service_Down
         expr: up == 0
-        for: 1m
+        for: 30s
         labels:
           severity: critical
         annotations:
@@ -12,7 +12,7 @@ groups:
 
       - alert: DISK_Space_Usage_Is_High
         expr: 100 - avg(node_filesystem_avail_bytes{fstype="btrfs"}) / ((sum(node_filesystem_size_bytes{fstype="btrfs"}) + sum(node_filesystem_size_bytes{fstype="tmpfs"})) / 100) > 95
-        for: 1m
+        for: 30s
         labels:
           severity: critical
         annotations:
@@ -21,7 +21,7 @@ groups:
 
       - alert: CPU_Usage_Is_High
         expr: 100 - (avg(rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 90
-        for: 1m
+        for: 30s
         labels:
           severity: critical
         annotations:
@@ -29,17 +29,17 @@ groups:
           summary: "Сервер использует более 90% CPU. Проверьте работу сервера."
 
       - alert: RAM_Usage_Is_High
-        expr: 100 * (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) > 90
-        for: 1m
+        expr: 100 * (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) > 75
+        for: 30s
         labels:
           severity: critical
         annotations:
           description: "🚨 High RAM usage {{ $labels.instance }} 🚨"
-          summary: "Сервер использует более 90% RAM. Проверьте работу сервера."
+          summary: "Сервер использует более 75% RAM. Проверьте работу сервера."
 
       - alert: Too_High_Internal_Errors
         expr: sum(irate(django_http_responses_total_by_status_total{status=~"5.+",app=~"^$application$"}[5m])) > 10
-        for: 1m
+        for: 30s
         labels:
           severity: critical
         annotations:

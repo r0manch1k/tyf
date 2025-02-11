@@ -1,5 +1,5 @@
 global:
-  resolve_timeout: 5m
+  resolve_timeout: 1m
   telegram_api_url: "https://api.telegram.org"
 
 templates:
