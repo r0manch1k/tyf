@@ -38,7 +38,7 @@ groups:
           summary: "Сервер использует более 90% RAM. Проверьте работу сервера."
 
       - alert: Too_High_Internal_Errors
-        expr: sum(irate(django_http_responses_total_by_status_total{status=~"5.+",app=~"^$application$"}[$__rate_interval])) > 10
+        expr: sum(irate(django_http_responses_total_by_status_total{status=~"5.+",app=~"^$application$"}[5m])) > 10
         for: 1m
         labels:
           severity: critical
