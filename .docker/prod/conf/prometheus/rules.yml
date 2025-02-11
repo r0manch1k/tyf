@@ -20,13 +20,13 @@ groups:
           summary: "Диск заполнен на 95%. Проверьте диск и примите меры."
 
       - alert: CPU_Usage_Is_High
-        expr: 100 - (avg(rate(node_cpu_seconds_total{mode="idle"}[2m])) * 100) > 90
+        expr: 100 - (avg(rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 75
         for: 30s
         labels:
           severity: critical
         annotations:
           description: "🚨 High CPU usage {{ $labels.instance }} 🚨"
-          summary: "Сервер использует более 90% CPU. Проверьте работу сервера."
+          summary: "Сервер использует более 75% CPU. Проверьте работу сервера."
 
       - alert: RAM_Usage_Is_High
         expr: 100 * (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) > 75
