@@ -48,6 +48,19 @@
               >
                 Редактировать профиль
               </router-link>
+
+              <button
+                v-if="isAuth && guestMode"
+                @click="sendMessage"
+                class="btn btn-action text-decoration-none text-light"
+                :disabled="loadingSendMesssage"
+              >
+                <span v-if="!loadingSendMesssage">Написать сообщение</span>
+                <LoadingCircle
+                  v-else
+                  class="spinner-border-sm mx-auto my-auto"
+                />
+              </button>
             </div>
             <div
               class="profile-view__meta d-flex flex-column text-light gap-1 text-start"
@@ -271,6 +284,7 @@ import LoadingCircle from "@/components/LoadingCircle.vue";
 import Post from "@/components/Post.vue";
 import ProfileListItemLarge from "@/components/ProfileListItemLarge.vue";
 import Tag from "@/components/Tag.vue";
+import { ChatListItemModel } from "@/models/ChatModel";
 import type { ProfileDetailModel } from "@/models/ProfileModel";
 import router from "@/router";
 import ProfileDataService from "@/services/ProfileDataService";
@@ -286,6 +300,7 @@ const loadingFollowers = ref(true);
 const loadingFollowing = ref(true);
 const loadingToggleFollow = ref(false);
 const loadingProfile = computed(() => store.getters["profile/getLoading"]);
+const loadingSendMesssage = ref(false);
 
 const props = defineProps({
   username: {
@@ -368,6 +383,31 @@ const fetchFollowing = async () => {
   );
 };
 
+const sendMessage = async () => {
+  if (!guestMode.value) return;
+
+  console.log(profile.value);
+  if (profile.value.chat_uuid) {
+    router.push({
+      name: "chat",
+      params: { uuid: profile.value.chat_uuid },
+    });
+  } else {
+    loadingSendMesssage.value = true;
+
+    await ProfileDataService.createChatWithProfile(profile.value.username)
+      .then((response: ChatListItemModel) => {
+        router.push({
+          name: "chat",
+          params: { uuid: response.uuid },
+        });
+      })
+      .finally(() => {
+        loadingSendMesssage.value = false;
+      });
+  }
+};
+
 interface TabObject {
   tab: {
     name: string;
@@ -406,10 +446,8 @@ ul {
 .nav-item {
   display: block;
   color: var(--light);
-  /* border-bottom: 1px solid var(--secondary); */
   border-top-left-radius: 0.4rem !important;
   border-top-right-radius: 0.4rem !important;
-  /* padding: 0.5rem 1rem; */
 }
 
 .nav-item:hover {
@@ -417,7 +455,6 @@ ul {
 }
 
 .nav-item-active {
-  /* border-bottom: 1px solid var(--primary); */
   text-decoration: underline;
   text-decoration-color: var(--primary);
 }
@@ -428,6 +465,10 @@ ul {
   color: var(--light);
 }
 
+.nav-item-link:hover {
+  color: var(--light) !important;
+}
+
 .tab-panels-wrapper {
   display: flex;
   gap: 1rem;
@@ -435,10 +476,6 @@ ul {
 </style>
 
 <style scoped>
-/* .profile-view__avatar {
-  border: 1px solid var(--secondary);
-} */
-
 .profile-view__container {
   border-radius: 0.4rem;
 }
@@ -453,18 +490,13 @@ a:hover {
 }
 
 p {
-  /* color: var(--secondary-xx-light); */
   margin: 0;
 }
 
-/* .profile-view__stat {
-  color: var(--secondary-xx-light);
-} */
-
 .profile-view__stat-label {
   color: var(--light);
-  font-weight: bold;
+  /* font-weight: bold; */
   text-decoration: underline;
-  text-decoration-color: var(--primary);
+  /* text-decoration-color: var(--primary); */
 }
 </style>

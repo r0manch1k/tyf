@@ -19,7 +19,8 @@ STATIC_URL = "/static/"
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 
-DEFAULT_USER_AVATAR = "/static/default_avatar_light.webp"
+DEFAULT_USER_AVATAR = "/static/default_avatar.webp"
+DEFAULT_USER_AVATAR_THUMBNAIL = "/static/default_avatar_thumb.webp"
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "mediafiles")
@@ -176,6 +177,7 @@ CELERY_RESULT_BACKEND = os.getenv("REDIS_LOCATION")
 CELERY_ACCEPT_CONTENT = ["application/json"]
 CELERY_TASK_SERIALIZER = "json"
 CELERY_RESULT_SERIALIZER = "json"
+CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
 
 
 AUTH_PASSWORD_VALIDATORS = [

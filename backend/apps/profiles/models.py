@@ -1,7 +1,9 @@
+# import os
+from io import BytesIO
 from functools import partial
 
 # Do not remove PIL
-# from PIL import Image
+from PIL import Image
 import requests
 from django.core.files.base import ContentFile
 from django.db import models
@@ -70,7 +72,7 @@ class Profile(models.Model):
         verbose_name="Avatar",
     )
     thumbnail = models.ImageField(
-        upload_to=partial(generate_media_path, key="email", remove_with_same_key=True),
+        upload_to=partial(generate_media_path, key="email", remove_with_same_key=False),
         blank=True,
         null=True,
         verbose_name="Thumbnail",
@@ -85,6 +87,10 @@ class Profile(models.Model):
     )
     __original_mode = None
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.__original_mode = self.avatar
+
     def save(
         self,
         *args,
@@ -94,9 +100,9 @@ class Profile(models.Model):
         update_fields=None,
         **kwargs,
     ):
-        # if self.avatar != self.__original_mode:
-        #     self.__original_mode = self.avatar
-        #     self.save_thumbnail()
+        if self.avatar != self.__original_mode:
+            self.__original_mode = self.avatar
+            self.save_thumbnail()
 
         if not self.username:
             username = generate_username()[0]
@@ -106,16 +112,17 @@ class Profile(models.Model):
 
         super(Profile, self).save(force_insert, force_update, *args, **kwargs)
 
-    # def save_thumbnail(self):
-    #     if not self.avatar:
-    #         return
-    #     image = Image.open(self.avatar)
-    #     image.thumbnail((49, 50), Image.Resampling.LANCZOS)
-    #     thumb_name, _ = os.path.splitext(self.avatar.name)
-    #     thumb_filename = thumb_name + "_thumb" + ".webp"
-    #     image.save(MEDIA_ROOT + thumb_filename, "WEBP")
-    #     self.thumbnail = thumb_filename
-    #     return True
+    def save_thumbnail(self):
+        if not self.avatar:
+            return
+
+        img = Image.open(self.avatar)
+        img.thumbnail((49, 50), Image.ANTIALIAS)
+        temp = BytesIO()
+        img.save(temp, "WEBP")
+        temp.seek(0)
+        self.thumbnail.save(self.avatar.name, ContentFile(temp.read()), save=False)
+        temp.close()
 
     def get_followers(self):
         return self.followers.all()
@@ -136,6 +143,12 @@ class Profile(models.Model):
         return settings.DEFAULT_USER_AVATAR
 
     @property
+    def get_thumbnail(self):
+        if self.thumbnail:
+            return self.thumbnail.url
+        return settings.DEFAULT_USER_AVATAR_THUMBNAIL
+
+    @property
     def get_telegram(self):
         if self.telegram:
             return "@" + self.telegram.split("/")[-1]
@@ -152,6 +165,10 @@ class Profile(models.Model):
         if response.status_code == status.HTTP_200_OK:
             filename = "avatar"
             self.avatar.save(filename, ContentFile(response.content), save=False)
+
+    @property
+    def is_anonymous(self):
+        return self.user.is_anonymous
 
     def __str__(self):
         return self.username

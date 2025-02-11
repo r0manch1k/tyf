@@ -102,7 +102,7 @@
       <img
         v-if="post.thumbnail"
         :src="post.thumbnail"
-        class="card-img-top rounded-1 my-3"
+        class="card-img-top rounded-1 my-2"
         alt="post-thumbnail"
       />
       <br v-else />

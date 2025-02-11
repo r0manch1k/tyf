@@ -1,20 +1,19 @@
 <template>
   <div class="highscores-bar">
     <div v-if="!loading">
-      <h3 class="highscores-bar__title-header">
+      <!-- <h3 class="highscores-bar__title-header">
         <span class="highscores-bar__header-text">Tell Your Enemies</span>
         <span class="highscores-bar__emoji"> 🚀</span>
       </h3>
       <h4 class="highscores-bar__subtitle">
-        Наш новый проект, в котором вы можете соревноваться с друзьями
-      </h4>
-      <a
-        class="highscores-bar__details"
-        href="https://tellyourenemies.ru"
-        target="_blank"
-        >Подробнее...</a
-      >
-
+        Наш новый проект, в котором вы можете соревноваться с друзьями.
+        <a
+          class="highscores-bar__details"
+          href="https://tellyourenemies.ru"
+          target="_blank"
+          >Подробнее...</a
+        >
+      </h4> -->
       <div class="highscores-bar__content">
         <div class="highscores-bar__title">
           <h2 class="highscores-bar__title-text">HIGH SCORES</h2>
@@ -55,7 +54,7 @@
                 target="_blank"
                 class="highscores-bar__footer-link"
               >
-                PLAY NOW
+                WHAT IS THAT?
               </a>
             </div>
           </div>
@@ -101,14 +100,14 @@ onMounted(async () => {
   src: url("@/tye_frontend/assets/fonts/PressStart2P.ttf") format("truetype");
 }
 
-.highscores-bar__content {
+/* .highscores-bar__content {
   margin-top: 1rem;
-}
+} */
 
 .highscores-bar__header-text {
   color: rgb(240, 230, 20);
   text-decoration: underline;
-  font-size: x-large;
+  font-size: large;
   text-decoration-color: rgb(250, 0, 10) !important;
 }
 
@@ -117,6 +116,7 @@ onMounted(async () => {
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+  text-align: center;
   border-radius: 0.4rem !important;
   padding: 1rem;
 }
@@ -126,6 +126,7 @@ onMounted(async () => {
   color: white;
   text-shadow: rgb(50, 90, 230) 3px 3px 0;
   margin: 0;
+  text-align: center;
   font-size: medium;
   font-family: "Press Start 2P", sans-serif;
 }
@@ -158,6 +159,7 @@ onMounted(async () => {
 .highscores-bar__header {
   display: grid;
   grid-template-columns: 0.5fr 2fr 1fr;
+  text-align: center;
   margin-bottom: 0.5rem;
 }
 

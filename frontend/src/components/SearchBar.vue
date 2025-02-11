@@ -9,8 +9,15 @@
 
   <div class="position-relative" ref="container" @click="handleFocused">
     <input
-      class="header__search-input form-control fs-6 bg-dark-light border-0"
-      :style="inputTextStyle"
+      class="header__search-input form-control fs-6 border-0"
+      :style="[
+        inputTextStyle,
+        {
+          backgroundColor: inputText.valueOf()
+            ? 'var(--secondary)'
+            : 'var(--dark-light)',
+        },
+      ]"
       type="text"
       placeholder="Поиск"
       @input="handleInput"
@@ -18,16 +25,16 @@
       ref="inputComponent"
     />
     <div v-if="isExpanded" class="suggestions">
-      <p class="text-start">
+      <p class="text-start text-secondary-xx-light m-0">
         Используйте ключевые фразы для эффективного поиска:
       </p>
-      <hr />
+      <hr class="mt-2 mb-3" />
       <button
         class="suggestions__button d-block rounded-3 mb-2"
         @click="applyFilterSearch"
         id="tag-search"
       >
-        <svg class="me-3" role="img" width="16" height="16">
+        <svg class="mx-2 ms-0" role="img" width="16" height="16">
           <use xlink:href="#search-icon" />
         </svg>
         <span>Искать по тегу:[тег]</span>
@@ -37,7 +44,7 @@
         @click="applyFilterSearch"
         id="category-search"
       >
-        <svg class="me-3" role="img" width="16" height="16">
+        <svg class="mx-2 ms-0" role="img" width="16" height="16">
           <use xlink:href="#search-icon" />
         </svg>
         <span>Искать по категории:[категория]</span>
@@ -47,7 +54,7 @@
         @click="applyFilterSearch"
         id="collection-search"
       >
-        <svg class="me-3" role="img" width="16" height="16">
+        <svg class="mx-2 ms-0" role="img" width="16" height="16">
           <use xlink:href="#search-icon" />
         </svg>
         <span>Искать по коллекции:[коллекция]</span>
@@ -57,17 +64,17 @@
         @click="applyFilterSearch"
         id="title-search"
       >
-        <svg class="me-3" role="img" width="16" height="16">
+        <svg class="mx-2 ms-0" role="img" width="16" height="16">
           <use xlink:href="#search-icon" />
         </svg>
         <span>Искать по заголовку:[название заголовка]</span>
       </button>
       <button
-        class="suggestions__button d-block rounded-3 mb-2"
+        class="suggestions__button d-block rounded-3 mb-1"
         @click="applyFilterSearch"
         id="author-search"
       >
-        <svg class="me-3" role="img" width="16" height="16">
+        <svg class="mx-2 ms-0" role="img" width="16" height="16">
           <use xlink:href="#search-icon" />
         </svg>
         <span>Искать по автору поста:[имя пользователя]</span>
@@ -78,6 +85,7 @@
 
 <script lang="ts" setup>
 import type SearchModel from "@/models/SearchModel";
+import router from "@/router";
 import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import { useStore } from "vuex";
 
@@ -98,11 +106,10 @@ const isExpanded = ref(false);
 const inputTextStyle = ref({ color: BASE_COLOR });
 const inputComponent = ref<HTMLElement>();
 const container = ref<HTMLElement>();
-const searchInput = computed<SearchModel>(
-  () => store.state.search.searchInput
-);
+const searchInput = computed<SearchModel>(() => store.state.search.searchInput);
 
 const handleInput = () => {
+  router.push("/");
   let inputKeyword = "";
   if (inputText.value.includes(":")) {
     inputKeyword = `${inputText.value.toLowerCase().split(":")[0]}:`;
@@ -209,15 +216,14 @@ onBeforeUnmount(() => {
 
 <style scoped>
 .header__search-input {
-  border: 1px solid var(--secondary-light) !important;
   border-radius: 0.4em !important;
   box-shadow: none !important;
 }
 
 .header__search-input:focus {
   color: var(--light) !important;
-  background-color: var(--dark-light) !important;
-  outline: var(--primary) solid 1px !important;
+  background-color: var(--secondary) !important;
+  outline: none !important;
 }
 
 input[type="search"]::-webkit-search-cancel-button {
@@ -227,7 +233,7 @@ input[type="search"]::-webkit-search-cancel-button {
 
 .suggestions {
   background-color: var(--dark-light);
-  border: 1px solid var(--primary);
+  /* border: 1px solid var(--primary); */
   border-radius: 0.4em !important;
   padding: 10px;
   margin-top: 5px;
@@ -238,9 +244,9 @@ input[type="search"]::-webkit-search-cancel-button {
 }
 
 .suggestions__button {
-  border: 1px solid var(--secondary) !important;
+  border: none !important;
   border-radius: 0.4em !important;
-  color: var(--text-color);
+  color: var(--primary);
   background-color: var(--secondary);
   font-weight: 400;
   line-height: 1.5;
@@ -249,12 +255,12 @@ input[type="search"]::-webkit-search-cancel-button {
   user-select: none;
   padding: 0.375rem 0.75rem;
   font-size: 1rem;
-  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
-    border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  /* transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
+    border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out; */
 }
 
 .suggestions__button:hover {
-  background-color: var(--dark-light);
+  background-color: var(--dark-x-light);
 }
 
 @media only screen and (min-width: 200px) and (max-width: 768px) {

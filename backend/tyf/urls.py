@@ -8,6 +8,7 @@ api_url_prefix = "v1/" if not bool(settings.DEBUG) else "api/v1/"
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path("api/v1/", include("apps.chats.urls")),
     path(api_url_prefix, include("apps.users.urls")),
     path(api_url_prefix, include("apps.profiles.urls")),
     path(api_url_prefix, include("apps.categories.urls")),

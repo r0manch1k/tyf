@@ -7,6 +7,7 @@ from apps.posts.serializers import PostListSerializer
 from apps.chats.serializers import ChatListSerializer
 from .models import Profile
 from apps.follows.models import Follow
+from apps.chats.models import Chat
 from django.db.models import Count
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
@@ -156,4 +157,14 @@ class ProfileViewSet(viewsets.ViewSet):
         profile = get_object_or_404(queryset, username=pk)
         chats = profile.chats.all()
         serializer = ChatListSerializer(chats, context={"request": request}, many=True)
+        return Response(serializer.data)
+
+    @chats.mapping.post
+    def create_chat(self, request, pk=None):
+        request_user = Profile.objects.get(email=request.user)
+        recepient_user = Profile.objects.get(username=pk)
+        chat = Chat.objects.create()
+        chat.participants.add(request_user, recepient_user)
+        chat.save()
+        serializer = ChatListSerializer(chat, context={"request": request})
         return Response(serializer.data)

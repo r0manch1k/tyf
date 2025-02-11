@@ -45,8 +45,8 @@ class ProfileListSerializer(serializers.ModelSerializer):
 
 class ProfileDetailSerializer(serializers.ModelSerializer):
     avatar = AvatarField(allow_empty_file=False, required=False, allow_null=True)
-    telegram = serializers.URLField(required=False, allow_blank=True)
-    vkontakte = serializers.URLField(required=False, allow_blank=True)
+    telegram = serializers.URLField(allow_null=True)
+    vkontakte = serializers.URLField(allow_null=True)
     telegram_alias = serializers.SerializerMethodField()
     vkontakte_alias = serializers.SerializerMethodField()
     date_joined = serializers.DateTimeField(
@@ -74,6 +74,7 @@ class ProfileDetailSerializer(serializers.ModelSerializer):
     following_count = serializers.SerializerMethodField()
     followers_count = serializers.SerializerMethodField()
     posts_count = serializers.SerializerMethodField()
+    chat_uuid = serializers.SerializerMethodField()
 
     class Meta:
         model = Profile
@@ -101,11 +102,13 @@ class ProfileDetailSerializer(serializers.ModelSerializer):
             "following_count",
             "followers_count",
             "posts_count",
+            "chat_uuid",
         ]
 
         read_only_fields = [
             "avatar",
             "date_joined",
+            "chat_uuid",
         ]
 
     def get_telegram_alias(self, obj):
@@ -154,3 +157,12 @@ class ProfileDetailSerializer(serializers.ModelSerializer):
 
     def get_posts_count(self, obj):
         return obj.posts.count()
+
+    def get_chat_uuid(self, obj):
+        request = self.context.get("request", None)
+        if request and request.user:
+            for chat in obj.chats.all():
+                participants = chat.participants.all()
+                if participants.filter(email=request.user).exists():
+                    return serializers.UUIDField().to_representation(chat.uuid)
+        return None

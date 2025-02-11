@@ -80,6 +80,28 @@ const routes: Array<RouteRecordRaw> = [
     },
   },
   {
+    path: "/chats/:uuid",
+    name: "chat",
+    component: ChatsView,
+    props: true,
+    beforeEnter: () => {
+      if (store.getters["profile/getIsAuth"] === false) {
+        return { name: "login" };
+      }
+    },
+  },
+  {
+    path: "/chats/:uuid/edit",
+    name: "chat-edit",
+    component: ChatsView,
+    props: true,
+    beforeEnter: () => {
+      if (store.getters["profile/getIsAuth"] === false) {
+        return { name: "login" };
+      }
+    },
+  },
+  {
     path: "/notifications",
     name: "notifications",
     component: NotificationsView,

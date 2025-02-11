@@ -16,7 +16,7 @@
       <li
         v-for="collection in collections"
         :key="collection.id"
-        class="nav-item me-2"
+        class="nav-item"
       >
         <button
           @click="enableSearch(collection.name)"
@@ -105,7 +105,7 @@ ul {
 }
 
 .nav-item {
-  padding: 0.5rem 0.2rem !important;
+  padding: 0 0.3rem !important;
   width: fit-content !important;
   border: 0 !important;
 }
@@ -118,7 +118,6 @@ ul {
 .nav-pills .nav-link {
   white-space: nowrap;
   border-radius: 0.4rem;
-  font-weight: bold;
   padding: 0.3rem 0.8rem;
   background-color: var(--dark-light);
   color: var(--light);

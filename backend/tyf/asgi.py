@@ -10,6 +10,8 @@ from channels.db import database_sync_to_async
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from apps.chats import routing as chats_routing
 from apps.notifications import routing as notifications_routing
+from apps.profiles.models import Profile
+
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "tyf.settings")
 
@@ -18,7 +20,8 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "tyf.settings")
 def get_user(token_key):
     try:
         validated_token = JWTAuthentication().get_validated_token(token_key)
-        user = JWTAuthentication().get_user(validated_token)
+        email = JWTAuthentication().get_user(validated_token)
+        user = Profile.objects.get(email=email)
     except Exception:
         user = AnonymousUser()
     return user
